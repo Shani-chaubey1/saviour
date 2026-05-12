@@ -35,20 +35,22 @@ export default function ProjectForm({ projectId }) {
   const [activeTab, setActiveTab] = useState('basic');
 
   useEffect(() => {
+    const fetchOpts = { credentials: 'include' };
     Promise.all([
-      fetch('/api/admin/property-types').then((r) => r.json()),
-      fetch('/api/admin/amenities').then((r) => r.json()),
-      fetch('/api/admin/specifications').then((r) => r.json()),
+      fetch('/api/admin/property-types', fetchOpts).then((r) => r.json()),
+      fetch('/api/admin/amenities', fetchOpts).then((r) => r.json()),
+      fetch('/api/admin/specifications', fetchOpts).then((r) => r.json()),
     ]).then(([typesData, amenData, specData]) => {
       setPropertyTypes(typesData.types || []);
       setAllAmenities(amenData.amenities || []);
       setAllSpecifications(specData.specifications || []);
     });
 
-    if (isEdit) {
-      fetch(`/api/admin/projects/${projectId}`)
-        .then((r) => r.json())
-        .then((d) => {
+    if (isEdit && projectId) {
+      fetch(`/api/admin/projects/${projectId}`, { credentials: 'include', cache: 'no-store' })
+        .then(async (r) => {
+          const d = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error(d.error || r.status);
           if (d.project) {
             const p = d.project;
             setForm({
@@ -62,9 +64,9 @@ export default function ProjectForm({ projectId }) {
               priceTable: p.priceTable || [],
             });
           }
-          setFetching(false);
         })
-        .catch(() => setFetching(false));
+        .catch(() => toast({ message: 'Could not load project', type: 'error' }))
+        .finally(() => setFetching(false));
     }
   }, [isEdit, projectId]);
 
@@ -137,6 +139,7 @@ export default function ProjectForm({ projectId }) {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
       const data = await res.json();

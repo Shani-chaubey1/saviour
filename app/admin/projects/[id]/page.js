@@ -1,9 +1,11 @@
 'use client';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import ProjectForm from '../../_components/ProjectForm';
 
-export default async function EditProjectPage({ params }) {
-  const resolvedParams = await Promise.resolve(params);
+export default function EditProjectPage() {
+  const params = useParams();
+  const projectId = params?.id;
   return (
     <div>
       <div className="page-header">
@@ -13,7 +15,7 @@ export default async function EditProjectPage({ params }) {
         </div>
         <Link href="/admin/projects" className="btn-back">← Back to Projects</Link>
       </div>
-      <ProjectForm projectId={resolvedParams.id} />
+      <ProjectForm projectId={projectId} />
       <style jsx global>{`
         .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
         .page-title { font-size: 24px; font-weight: 800; color: #111827; margin-bottom: 4px; }

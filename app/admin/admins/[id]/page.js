@@ -1,26 +1,34 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useToast } from '../../_components/Toast';
 
-export default function EditAdminPage({ params }) {
+export default function EditAdminPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const params = useParams();
+  const id = params?.id;
   const [form, setForm] = useState({ name: '', email: '', role: 'admin', password: '' });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/admins')
-      .then((r) => r.json())
-      .then((d) => {
-        const found = d.admins?.find((a) => a._id === params.id);
-        if (found) setForm({ name: found.name, email: found.email, role: found.role, password: '' });
-        setFetching(false);
+    if (!id) {
+      setFetching(false);
+      return;
+    }
+    fetch(`/api/admin/admins/${id}`, { credentials: 'include', cache: 'no-store' })
+      .then(async (r) => {
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || r.status);
+        const a = d.admin;
+        if (a) setForm({ name: a.name ?? '', email: a.email ?? '', role: a.role ?? 'admin', password: '' });
       })
-      .catch(() => setFetching(false));
-  }, [params.id]);
+      .catch(() => toast({ message: 'Could not load admin', type: 'error' }))
+      .finally(() => setFetching(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +36,10 @@ export default function EditAdminPage({ params }) {
     const payload = { name: form.name, email: form.email, role: form.role };
     if (form.password) payload.password = form.password;
     try {
-      const res = await fetch(`/api/admin/admins/${params.id}`, {
+      const res = await fetch(`/api/admin/admins/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
       const data = await res.json();

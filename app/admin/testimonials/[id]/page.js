@@ -1,27 +1,45 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useToast } from '../../_components/Toast';
 import ImageField from '../../_components/ImageField';
 
-export default function EditTestimonialPage({ params }) {
+export default function EditTestimonialPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const params = useParams();
+  const id = params?.id;
   const [form, setForm] = useState({ name: '', role: '', project: '', content: '', rating: 5, avatar: '', isActive: true });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/testimonials')
-      .then((r) => r.json())
-      .then((d) => {
-        const found = (d.testimonials || []).find((t) => t._id === params.id);
-        if (found) setForm({ name: found.name, role: found.role || '', project: found.project || '', content: found.content, rating: found.rating, avatar: found.avatar || '', isActive: found.isActive });
-        setFetching(false);
+    if (!id) {
+      setFetching(false);
+      return;
+    }
+    fetch(`/api/admin/testimonials/${id}`, { credentials: 'include', cache: 'no-store' })
+      .then(async (r) => {
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || r.status);
+        const t = d.testimonial;
+        if (t) {
+          setForm({
+            name: t.name ?? '',
+            role: t.role ?? '',
+            project: t.project ?? '',
+            content: t.content ?? '',
+            rating: Number(t.rating) || 5,
+            avatar: t.avatar ?? '',
+            isActive: Boolean(t.isActive),
+          });
+        }
       })
-      .catch(() => setFetching(false));
-  }, [params.id]);
+      .catch(() => toast({ message: 'Could not load testimonial', type: 'error' }))
+      .finally(() => setFetching(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- toast stable from provider
+  }, [id]);
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value });
 
@@ -29,10 +47,11 @@ export default function EditTestimonialPage({ params }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/testimonials/${params.id}`, {
+      const res = await fetch(`/api/admin/testimonials/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        credentials: 'include',
+        body: JSON.stringify({ ...form, rating: Number(form.rating) || 5 }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);

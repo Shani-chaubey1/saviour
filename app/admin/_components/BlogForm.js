@@ -27,15 +27,17 @@ export default function BlogForm({ postId }) {
 
   useEffect(() => {
     if (!isEdit) return;
-    fetch(`/api/admin/blogs/${postId}`)
-      .then((r) => r.json())
-      .then((d) => {
+    if (!postId) return;
+    fetch(`/api/admin/blogs/${postId}`, { credentials: 'include', cache: 'no-store' })
+      .then(async (r) => {
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.error || r.status);
         if (d.post) {
           setForm({ ...EMPTY_POST, ...d.post, tags: (d.post.tags || []).join(', ') });
         }
-        setFetching(false);
       })
-      .catch(() => setFetching(false));
+      .catch(() => toast({ message: 'Could not load post', type: 'error' }))
+      .finally(() => setFetching(false));
   }, [isEdit, postId]);
 
   const set = (key) => (e) => {
@@ -57,6 +59,7 @@ export default function BlogForm({ postId }) {
       const res = await fetch(url, {
         method: isEdit ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(payload),
       });
       const data = await res.json();
