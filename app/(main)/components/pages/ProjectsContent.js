@@ -6,7 +6,7 @@ import PageBanner from '../ui/PageBanner';
 import SectionHeading from '../ui/SectionHeading';
 import PropertyCard from '../ui/PropertyCard';
 
-const TYPE_CONFIG = {
+const FALLBACK = {
   residential: {
     title: 'Residential Projects',
     subtitle: 'Browse our residential townships and homes across Noida, Greater Noida & Ghaziabad.',
@@ -24,21 +24,39 @@ const TYPE_CONFIG = {
   },
 };
 
-export function AllProjectsContent({ projects }) {
-  // Read type from the live URL so active tab always matches the current route
+export function AllProjectsContent({ projects, sections = {} }) {
   const searchParams = useSearchParams();
   const type = searchParams.get('type') || '';
-  const cfg = TYPE_CONFIG[type] || TYPE_CONFIG[''];
+
+  const title =
+    type === 'residential'
+      ? (sections.residential_title?.trim() || FALLBACK.residential.title)
+      : type === 'commercial'
+      ? (sections.commercial_title?.trim() || FALLBACK.commercial.title)
+      : (sections.all_title?.trim() || FALLBACK[''].title);
+
+  const subtitle =
+    type === 'residential'
+      ? (sections.residential_subtitle?.trim() || FALLBACK.residential.subtitle)
+      : type === 'commercial'
+      ? (sections.commercial_subtitle?.trim() || FALLBACK.commercial.subtitle)
+      : (sections.all_subtitle?.trim() || FALLBACK[''].subtitle);
+
+  const breadcrumb =
+    type === 'residential' ? 'Residential'
+    : type === 'commercial' ? 'Commercial'
+    : 'All Projects';
+
+  const emptyMsg = sections.empty_message?.trim() || 'No projects found at this time. Please check back soon.';
 
   const breadcrumbs = type
-    ? [{ label: 'Projects', href: '/projects' }, { label: cfg.breadcrumb }]
+    ? [{ label: 'Projects', href: '/projects' }, { label: breadcrumb }]
     : [{ label: 'Projects' }];
 
   return (
     <>
-      <PageBanner title={cfg.title} breadcrumbs={breadcrumbs} />
+      <PageBanner title={title} breadcrumbs={breadcrumbs} />
 
-      {/* Filter tabs */}
       <div className="pj-tabs-wrap">
         <div className="container pj-tabs">
           <Link href="/projects" className={`pj-tab${!type ? ' pj-tab-active' : ''}`}>All</Link>
@@ -49,7 +67,7 @@ export function AllProjectsContent({ projects }) {
 
       <section className="projects-pg">
         <div className="container">
-          <SectionHeading title={cfg.title} subtitle={cfg.subtitle} />
+          <SectionHeading title={title} subtitle={subtitle} />
           {projects.length > 0 ? (
             <div className="pg-grid">
               {projects.map((project) => (
@@ -57,7 +75,7 @@ export function AllProjectsContent({ projects }) {
               ))}
             </div>
           ) : (
-            <p className="empty-msg">No projects found at this time. Please check back soon.</p>
+            <p className="empty-msg">{emptyMsg}</p>
           )}
         </div>
       </section>
@@ -99,11 +117,10 @@ export function AllProjectsContent({ projects }) {
   );
 }
 
-// Keep old named exports as redirectors for backward compat (e.g. if any page still imports them)
-export function CommercialProjectsContent({ projects }) {
-  return <AllProjectsContent projects={projects} type="commercial" />;
+export function CommercialProjectsContent({ projects, sections }) {
+  return <AllProjectsContent projects={projects} sections={sections} />;
 }
 
-export function ResidentialProjectsContent({ projects }) {
-  return <AllProjectsContent projects={projects} type="residential" />;
+export function ResidentialProjectsContent({ projects, sections }) {
+  return <AllProjectsContent projects={projects} sections={sections} />;
 }

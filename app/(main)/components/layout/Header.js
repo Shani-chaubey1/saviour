@@ -50,8 +50,8 @@ export default function Header({ settings = {} }) {
           {/* Logo */}
           <Link href="/" className="lx-logo">
             <Image
-              src="https://saviourgroup.in/wp-content/uploads/2025/05/sb-logo.png"
-              alt="Saviour Group"
+              src={settings.site_logo || 'https://saviourgroup.in/wp-content/uploads/2025/05/sb-logo.png'}
+              alt={settings.site_name || 'Saviour Group'}
               width={160}
               height={52}
               className="lx-logo-img"
@@ -98,8 +98,8 @@ export default function Header({ settings = {} }) {
               </div>
             ))}
 
-            <Link href="/contact-us" className="lx-cta-btn">
-              Get in Touch
+            <Link href={settings.header_cta_url || '/contact-us'} className="lx-cta-btn">
+              {settings.header_cta_label || 'Get in Touch'}
             </Link>
           </nav>
 

@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Setting from '@/lib/models/Setting';
+import { getSettings } from '@/lib/data';
 
-// GET /api/admin/settings — returns { settings: { key: value, ... } }
+// GET /api/admin/settings — merged defaults + DB so every field shows a value in the admin UI
 export async function GET() {
   try {
-    await connectDB();
-    const rows = await Setting.find().lean();
-    const map = {};
-    rows.forEach((r) => { map[r.key] = r.value; });
-    return NextResponse.json({ settings: map });
+    const settings = await getSettings();
+    return NextResponse.json({ settings });
   } catch {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }

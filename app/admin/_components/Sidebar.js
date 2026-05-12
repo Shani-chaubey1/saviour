@@ -39,7 +39,7 @@ const NAV_GROUPS = [
   {
     label: 'System',
     items: [
-      { href: '/admin/settings', label: 'Settings', icon: FaCog },
+      { href: '/admin/pages/home', label: 'Homepage & site', icon: FaCog },
       { href: '/admin/profile', label: 'My Profile', icon: FaUserCircle },
     ],
   },

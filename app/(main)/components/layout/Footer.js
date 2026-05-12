@@ -2,24 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import DynamicFaIcon from '../shared/DynamicFaIcon';
+import { parseJsonArray } from '@/lib/cmsJson';
 
-const FbIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-  </svg>
-);
-const IgIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-  </svg>
-);
-const YtIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-  </svg>
-);
-
-const quickLinks = [
+const FALLBACK_QUICK_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about-us' },
   { label: 'Commercial Projects', href: '/projects' },
@@ -28,7 +14,7 @@ const quickLinks = [
   { label: 'Contact Us', href: '/contact-us' },
 ];
 
-const featuredProjects = [
+const FALLBACK_PROJECT_LINKS = [
   { label: 'Lord Krishna Mart', href: '/properties/lord-krishna-mart' },
   { label: 'Saviour Manoharram', href: '/properties/saviour-manoharram' },
   { label: 'Lord Krishna Medlley', href: '/properties/lord-krishna-medlley' },
@@ -37,14 +23,55 @@ const featuredProjects = [
   { label: 'Saviour Greenarch', href: '/properties/saviour-greenarch' },
 ];
 
+function isExternalHref(href) {
+  if (!href || typeof href !== 'string') return false;
+  return /^https?:\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
+}
+
+function FooterNavLink({ href, className, children }) {
+  const h = href || '#';
+  if (isExternalHref(h)) {
+    const isHttp = /^https?:\/\//i.test(h);
+    return (
+      <a
+        href={h}
+        className={className}
+        {...(isHttp ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={h} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export default function Footer({ settings = {} }) {
-  const footerStats = [
-    { num: settings.stat_years || '25+', label: 'Years' },
-    { num: settings.stat_projects || '50+', label: 'Projects' },
-    { num: settings.stat_families || '10K+', label: 'Families' },
-    { num: '5★', label: 'Rated' },
-  ];
-  const phone = settings.site_phone || '+91 0120-4104506';
+  const fromJson = parseJsonArray(settings.footer_stats_strip_json, [])
+    .filter((s) => String(s.num || '').trim() && String(s.label || '').trim())
+    .map((s) => ({ num: String(s.num).trim(), label: String(s.label).trim() }));
+
+  const footerStats =
+    fromJson.length > 0
+      ? fromJson
+      : [
+          { num: settings.stat_years || '25+', label: 'Years' },
+          { num: settings.stat_projects || '50+', label: 'Projects' },
+          { num: settings.stat_families || '10K+', label: 'Families' },
+          { num: settings.footer_stat_4_num || '5★', label: settings.footer_stat_4_label || 'Rated' },
+        ];
+
+  const logo = settings.site_logo || 'https://saviourgroup.in/wp-content/uploads/2025/05/sb-logo.png';
+  const siteName = settings.site_name || 'Saviour Group';
+  const footerDesc =
+    settings.footer_desc ||
+    "M/s Saviour Builders Pvt. Ltd. is one of Delhi-NCR's leading real estate developers, delivering landmark residential & commercial projects since 1999.";
+  const footerMap =
+    settings.footer_map_embed ||
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.4561793905256!2d77.47369!3d28.32944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDE5JzQ2LjAiTiA3N8KwMjgnMjUuMyJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin';
   const phone2 = settings.site_phone_2 || '+91 9206-001-002';
   const email = settings.site_email || 'sales@saviourindia.com';
   const address = settings.site_address || 'C Block-110, Sector 65, Noida – 201301';
@@ -52,13 +79,38 @@ export default function Footer({ settings = {} }) {
   const igUrl = settings.site_instagram || 'https://instagram.com/saviourindia';
   const ytUrl = settings.site_youtube || 'https://youtube.com/@saviourindia';
 
+  const quickHeading = (settings.footer_quick_links_heading || '').trim() || 'Quick Links';
+  const projectsHeading = (settings.footer_projects_heading || '').trim() || 'Our Projects';
+  const contactHeading = (settings.footer_contact_heading || '').trim() || 'Get in Touch';
+
+  const quickParsed = parseJsonArray(settings.footer_quick_links_json, []).filter(
+    (r) => (r.label || '').trim() && (r.href || '').trim(),
+  );
+  const quickLinks = quickParsed.length ? quickParsed : FALLBACK_QUICK_LINKS;
+
+  const projParsed = parseJsonArray(settings.footer_project_links_json, []).filter(
+    (r) => (r.label || '').trim() && (r.href || '').trim(),
+  );
+  const projectLinks = projParsed.length ? projParsed : FALLBACK_PROJECT_LINKS;
+
+  const socialRows = parseJsonArray(settings.footer_social_icons_json, []).filter((r) => (r.url || '').trim());
+
+  const contactParsed = parseJsonArray(settings.footer_contact_items_json, []).filter((r) => (r.value || '').trim());
+  const contactRows =
+    contactParsed.length > 0
+      ? contactParsed
+      : [
+          { icon: 'FaPhone', label: 'Phone', value: phone2, href: `tel:${phone2.replace(/\s/g, '')}` },
+          { icon: 'FaEnvelope', label: 'Email', value: email, href: `mailto:${email}` },
+          { icon: 'FaMapMarkerAlt', label: 'Office', value: address, href: '' },
+        ];
+
   return (
     <footer className="ft-root">
-      {/* Stats strip */}
       <div className="ft-stats-strip">
         <div className="container ft-stats-inner">
           {footerStats.map((s) => (
-            <div key={s.label} className="ft-stat">
+            <div key={`${s.num}-${s.label}`} className="ft-stat">
               <span className="ft-stat-num">{s.num}</span>
               <span className="ft-stat-label">{s.label}</span>
             </div>
@@ -66,114 +118,148 @@ export default function Footer({ settings = {} }) {
         </div>
       </div>
 
-      {/* Main footer */}
       <div className="ft-main">
         <div className="container ft-grid">
-          {/* Brand */}
           <div className="ft-col ft-brand-col">
             <Link href="/">
               <Image
-                src="https://saviourgroup.in/wp-content/uploads/2025/05/sb-logo.png"
-                alt="Saviour Group"
+                src={logo}
+                alt={siteName}
                 width={150}
                 height={50}
-                style={{ filter: 'brightness(0) invert(1)', objectFit: 'contain', marginBottom: '16px', display: 'block' }}
+                style={{
+                  filter: 'brightness(0) invert(1)',
+                  objectFit: 'contain',
+                  marginBottom: '16px',
+                  display: 'block',
+                }}
               />
             </Link>
-            <p className="ft-desc">
-              M/s Saviour Builders Pvt. Ltd. is one of Delhi-NCR's leading real estate developers, delivering landmark residential & commercial projects since 1999.
-            </p>
+            <p className="ft-desc">{footerDesc}</p>
             <div className="ft-social">
-              {[
-                { href: fbUrl, Icon: FbIcon, label: 'Facebook' },
-                { href: igUrl, Icon: IgIcon, label: 'Instagram' },
-                { href: ytUrl, Icon: YtIcon, label: 'YouTube' },
-              ].map(({ href, Icon, label }) => (
-                <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="ft-social-btn" aria-label={label}>
-                  <Icon />
-                </a>
-              ))}
+              {socialRows.length > 0
+                ? socialRows.map((row, idx) => {
+                    const col = row.color?.startsWith('#') ? row.color : '#ffffff';
+                    return (
+                      <a
+                        key={`${row.url}-${idx}`}
+                        href={row.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ft-social-btn"
+                        aria-label={row.label || 'Social link'}
+                        style={{ color: col }}
+                      >
+                        <DynamicFaIcon name={row.icon} size={15} style={{ color: col }} />
+                      </a>
+                    );
+                  })
+                : [
+                    { href: fbUrl, icon: 'FaFacebook', color: '#1877f2', label: 'Facebook' },
+                    { href: igUrl, icon: 'FaInstagram', color: '#e4405f', label: 'Instagram' },
+                    { href: ytUrl, icon: 'FaYoutube', color: '#ff0000', label: 'YouTube' },
+                  ].map((row) => (
+                    <a
+                      key={row.label}
+                      href={row.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ft-social-btn"
+                      aria-label={row.label}
+                      style={{ color: row.color }}
+                    >
+                      <DynamicFaIcon name={row.icon} size={15} style={{ color: row.color }} />
+                    </a>
+                  ))}
             </div>
           </div>
 
-          {/* Quick Links */}
           <div className="ft-col">
-            <h3 className="ft-heading">Quick Links</h3>
+            <h3 className="ft-heading">{quickHeading}</h3>
             <ul className="ft-links">
               {quickLinks.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="ft-link">
+                <li key={`${l.href}-${l.label}`}>
+                  <FooterNavLink href={l.href} className="ft-link">
                     <span className="ft-link-dot" />
                     {l.label}
-                  </Link>
+                  </FooterNavLink>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Projects */}
           <div className="ft-col">
-            <h3 className="ft-heading">Our Projects</h3>
+            <h3 className="ft-heading">{projectsHeading}</h3>
             <ul className="ft-links">
-              {featuredProjects.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="ft-link">
+              {projectLinks.map((l) => (
+                <li key={`${l.href}-${l.label}`}>
+                  <FooterNavLink href={l.href} className="ft-link">
                     <span className="ft-link-dot" />
                     {l.label}
-                  </Link>
+                  </FooterNavLink>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
           <div className="ft-col">
-            <h3 className="ft-heading">Get in Touch</h3>
+            <h3 className="ft-heading">{contactHeading}</h3>
             <ul className="ft-contact">
-              <li>
-                <div className="ft-contact-icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.1 19.79 19.79 0 0 1 1.62 4.5 2 2 0 0 1 3.6 2.33h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.08 6.08l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                </div>
-                <a href={`tel:${phone2.replace(/\s/g,'')}`}>{phone2}</a>
-              </li>
-              <li>
-                <div className="ft-contact-icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                </div>
-                <a href={`mailto:${email}`}>{email}</a>
-              </li>
-              <li>
-                <div className="ft-contact-icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                </div>
-                <span>{address}</span>
-              </li>
+              {contactRows.map((row, idx) => (
+                <li key={`${row.value}-${idx}`}>
+                  <div className="ft-contact-icon" aria-hidden>
+                    <DynamicFaIcon name={row.icon} size={14} style={{ color: 'var(--red,#eb3237)' }} />
+                  </div>
+                  {row.href?.trim() ? (
+                    <FooterNavLink href={row.href.trim()} className="ft-contact-link">
+                      {row.value}
+                    </FooterNavLink>
+                  ) : (
+                    <span>{row.value}</span>
+                  )}
+                </li>
+              ))}
             </ul>
             <div className="ft-map">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.4561793905256!2d77.47369!3d28.32944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDE5JzQ2LjAiTiA3N8KwMjgnMjUuMyJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
-                width="100%" height="130"
+                src={footerMap}
+                width="100%"
+                height="130"
                 style={{ border: 0, borderRadius: '8px', display: 'block' }}
-                allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-                title="Saviour Group Location"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`${siteName} Location`}
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="ft-bottom">
         <div className="container ft-bottom-inner">
-          <p>&copy; {new Date().getFullYear()} Saviour Group. All rights reserved. &nbsp;·&nbsp; <span className="ft-disclaimer">Images for representation only.</span></p>
-          <p>Powered by <a href="https://www.sysneticindia.com" target="_blank" rel="noopener noreferrer">Sysneticindia</a></p>
+          <p>
+            &copy; {new Date().getFullYear()} {settings.footer_copyright || 'Saviour Group. All rights reserved.'}{' '}
+            &nbsp;·&nbsp; <span className="ft-disclaimer">Images for representation only.</span>
+          </p>
+          {settings.footer_powered_by !== '' && settings.footer_powered_by !== undefined && (
+            <p>
+              Powered by{' '}
+              {settings.footer_powered_by_url ? (
+                <a href={settings.footer_powered_by_url} target="_blank" rel="noopener noreferrer">
+                  {settings.footer_powered_by || 'Sysneticindia'}
+                </a>
+              ) : (
+                <span>{settings.footer_powered_by || 'Sysneticindia'}</span>
+              )}
+            </p>
+          )}
         </div>
       </div>
 
       <style jsx global>{`
         .ft-root { background: var(--dark-800, #041208); color: rgba(255,255,255,0.65); }
 
-        /* Stats strip */
         .ft-stats-strip {
           background: linear-gradient(135deg, var(--green-dark, #004d26), var(--green, #006833));
           padding: 28px 0;
@@ -181,7 +267,7 @@ export default function Footer({ settings = {} }) {
         }
         .ft-stats-inner {
           display: grid !important;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
           gap: 0;
         }
         .ft-stat {
@@ -200,7 +286,6 @@ export default function Footer({ settings = {} }) {
         }
         .ft-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); }
 
-        /* Main */
         .ft-main { padding: 64px 0 48px; border-bottom: 1px solid rgba(255,255,255,0.07); }
         .ft-grid {
           display: grid;
@@ -210,7 +295,7 @@ export default function Footer({ settings = {} }) {
 
         .ft-desc { font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
 
-        .ft-social { display: flex !important; gap: 10px; }
+        .ft-social { display: flex !important; gap: 10px; flex-wrap: wrap; }
         .ft-social-btn {
           display: flex !important; align-items: center !important; justify-content: center !important;
           width: 36px; height: 36px; border-radius: 8px;
@@ -219,7 +304,7 @@ export default function Footer({ settings = {} }) {
           color: rgba(255,255,255,0.6);
           transition: all 0.2s;
         }
-        .ft-social-btn:hover { background: var(--red, #eb3237); border-color: var(--red, #eb3237); color: var(--dark-900, #020c05); transform: translateY(-3px); }
+        .ft-social-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); transform: translateY(-3px); }
 
         .ft-heading {
           font-size: 12px; font-weight: 800; color: white;
@@ -245,11 +330,10 @@ export default function Footer({ settings = {} }) {
           display: flex !important; align-items: center !important; justify-content: center !important;
           color: var(--red, #eb3237); flex-shrink: 0;
         }
-        .ft-contact a, .ft-contact span { font-size: 13.5px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; line-height: 1.6; }
-        .ft-contact a:hover { color: var(--red, #eb3237); }
+        .ft-contact a, .ft-contact span, .ft-contact-link { font-size: 13.5px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; line-height: 1.6; }
+        .ft-contact a:hover, .ft-contact-link:hover { color: var(--red, #eb3237); }
         .ft-map { margin-top: 18px; border-radius: 10px; overflow: hidden; opacity: 0.8; }
 
-        /* Bottom bar */
         .ft-bottom { padding: 18px 0; background: rgba(0,0,0,0.25); }
         .ft-bottom-inner {
           display: flex !important; justify-content: space-between; align-items: center;

@@ -58,6 +58,12 @@ const EnquirySchema = new mongoose.Schema({
 });
 
 const SettingSchema = new mongoose.Schema({ key: String, value: String, group: String });
+const PageSchema = new mongoose.Schema({
+  slug: { type: String, required: true },
+  title: { type: String, required: true },
+  sections: { type: mongoose.Schema.Types.Mixed, default: {} },
+  updatedAt: { type: Date, default: Date.now },
+});
 
 /* ─── Models ─── */
 const PropertyType = mongoose.models.PropertyType || mongoose.model('PropertyType', PropertyTypeSchema);
@@ -69,6 +75,7 @@ const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial',
 const Admin = mongoose.models.Admin || mongoose.model('Admin', AdminSchema);
 const Enquiry = mongoose.models.Enquiry || mongoose.model('Enquiry', EnquirySchema);
 const Setting = mongoose.models.Setting || mongoose.model('Setting', SettingSchema);
+const Page = mongoose.models.Page || mongoose.model('Page', PageSchema);
 
 /* ─── Seed Data ─── */
 async function seed() {
@@ -79,7 +86,7 @@ async function seed() {
     PropertyType.deleteMany({}), Amenity.deleteMany({}),
     Specification.deleteMany({}), Project.deleteMany({}),
     Post.deleteMany({}), Testimonial.deleteMany({}),
-    Admin.deleteMany({}), Enquiry.deleteMany({}), Setting.deleteMany({}),
+    Admin.deleteMany({}), Enquiry.deleteMany({}), Setting.deleteMany({}), Page.deleteMany({}),
   ]);
   console.log('🗑️  Cleared existing data');
 
@@ -548,20 +555,26 @@ async function seed() {
   ]);
   console.log('📬 Created sample enquiries');
 
-  /* ── Settings ── */
-  await Setting.insertMany([
-    { key: 'site_name', value: 'Saviour Group', group: 'general' },
-    { key: 'site_tagline', value: 'Building Dreams, Delivering Excellence', group: 'general' },
-    { key: 'phone', value: '+91 9206-001-002', group: 'general' },
-    { key: 'email', value: 'info@saviourgroup.in', group: 'general' },
-    { key: 'address', value: 'Yamuna Expressway, Greater Noida, Uttar Pradesh – 201308', group: 'general' },
-    { key: 'facebook_url', value: 'https://www.facebook.com/saviourgroup', group: 'social' },
-    { key: 'instagram_url', value: 'https://www.instagram.com/saviourgroup', group: 'social' },
-    { key: 'youtube_url', value: 'https://www.youtube.com/saviourgroup', group: 'social' },
-    { key: 'meta_title', value: 'Saviour Group – Best Builder in Delhi-NCR | RERA Certified', group: 'seo' },
-    { key: 'meta_description', value: 'M/s Saviour Builders Pvt. Ltd. is one of the leading real estate developers in Delhi-NCR delivering residential & commercial projects in Greater Noida and Ghaziabad.', group: 'seo' },
-  ]);
-  console.log('⚙️  Created settings');
+  /* ── Settings + CMS pages (same defaults as lib/siteDefaults.js) ── */
+  const { DEFAULT_SETTINGS, DEFAULT_PAGE_SECTIONS, CMS_PAGE_TITLES } = await import('../lib/siteDefaults.js');
+  await Setting.insertMany(
+    Object.entries(DEFAULT_SETTINGS).map(([key, value]) => ({
+      key,
+      value: value == null ? '' : String(value),
+      group: 'general',
+    })),
+  );
+  console.log(`⚙️  Created ${Object.keys(DEFAULT_SETTINGS).length} settings`);
+
+  await Page.insertMany(
+    Object.keys(DEFAULT_PAGE_SECTIONS).map((slug) => ({
+      slug,
+      title: CMS_PAGE_TITLES[slug] || slug,
+      sections: { ...DEFAULT_PAGE_SECTIONS[slug] },
+      updatedAt: new Date(),
+    })),
+  );
+  console.log(`📄 Created ${Object.keys(DEFAULT_PAGE_SECTIONS).length} CMS pages`);
 
   console.log('\n✅ SEED COMPLETE!');
   console.log('━'.repeat(40));

@@ -31,7 +31,7 @@ export default function DashboardPage() {
     { label: 'Add Admin', href: '/admin/admins/new', icon: '👤', color: '#eb3237' },
     { label: 'Manage Types', href: '/admin/property-types', icon: '🏷', color: '#7c3aed' },
     { label: 'Amenities', href: '/admin/amenities', icon: '✨', color: '#0891b2' },
-    { label: 'Settings', href: '/admin/settings', icon: '⚙', color: '#6b7280' },
+    { label: 'Homepage & site', href: '/admin/pages/home', icon: '⚙', color: '#6b7280' },
   ];
 
   return (

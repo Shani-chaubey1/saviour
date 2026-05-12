@@ -7,7 +7,7 @@ export default async function PublicLayout({ children }) {
   const settings = await getSettings();
   return (
     <>
-      {/* <TopBar /> */}
+      <TopBar settings={settings} />
       <Header settings={settings} />
       <main className="flex-1">{children}</main>
       <Footer settings={settings} />

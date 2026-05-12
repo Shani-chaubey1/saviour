@@ -1,5 +1,5 @@
 import { BlogListContent } from '../components/pages/BlogContent';
-import { getPosts } from '@/lib/data';
+import { getPosts, getPageSections } from '@/lib/data';
 
 export const metadata = {
   title: 'Blog',
@@ -9,6 +9,9 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function BlogPage() {
-  const posts = await getPosts();
-  return <BlogListContent posts={posts} />;
+  const [posts, blogCms] = await Promise.all([
+    getPosts(),
+    getPageSections('blog'),
+  ]);
+  return <BlogListContent posts={posts} cms={blogCms} />;
 }

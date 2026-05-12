@@ -9,6 +9,7 @@ import PropertyCard from '../ui/PropertyCard';
 import BlogCard from '../ui/BlogCard';
 import TestimonialCard from '../ui/TestimonialCard';
 import ContactForm from '../shared/ContactForm';
+import { parseJsonArray } from '@/lib/cmsJson';
 
 /* ─────────────────────────────────────────
    1. Quick Search / Filter Bar
@@ -238,17 +239,23 @@ export function CertificationsSection({ settings = {} }) {
    3. Trust / Intro Banner
 ───────────────────────────────────────── */
 export function TrustBanner({ settings = {} }) {
-  const stats = [
-    { num: settings.stat_years || '25+', label: 'Years of Experience' },
-    { num: settings.stat_projects || '50+', label: 'Projects Delivered' },
-    { num: settings.stat_families || '10,000+', label: 'Happy Families' },
-    { num: settings.stat_assets || '₹500Cr+', label: 'Assets Delivered' },
-  ];
+  const fromJson = parseJsonArray(settings.trust_banner_stats_json, []).filter(
+    (s) => String(s.num || '').trim() && String(s.label || '').trim(),
+  );
+  const stats =
+    fromJson.length > 0
+      ? fromJson.map((s) => ({ num: String(s.num).trim(), label: String(s.label).trim() }))
+      : [
+          { num: settings.stat_years || '25+', label: 'Years of Experience' },
+          { num: settings.stat_projects || '50+', label: 'Projects Delivered' },
+          { num: settings.stat_families || '10,000+', label: 'Happy Families' },
+          { num: settings.stat_assets || '₹500Cr+', label: 'Assets Delivered' },
+        ];
   return (
     <div className="tb-root">
       <div className="container tb-inner">
         <div className="tb-left">
-          <div className="tb-tag">A Name You Can Trust Upon</div>
+          <div className="tb-tag">{settings.trust_tag || 'A Name You Can Trust Upon'}</div>
           <h2 className="tb-title">{settings.site_name || 'Saviour Builders'}</h2>
           <p className="tb-desc">{settings.trust_intro || 'Saviour Builders are one of the leading real estate developers in Delhi NCR, dedicated to the highest standards, systems and performance necessary to fulfill all of your real estate dreams.'}</p>
           <div className="tb-creds">
@@ -284,7 +291,7 @@ export function TrustBanner({ settings = {} }) {
         .tb-creds { display: flex !important; gap: 20px; flex-wrap: wrap; }
         .tb-cred { display: flex !important; align-items: center !important; gap: 8px; background: var(--green-pale,#e8f5ee); color: var(--green-dark,#004d26); padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; }
         .tb-cred svg { color: var(--green,#006833); flex-shrink: 0; }
-        .tb-right { display: grid !important; grid-template-columns: 1fr 1fr; gap: 1px; background: #e8e8e8; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.07); }
+        .tb-right { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: #e8e8e8; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.07); }
         .tb-stat { background: white; padding: 32px 24px; display: flex !important; flex-direction: column !important; align-items: center; gap: 6px; transition: background 0.2s; }
         .tb-stat:hover { background: var(--green-pale,#e8f5ee); }
         .tb-stat-num { font-size: clamp(28px,3.5vw,42px); font-weight: 900; color: var(--green,#006833); line-height: 1; }
@@ -577,14 +584,14 @@ export function MissionVisionSection({ settings = {} }) {
 /* ─────────────────────────────────────────
    5. Projects Section
 ───────────────────────────────────────── */
-export function ProjectsSection({ projects }) {
+export function ProjectsSection({ projects, settings = {} }) {
   return (
     <section className="prs-root">
       <div className="container">
         <div className="prs-header">
           <SectionHeading
-            title="Current &amp; Future Projects"
-            subtitle="We build value. We build you."
+            title={settings.projects_section_title || 'Current & Future Projects'}
+            subtitle={settings.projects_section_subtitle || 'We build value. We build you.'}
           />
           <div className="prs-tabs">
             <Link href="/projects" className="prs-tab prs-tab-active">
@@ -605,7 +612,7 @@ export function ProjectsSection({ projects }) {
         </div>
         <div className="prs-cta-row">
           <Link href="/projects" className="prs-cta-btn">
-            View All Projects <ArrowRight size={16} />
+            {settings.projects_section_cta || 'View All Projects'} <ArrowRight size={16} />
           </Link>
         </div>
       </div>
@@ -709,19 +716,19 @@ export function ProjectsSection({ projects }) {
 export function WhyUsSection({ settings = {} }) {
   const pillars = [
     {
-      icon: '🏆',
+      icon: settings.why_1_icon || '🏆',
       title: settings.why_1_title || 'Quality Policy',
       desc: settings.why_1_desc || 'We are committed to delight our customers by improving their quality of life through ethical practices and continuous improvement.',
       color: 'green',
     },
     {
-      icon: '🌿',
+      icon: settings.why_2_icon || '🌿',
       title: settings.why_2_title || 'Green & Clean Environment',
       desc: settings.why_2_desc || 'Each urban area of Saviour Builders is built on the basis of "A place where living is in harmony with nature" — with greeneries, parks, and water surfaces arranged harmoniously.',
       color: 'red',
     },
     {
-      icon: '💎',
+      icon: settings.why_3_icon || '💎',
       title: settings.why_3_title || 'We Build Value',
       desc: settings.why_3_desc || 'With our projects spanning residential, commercial and corporate construction, we aim to deliver excellence and comfort with fairness and transparency.',
       color: 'green',
@@ -730,7 +737,7 @@ export function WhyUsSection({ settings = {} }) {
   return (
     <section className="wu-root">
       <div className="container">
-        <SectionHeading title="Why Choose Us" subtitle="Providing quality spaces through continuous innovation." centered light />
+        <SectionHeading title="Why Choose Us" subtitle={settings.why_section_subtitle || 'Providing quality spaces through continuous innovation.'} centered light />
         <div className="wu-grid">
           {pillars.map((p, i) => (
             <div key={p.title} className={`wu-card wu-${p.color}`}>
@@ -768,9 +775,14 @@ export function WhyUsSection({ settings = {} }) {
    7. Launching Soon Banner
 ───────────────────────────────────────── */
 export function LaunchingSoonBanner({ data = {} }) {
+  const badge = data.launching_soon_badge || 'Launching Soon';
   const title = data.launching_soon_title || 'Vridhi+ Premium Tower';
   const desc = data.launching_soon_desc || 'Step into your dream world where luxury meets lifestyle. Surrounded by a lush 7.5-acre park, Vridhi+ Premium Tower offers an eco-friendly environment, grand commercial spaces, and beautifully crafted 3 & 4 BHK premium residences — limited to just 192 units.';
   const tags = (data.launching_soon_tags || '🌳 7.5-Acre Park,🏠 3 & 4 BHK,✨ 192 Units Only,🏙️ Premium Location').split(',');
+  const ctaLabel = data.launching_soon_cta_label || 'Register Your Interest';
+  const ctaUrl = data.launching_soon_cta_url || '/contact-us';
+  const secLabel = data.launching_soon_secondary_label || 'View All Projects';
+  const secUrl = data.launching_soon_secondary_url || '/projects';
 
   return (
     <div className="ls-root">
@@ -778,7 +790,7 @@ export function LaunchingSoonBanner({ data = {} }) {
         <div className="ls-glass">
           <div className="ls-badge">
             <span className="ls-badge-dot" />
-            Launching Soon
+            {badge}
           </div>
           <h2 className="ls-title">{title}</h2>
           <p className="ls-sub">{desc}</p>
@@ -786,8 +798,8 @@ export function LaunchingSoonBanner({ data = {} }) {
             {tags.map(t => <span key={t} className="ls-tag">{t.trim()}</span>)}
           </div>
           <div className="ls-actions">
-            <Link href="/contact-us" className="ls-btn-primary">Register Your Interest</Link>
-            <Link href="/projects" className="ls-btn-outline">View All Projects</Link>
+            <Link href={ctaUrl} className="ls-btn-primary">{ctaLabel}</Link>
+            <Link href={secUrl} className="ls-btn-outline">{secLabel}</Link>
           </div>
         </div>
       </div>
@@ -928,7 +940,7 @@ export function DevelopmentsSection({ settings = {} }) {
   return (
     <section className="dev-root">
       <div className="container">
-        <SectionHeading title="Explore More" subtitle="Residential, commercial and investor opportunities across Delhi-NCR." centered />
+        <SectionHeading title={settings.dev_section_title || 'Explore More'} subtitle={settings.dev_section_subtitle || 'Residential, commercial and investor opportunities across Delhi-NCR.'} centered />
         <div className="dev-grid">
           {segments.map(s => (
             <div key={s.title} className="dev-card">
@@ -978,13 +990,13 @@ export function DevelopmentsSection({ settings = {} }) {
 /* ─────────────────────────────────────────
    9. Blog Section
 ───────────────────────────────────────── */
-export function BlogSection({ posts }) {
+export function BlogSection({ posts, settings = {} }) {
   return (
     <section className="bls-root">
       <div className="container">
         <div className="bls-header">
-          <SectionHeading title="News &amp; Events" subtitle="From our blog — stay informed with the latest insights." />
-          <Link href="/blog" className="bls-all-link">View All <ArrowRight size={14} /></Link>
+          <SectionHeading title={settings.blog_section_title || 'News & Events'} subtitle={settings.blog_section_subtitle || 'From our blog — stay informed with the latest insights.'} />
+          <Link href="/blog" className="bls-all-link">{settings.blog_section_view_all || 'View All'} <ArrowRight size={14} /></Link>
         </div>
         <div className="bls-grid">
           {posts.map(p => <BlogCard key={p._id?.toString() ?? p.slug} post={p} />)}
@@ -1007,11 +1019,11 @@ export function BlogSection({ posts }) {
 /* ─────────────────────────────────────────
    10. Testimonials
 ───────────────────────────────────────── */
-export function TestimonialsSection({ testimonials }) {
+export function TestimonialsSection({ testimonials, settings = {} }) {
   return (
     <section className="ts-root">
       <div className="container">
-        <SectionHeading title="What Clients Say" subtitle="Real stories from real buyers — this is what we live for." centered light />
+        <SectionHeading title={settings.testimonials_section_title || 'What Clients Say'} subtitle={settings.testimonials_section_subtitle || 'Real stories from real buyers — this is what we live for.'} centered light />
         <div className="ts-grid">
           {testimonials.map(t => <TestimonialCard key={t._id?.toString() ?? t.name} testimonial={t} />)}
         </div>
@@ -1040,7 +1052,7 @@ export function ContactSection({ settings = {} }) {
       <div className="container cs-inner">
         <div className="cs-info">
           <SectionHeading title="Get in Touch" light />
-          <p className="cs-desc">Looking for your dream home or the perfect commercial investment? Our experts are ready to guide you through every step — from choosing the right property to final possession.</p>
+          <p className="cs-desc">{settings.contact_section_desc || 'Looking for your dream home or the perfect commercial investment? Our experts are ready to guide you through every step — from choosing the right property to final possession.'}</p>
           <ul className="cs-list">
             {[
               { icon: '📞', label: 'Phone (Toll Free)', val: phone, href: `tel:${phone.replace(/\s/g,'')}` },
@@ -1062,7 +1074,7 @@ export function ContactSection({ settings = {} }) {
         </div>
         <div className="cs-form-col">
           <div className="cs-form-card">
-            <h3 className="cs-form-title">Send a Message</h3>
+            <h3 className="cs-form-title">{settings.contact_form_title || 'Send a Message'}</h3>
             <ContactForm />
           </div>
         </div>

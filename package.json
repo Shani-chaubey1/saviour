@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed.js",
+    "sync-defaults": "node scripts/sync-defaults.js",
     "backfill:projects": "node scripts/backfill-projects.js"
   },
   "dependencies": {

@@ -1,5 +1,5 @@
 import { AllProjectsContent } from '../components/pages/ProjectsContent';
-import { getProjects } from '@/lib/data';
+import { getProjects, getPageSections } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +14,9 @@ export async function generateMetadata({ searchParams }) {
 export default async function ProjectsPage({ searchParams }) {
   const params = await Promise.resolve(searchParams);
   const type = params?.type || '';
-  const projects = await getProjects(type ? { type } : {});
-  return <AllProjectsContent projects={projects} />;
+  const [projects, sections] = await Promise.all([
+    getProjects(type ? { type } : {}),
+    getPageSections('projects'),
+  ]);
+  return <AllProjectsContent projects={projects} sections={sections} />;
 }

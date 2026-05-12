@@ -19,50 +19,43 @@ const YtIcon = () => (
   </svg>
 );
 
-export default function TopBar() {
+export default function TopBar({ settings = {} }) {
+  const phone = settings.topbar_phone || settings.site_phone_2 || '+91 9206-001-002';
+  const email = settings.topbar_email || settings.site_email || 'info@saviourgroup.in';
+  const tagline = settings.topbar_tagline || '';
+  const fbUrl = settings.site_facebook || 'https://www.facebook.com/saviourgroup';
+  const igUrl = settings.site_instagram || 'https://www.instagram.com/saviourgroup';
+  const ytUrl = settings.site_youtube || 'https://www.youtube.com/saviourgroup';
+
+  const phoneHref = `tel:${phone.replace(/\s/g, '')}`;
+  const emailHref = `mailto:${email}`;
+
   return (
     <div className="top-bar">
       <div className="container top-bar-inner">
         <div className="contact-items">
-          <a href="tel:+919206001002" className="contact-item">
+          <a href={phoneHref} className="contact-item">
             <Phone size={14} />
-            <span>+91 9206-001-002</span>
+            <span>{phone}</span>
           </a>
-          <a href="mailto:info@saviourgroup.in" className="contact-item">
+          <a href={emailHref} className="contact-item">
             <Mail size={14} />
-            <span>info@saviourgroup.in</span>
+            <span>{email}</span>
           </a>
+          {tagline && <span className="topbar-tagline">{tagline}</span>}
         </div>
         <div className="social-links">
-          <a
-            href="https://www.facebook.com/saviourgroup"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="social-link"
-            aria-label="Facebook"
-          >
+          <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Facebook">
             <FbIcon />
           </a>
-          <a
-            href="https://www.instagram.com/saviourgroup"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="social-link"
-            aria-label="Instagram"
-          >
+          <a href={igUrl} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
             <IgIcon />
           </a>
-          <a
-            href="https://www.youtube.com/saviourgroup"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="social-link"
-            aria-label="Youtube"
-          >
+          <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="social-link" aria-label="YouTube">
             <YtIcon />
           </a>
         </div>
       </div>
-</div>
+    </div>
   );
 }

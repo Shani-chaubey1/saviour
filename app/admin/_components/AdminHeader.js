@@ -13,6 +13,7 @@ const BREADCRUMB_MAP = {
   '/admin/blogs': 'Blogs',
   '/admin/blogs/new': 'New Blog Post',
   '/admin/pages': 'Pages',
+  '/admin/pages/home': 'Homepage & site',
   '/admin/testimonials': 'Testimonials',
   '/admin/property-types': 'Property Types',
   '/admin/amenities': 'Amenities',
@@ -20,7 +21,6 @@ const BREADCRUMB_MAP = {
   '/admin/admins': 'Admins',
   '/admin/admins/new': 'New Admin',
   '/admin/enquiries': 'Enquiries',
-  '/admin/settings': 'Settings',
   '/admin/profile': 'My Profile',
 };
 
@@ -30,7 +30,14 @@ function getPageTitle(pathname) {
   if (pathname.includes('/blogs/')) return 'Edit Blog Post';
   if (pathname.includes('/admins/')) return 'Edit Admin';
   if (pathname.includes('/testimonials/')) return 'Edit Testimonial';
-  if (pathname.includes('/pages/')) return 'Edit Page';
+  if (pathname.startsWith('/admin/pages/')) {
+    const seg = pathname.replace('/admin/pages/', '');
+    if (seg === 'home') return 'Homepage & site';
+    if (seg === 'about-us') return 'About Us';
+    if (seg === 'contact-us') return 'Contact Us';
+    if (seg === 'blog') return 'Blog listing';
+    return 'Edit page';
+  }
   return 'Admin Panel';
 }
 

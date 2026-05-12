@@ -5,23 +5,43 @@ import PageBanner from '../ui/PageBanner';
 import SectionHeading from '../ui/SectionHeading';
 import ContactForm from '../shared/ContactForm';
 
-export default function ContactPageContent() {
+const DEFAULT_MAP =
+  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.4561793905256!2d77.47369!3d28.32944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDE5JzQ2LjAiTiA3N8KwMjgnMjUuMyJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin';
+
+export default function ContactPageContent({ sections = {}, settings = {} }) {
+  const pageTitle = sections.page_title?.trim() || 'Contact Us';
+  const introSubtitle =
+    sections.intro_subtitle?.trim() ||
+    "We'd love to hear from you. Send us a message and we'll get back to you as soon as possible.";
+  const phone = sections.phone?.trim() || settings.site_phone_2 || '+91 9206-001-002';
+  const email = sections.email?.trim() || settings.site_email || 'info@saviourgroup.in';
+  const address =
+    sections.address?.trim() ||
+    settings.site_address ||
+    'Yamuna Expressway, Greater Noida, Uttar Pradesh';
+  const hours = sections.working_hours?.trim() || 'Mon – Sat: 9:00 AM – 7:00 PM';
+  const mapSrc = sections.map_embed?.trim() || DEFAULT_MAP;
+  const formTitle = sections.form_title?.trim() || 'Send Us a Message';
+
+  const phoneHref = phone.replace(/\s/g, '').replace(/^\+/, '');
+  const telHref = phoneHref.startsWith('91') ? `tel:+${phoneHref}` : `tel:${phoneHref}`;
+
   return (
     <>
-      <PageBanner title="Contact Us" breadcrumbs={[{ label: 'Contact Us' }]} />
+      <PageBanner title={pageTitle} breadcrumbs={[{ label: pageTitle }]} />
       <section className="contact-pg">
         <div className="container">
           <div className="contact-intro">
-            <SectionHeading title="Contact Us" subtitle="We'd love to hear from you. Send us a message and we'll get back to you as soon as possible." centered />
+            <SectionHeading title={pageTitle} subtitle={introSubtitle} centered />
           </div>
           <div className="contact-grid">
             <div className="contact-info-col">
               <div className="info-cards">
                 {[
-                  { icon: <Phone size={24} />, title: 'Phone', content: '+91 9206-001-002', href: 'tel:+919206001002' },
-                  { icon: <Mail size={24} />, title: 'Email', content: 'info@saviourgroup.in', href: 'mailto:info@saviourgroup.in' },
-                  { icon: <MapPin size={24} />, title: 'Office', content: 'Yamuna Expressway, Greater Noida, Uttar Pradesh', href: null },
-                  { icon: <Clock size={24} />, title: 'Working Hours', content: 'Mon – Sat: 9:00 AM – 7:00 PM', href: null },
+                  { icon: <Phone size={24} />, title: 'Phone', content: phone, href: telHref },
+                  { icon: <Mail size={24} />, title: 'Email', content: email, href: `mailto:${email}` },
+                  { icon: <MapPin size={24} />, title: 'Office', content: address, href: null },
+                  { icon: <Clock size={24} />, title: 'Working Hours', content: hours, href: null },
                 ].map((item) => (
                   <div key={item.title} className="info-card">
                     <div className="info-card-icon">{item.icon}</div>
@@ -38,16 +58,20 @@ export default function ContactPageContent() {
               </div>
               <div className="contact-map">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.4561793905256!2d77.47369!3d28.32944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDE5JzQ2LjAiTiA3N8KwMjgnMjUuMyJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin"
-                  width="100%" height="300" style={{ border: 0, borderRadius: '12px' }}
-                  allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-                  title="Saviour Group Location"
+                  src={mapSrc}
+                  width="100%"
+                  height="300"
+                  style={{ border: 0, borderRadius: '12px' }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Office location map"
                 />
               </div>
             </div>
             <div className="contact-form-col">
               <div className="form-box">
-                <h3 className="form-box-title">Send Us a Message</h3>
+                <h3 className="form-box-title">{formTitle}</h3>
                 <ContactForm />
               </div>
             </div>

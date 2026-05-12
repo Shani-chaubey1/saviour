@@ -8,13 +8,20 @@ import SectionHeading from '../ui/SectionHeading';
 import BlogCard from '../ui/BlogCard';
 import ContactForm from '../shared/ContactForm';
 
-export function BlogListContent({ posts }) {
+export function BlogListContent({ posts, cms = {} }) {
+  const bannerBrand = cms.banner_brand?.trim() || 'Savviour Builderrs';
+  const sectionTitle = cms.section_title?.trim() || 'Blog';
+  const sectionSubtitle = cms.section_subtitle?.trim() || 'Best Builder in Delhi-NCR';
+  const emptyMessage =
+    cms.empty_message?.trim() ||
+    'No blog posts found at this time. Please check back soon.';
+
   return (
     <>
-      <PageBanner title="Savviour Builderrs" breadcrumbs={[{ label: 'Blog' }]} />
+      <PageBanner title={bannerBrand} breadcrumbs={[{ label: 'Blog' }]} />
       <section className="blog-pg">
         <div className="container">
-          <SectionHeading title="Blog" subtitle="Best Builder in Delhi-NCR" />
+          <SectionHeading title={sectionTitle} subtitle={sectionSubtitle} />
           {posts.length > 0 ? (
             <div className="blog-pg-grid">
               {posts.map((post) => (
@@ -22,7 +29,7 @@ export function BlogListContent({ posts }) {
               ))}
             </div>
           ) : (
-            <p className="empty-msg">No blog posts found at this time. Please check back soon.</p>
+            <p className="empty-msg">{emptyMessage}</p>
           )}
         </div>
       </section>
