@@ -25,9 +25,7 @@ const nextConfig = {
     ],
     unoptimized: false,
   },
-  experimental: {
-    serverComponentsExternalPackages: ['mongoose'],
-  },
+  serverExternalPackages: ['mongoose'],
 };
 
 export default nextConfig;

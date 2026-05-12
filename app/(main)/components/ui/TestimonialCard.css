@@ -1,0 +1,12 @@
+        .tc-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 28px 24px; display: flex; flex-direction: column; gap: 16px; transition: all 0.3s; position: relative; overflow: hidden; }
+        .tc-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: linear-gradient(to bottom, var(--green,#006833), var(--red,#eb3237)); opacity: 0; transition: opacity 0.3s; }
+        .tc-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-4px); }
+        .tc-card:hover::before { opacity: 1; }
+        .tc-top { display: flex !important; align-items: center !important; justify-content: space-between; }
+        .tc-stars { display: flex !important; gap: 2px; }
+        .tc-quote { font-size: 64px; line-height: 0.6; color: var(--green,#006833); opacity: 0.3; font-family: Georgia,serif; font-weight: 900; }
+        .tc-content { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.75; font-style: italic; flex: 1; }
+        .tc-author { display: flex !important; align-items: center !important; gap: 12px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+        .tc-avatar { width: 42px; height: 42px; min-width: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--green,#006833), var(--green-light,#008a40)); display: flex !important; align-items: center !important; justify-content: center !important; color: white; font-size: 14px; font-weight: 800; box-shadow: 0 3px 10px rgba(0,104,51,0.35); }
+        .tc-name { font-size: 14px; font-weight: 700; color: white; margin: 0; }
+        .tc-role { font-size: 12px; color: rgba(255,255,255,0.45); margin: 0; }
