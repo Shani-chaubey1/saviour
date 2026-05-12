@@ -1,17 +1,23 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import './dashboard-page.css';
 
 export default function DashboardPage() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/admin/dashboard', { credentials: 'same-origin' })
-      .then((r) => r.json())
-      .then((d) => { setData(d); setLoading(false); })
-      .catch(() => setLoading(false));
+    fetch('/api/admin/dashboard', {
+      credentials: 'include',
+      cache: 'no-store',
+    })
+      .then(async (r) => {
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) setData({ stats: {}, recentEnquiries: [], _error: d.error || r.status });
+        else setData(d);
+      })
+      .catch(() => setData({ stats: {}, recentEnquiries: [], _error: 'network' }))
+      .finally(() => setLoading(false));
   }, []);
 
   const stats = data?.stats || {};

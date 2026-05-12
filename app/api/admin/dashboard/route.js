@@ -6,6 +6,13 @@ import Enquiry from '@/lib/models/Enquiry';
 import Testimonial from '@/lib/models/Testimonial';
 import Admin from '@/lib/models/Admin';
 
+export const dynamic = 'force-dynamic';
+
+const NO_STORE = {
+  'Cache-Control': 'private, no-store, no-cache, must-revalidate',
+  Pragma: 'no-cache',
+};
+
 export async function GET() {
   try {
     await connectDB();
@@ -20,11 +27,16 @@ export async function GET() {
       Enquiry.find().sort({ createdAt: -1 }).limit(5).lean(),
     ]);
 
-    return NextResponse.json({
-      stats: { projects, posts, enquiries, testimonials, admins },
-      recentEnquiries,
-    });
+    const safeRecent = JSON.parse(JSON.stringify(recentEnquiries));
+
+    return NextResponse.json(
+      {
+        stats: { projects, posts, enquiries, testimonials, admins },
+        recentEnquiries: safeRecent,
+      },
+      { headers: NO_STORE },
+    );
   } catch {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Server error' }, { status: 500, headers: NO_STORE });
   }
 }

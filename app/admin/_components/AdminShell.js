@@ -32,7 +32,10 @@ export default function AdminShell({ children }) {
         .admin-shell {
           display: flex !important;
           flex-direction: row !important;
+          flex: 1;
+          width: 100%;
           min-height: 100vh;
+          min-height: 100dvh;
           background: #f4f6fa;
         }
         .admin-main {
@@ -49,6 +52,7 @@ export default function AdminShell({ children }) {
           min-height: 0;
           overflow-x: hidden;
           overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
         }
         @media (max-width: 768px) {
           .admin-main { margin-left: 0; }
