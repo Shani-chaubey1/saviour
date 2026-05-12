@@ -291,13 +291,12 @@ export function TrustBanner({ settings = {} }) {
         .tb-creds { display: flex !important; gap: 20px; flex-wrap: wrap; }
         .tb-cred { display: flex !important; align-items: center !important; gap: 8px; background: var(--green-pale,#e8f5ee); color: var(--green-dark,#004d26); padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; }
         .tb-cred svg { color: var(--green,#006833); flex-shrink: 0; }
-        .tb-right { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: #e8e8e8; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.07); }
+        .tb-right { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: #e8e8e8; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.07); }
         .tb-stat { background: white; padding: 32px 24px; display: flex !important; flex-direction: column !important; align-items: center; gap: 6px; transition: background 0.2s; }
         .tb-stat:hover { background: var(--green-pale,#e8f5ee); }
         .tb-stat-num { font-size: clamp(28px,3.5vw,42px); font-weight: 900; color: var(--green,#006833); line-height: 1; }
         .tb-stat-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.8px; text-align: center; }
         @media(max-width:1024px){ .tb-inner{grid-template-columns:1fr; gap:48px;} }
-        @media(max-width:640px){ .tb-right{grid-template-columns:1fr 1fr;} }
       `}</style>
     </div>
   );
@@ -446,10 +445,11 @@ export function AboutSection({ settings = {} }) {
           margin-bottom: 16px;
         }
         .as-points {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px 16px;
           margin: 24px 0 32px;
+          max-width: 100%;
         }
         .as-point {
           display: flex !important;
