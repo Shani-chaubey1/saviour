@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/styles.css';
 import { MapPin, Maximize2, IndianRupee, Building2, CheckCircle, Tag, FileText, Video } from 'lucide-react';
 import PageBanner from '../ui/PageBanner';
 import PropertyCard from '../ui/PropertyCard';

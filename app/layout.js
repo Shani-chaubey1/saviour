@@ -1,5 +1,6 @@
 import { Lato } from 'next/font/google';
 import './globals.css';
+import 'yet-another-react-lightbox/styles.css';
 
 const lato = Lato({
   subsets: ['latin'],
