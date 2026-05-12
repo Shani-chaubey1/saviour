@@ -41,10 +41,14 @@ export default function AdminShell({ children }) {
           display: flex !important;
           flex-direction: column !important;
           min-width: 0;
+          min-height: 0;
         }
         .admin-content {
           flex: 1;
           padding: 24px;
+          min-height: 0;
+          overflow-x: hidden;
+          overflow-y: auto;
         }
         @media (max-width: 768px) {
           .admin-main { margin-left: 0; }

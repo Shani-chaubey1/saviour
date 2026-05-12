@@ -12,7 +12,8 @@ export async function GET() {
 
     const [projects, posts, enquiries, testimonials, admins, recentEnquiries] = await Promise.all([
       Project.countDocuments(),
-      Post.countDocuments({ status: 'published' }),
+      /* Total posts — matches admin blog list & public listing (many legacy rows are draft in DB but still shown). */
+      Post.countDocuments(),
       Enquiry.countDocuments(),
       Testimonial.countDocuments(),
       Admin.countDocuments(),
