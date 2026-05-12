@@ -49,7 +49,7 @@ export default function PropertyDetailContent({ project, relatedProjects }) {
           <PropertyMeta project={project} typeName={typeName} typeSlug={typeSlug} />
           <div className="sidebar-form-box">
             <h3 className="sidebar-form-title">Contact Us</h3>
-            <ContactForm projectSlug={project.slug} />
+            <ContactForm projectName={project.title} />
           </div>
         </aside>
       </div>

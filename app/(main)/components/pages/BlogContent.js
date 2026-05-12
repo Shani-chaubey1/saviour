@@ -82,7 +82,7 @@ export function BlogPostContent({ post, recentPosts }) {
         <aside className="post-sidebar">
           <div className="sidebar-form-box">
             <h3 className="sidebar-form-title">Get in Touch</h3>
-            <ContactForm />
+            <ContactForm pageLabel={`Blog — ${post.title}`} />
           </div>
           {recentPosts.length > 0 && (
             <div className="recent-posts-box">
