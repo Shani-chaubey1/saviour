@@ -107,7 +107,7 @@ export default function Footer({ settings = {} }) {
 
   return (
     <footer className="ft-root">
-      <div className="ft-stats-strip">
+      {/* <div className="ft-stats-strip">
         <div className="container ft-stats-inner">
           {footerStats.map((s) => (
             <div key={`${s.num}-${s.label}`} className="ft-stat">
@@ -116,7 +116,7 @@ export default function Footer({ settings = {} }) {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
       <div className="ft-main">
         <div className="container ft-grid">

@@ -86,9 +86,6 @@ export default function HeroSlider({ slides: slidesProp }) {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Link>
-              <Link href="/contact-us" className="hs-btn-outline">
-                Talk to Expert
-              </Link>
             </div>
           </div>
         </div>
@@ -187,7 +184,7 @@ export default function HeroSlider({ slides: slidesProp }) {
           -webkit-backdrop-filter: blur(14px);
           border: 1px solid rgba(255, 255, 255, 0.28);
           border-radius: 16px;
-          padding: 28px 30px;
+          padding: 18px 30px;
           box-shadow: 0 20px 46px rgba(0, 0, 0, 0.34);
         }
         @media (max-width: 1600px) {
@@ -211,7 +208,7 @@ export default function HeroSlider({ slides: slidesProp }) {
           font-weight: 800;
           letter-spacing: 1.5px;
           text-transform: uppercase;
-          margin-bottom: 20px;
+          margin-bottom: 12px;
           opacity: 0;
           transform: translateY(24px);
           animation: none;
@@ -220,7 +217,7 @@ export default function HeroSlider({ slides: slidesProp }) {
           animation: hsIn 0.6s ease 0.1s forwards;
         }
         .hs-title {
-          font-size: clamp(32px, 5vw, 62px);
+          font-size: 32px !important;
           font-weight: 900;
           line-height: 1.1;
           letter-spacing: -0.5px;
@@ -234,10 +231,10 @@ export default function HeroSlider({ slides: slidesProp }) {
           animation: hsIn 0.6s ease 0.25s forwards;
         }
         .hs-sub {
-          font-size: clamp(14px, 1.6vw, 17px);
+          font-size: 14px !important;
           color: rgba(255, 255, 255, 0.75);
           line-height: 1.7;
-          margin-bottom: 36px;
+          margin-bottom: 12px;
           opacity: 0;
           transform: translateY(24px);
           animation: none;

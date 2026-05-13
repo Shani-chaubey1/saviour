@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Target, Eye, Heart, Award } from 'lucide-react';
 import PageBanner from '../ui/PageBanner';
 import SectionHeading from '../ui/SectionHeading';
+import { TrustBanner, CertificationsSection } from './HomePageContent';
 import { ensureAboutBlocks } from '@/lib/aboutBlocks';
 
 const MV_ICONS = [Target, Eye, Heart, Award];
@@ -21,6 +22,8 @@ export default function AboutPageContent({ sections = {}, settings = {} }) {
       {blocks.map((block, bi) => (
         <AboutBlock key={block.id || `${block.kind}-${bi}`} block={block} sections={sections} settings={settings} pageTitle={pageTitle} />
       ))}
+      <TrustBanner settings={settings} />
+      <CertificationsSection settings={settings} />
     </>
   );
 }
