@@ -131,10 +131,6 @@ export default function HeroSlider({ slides: slidesProp }) {
             />
           ))}
         </div>
-        <span className="hs-counter">
-          {String(current + 1).padStart(2, "0")} /{" "}
-          {String(slides.length).padStart(2, "0")}
-        </span>
       </div>
 
       {/* Progress bar */}
@@ -172,24 +168,24 @@ export default function HeroSlider({ slides: slidesProp }) {
         /* Content */
         .hs-content {
           position: absolute;
-          bottom: 66px;
+          bottom: 16px;
           top: auto;
           transform: none;
           left: 50%;
           margin-left: -700px;
-          width: min(760px, calc(100vw - 48px));
+          width: min(560px, calc(100vw - 48px));
           color: white;
           background: #0a0a0acf;
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
           border: 1px solid rgba(255, 255, 255, 0.28);
           border-radius: 16px;
-          padding: 18px 30px;
+          padding: 18px 20px;
           box-shadow: 0 20px 46px rgba(0, 0, 0, 0.34);
         }
         @media (max-width: 1600px) {
           .hs-content {
-            left: 34px;
+            left: 10px;
             margin-left: 0;
           }
         }
@@ -344,17 +340,20 @@ export default function HeroSlider({ slides: slidesProp }) {
         /* Controls */
         .hs-controls {
           position: absolute;
-          bottom: 28px;
-          left: 50%;
-          transform: translateX(-50%);
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
           display: flex !important;
-          align-items: center !important;
-          gap: 20px;
+          flex-direction: column !important;
+          gap: 10px;
           z-index: 10;
         }
         .hs-dots {
           display: flex !important;
-          gap: 8px;
+          flex-direction: column !important;
+          gap: 10px;
+          align-items: center !important;
+          justify-content: center !important;
         }
         .hs-dot {
           width: 8px;

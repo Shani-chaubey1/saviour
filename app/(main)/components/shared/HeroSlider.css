@@ -27,7 +27,7 @@
         /* Content */
         .hs-content {
           position: absolute;
-          bottom: 66px;
+          bottom: 16px;
           top: auto;
           transform: none;
           left: 50%;
@@ -44,7 +44,7 @@
         }
         @media (max-width: 1600px) {
           .hs-content {
-            left: 34px;
+            left: 10px;
             margin-left: 0;
           }
         }
