@@ -6,6 +6,7 @@ import {
   AboutSection,
   MissionVisionSection,
   ProjectsSection,
+  TownshipsSection,
   WhyUsSection,
   LaunchingSoonBanner,
   DevelopmentsSection,
@@ -13,7 +14,7 @@ import {
   TestimonialsSection,
   ContactSection,
 } from './components/pages/HomePageContent';
-import { getProjects, getPosts, getTestimonials, getSettings, getHeroSlides } from '@/lib/data';
+import { getProjects, getPosts, getTestimonials, getSettings, getHeroSlides, getTownships } from '@/lib/data';
 
 export const metadata = {
   title: 'Savviour Builderrs – Best Builder in Delhi-NCR',
@@ -24,12 +25,13 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [projects, posts, testimonials, settings, heroSlides] = await Promise.all([
+  const [projects, posts, testimonials, settings, heroSlides, townships] = await Promise.all([
     getProjects({ limit: 6 }),
     getPosts({ limit: 3 }),
     getTestimonials(),
     getSettings(),
     getHeroSlides(),
+    getTownships(),
   ]);
 
   return (
@@ -39,6 +41,7 @@ export default async function HomePage() {
       <CertificationsSection settings={settings} />
       <AboutSection settings={settings} willShowFull={false} />
       <ProjectsSection projects={projects} />
+      <TownshipsSection townships={townships} settings={settings} />
       <LaunchingSoonBanner data={settings} />
       <DevelopmentsSection settings={settings} />
       <TestimonialsSection testimonials={testimonials} />

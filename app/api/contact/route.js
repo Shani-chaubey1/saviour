@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Enquiry from '@/lib/models/Enquiry';
 import { parseAndValidateLeadBody } from '@/lib/leadSubmission';
+import { sendLeadToCrm, buildCrmLeadFromEnquiry } from '@/lib/crm';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +23,12 @@ export async function POST(request) {
       visitDate: data.visitDate || '',
       visitTime: data.visitTime || '',
     });
+
+    // Fire-and-forget CRM push — never blocks or fails the user response.
+    sendLeadToCrm(buildCrmLeadFromEnquiry(data)).catch((crmErr) => {
+      console.error('[CRM] unexpected error:', crmErr);
+    });
+
     return NextResponse.json({ success: true, message: 'Enquiry submitted successfully' });
   } catch (err) {
     const status = err.status || 500;

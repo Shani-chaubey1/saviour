@@ -8,6 +8,7 @@ import StatsCardsJsonEditor from './cms/StatsCardsJsonEditor';
 import LinkListJsonEditor from './cms/LinkListJsonEditor';
 import SocialIconsJsonEditor from './cms/SocialIconsJsonEditor';
 import FooterContactJsonEditor from './cms/FooterContactJsonEditor';
+import TownshipsListEditor from './cms/TownshipsListEditor';
 import { SITE_SETTINGS_GROUPS } from '../_data/siteSettingsGroups';
 
 export default function HomeSiteSettingsPanel() {
@@ -126,6 +127,8 @@ export default function HomeSiteSettingsPanel() {
                         label={f.label}
                         hint={f.hint}
                       />
+                    ) : f.type === 'townships_list' ? (
+                      <TownshipsListEditor label={f.label} hint={f.hint} />
                     ) : f.type === 'image' ? (
                       <ImageField
                         value={values[f.key] || ''}

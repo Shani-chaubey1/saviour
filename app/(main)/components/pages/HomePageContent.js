@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
 import SectionHeading from "../ui/SectionHeading";
 import PropertyCard from "../ui/PropertyCard";
 import BlogCard from "../ui/BlogCard";
@@ -1063,6 +1063,243 @@ export function ProjectsSection({ projects, settings = {} }) {
           .prs-grid {
             grid-template-columns: 1fr;
             gap: 20px;
+          }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+/* ─────────────────────────────────────────
+   5b. Townships ("Our Presence in Leading Townships")
+───────────────────────────────────────── */
+export function TownshipsSection({ townships = [], settings = {} }) {
+  if (!townships?.length) return null;
+
+  const ctaLabel = settings.townships_section_cta_label || "View Projects";
+
+  return (
+    <section className="twn-root">
+      <div className="container">
+        <SectionHeading
+          centered
+          title={
+            settings.townships_section_title ||
+            "Our Presence in Leading Townships"
+          }
+          subtitle={
+            settings.townships_section_subtitle ||
+            "Discover signature developments across Delhi-NCR\u2019s most desirable corridors."
+          }
+        />
+
+        <div className="twn-grid">
+          {townships.map((t, i) => {
+            const num = String(i + 1).padStart(2, "0");
+            const hasLink = Boolean(t.link);
+            const CardEl = hasLink ? Link : "div";
+            const cardProps = hasLink
+              ? { href: t.link, className: "twn-card twn-card-link" }
+              : { className: "twn-card" };
+
+            return (
+              <CardEl key={t._id ?? `${t.area}-${i}`} {...cardProps}>
+                <div className="twn-media">
+                  {t.image ? (
+                    <img
+                      src={t.image}
+                      alt={t.area || ""}
+                      className="twn-img"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="twn-img-fallback" aria-hidden="true">
+                      <MapPin size={40} strokeWidth={1.5} />
+                    </div>
+                  )}
+                  <span className="twn-number" aria-hidden="true">
+                    {num}
+                  </span>
+                  <span className="twn-pin" aria-hidden="true">
+                    <MapPin size={22} strokeWidth={2.2} />
+                  </span>
+                </div>
+                <div className="twn-body">
+                  <h3 className="twn-area">{t.area}</h3>
+                  {t.city && <p className="twn-city">{t.city}</p>}
+                  <span className="twn-divider" aria-hidden="true" />
+                  <span className="twn-cta">
+                    {ctaLabel}
+                    <ArrowRight size={14} />
+                  </span>
+                </div>
+              </CardEl>
+            );
+          })}
+        </div>
+      </div>
+
+      <style jsx global>{`
+        .twn-root {
+          padding: 56px 0 64px;
+          background: #ffffff;
+        }
+        .twn-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 28px;
+        }
+        .twn-card {
+          position: relative;
+          display: flex !important;
+          flex-direction: column !important;
+          background: #0c2541;
+          border-radius: 14px;
+          overflow: hidden;
+          color: #ffffff;
+          text-decoration: none !important;
+          box-shadow: 0 10px 28px rgba(12, 37, 65, 0.12);
+          transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.35s ease;
+          isolation: isolate;
+        }
+        .twn-card-link:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 22px 48px rgba(12, 37, 65, 0.28);
+        }
+        .twn-card-link:focus-visible {
+          outline: 3px solid #d4a85c;
+          outline-offset: 3px;
+        }
+
+        .twn-media {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 16 / 11;
+          overflow: hidden;
+          background: #14365c;
+        }
+        .twn-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.6s ease;
+        }
+        .twn-card-link:hover .twn-img {
+          transform: scale(1.06);
+        }
+        .twn-img-fallback {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255, 255, 255, 0.45);
+          background: linear-gradient(135deg, #14365c, #0c2541);
+        }
+
+        /* Numbered badge */
+        .twn-number {
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: rgba(12, 37, 65, 0.85);
+          color: #d4a85c;
+          border: 1.5px solid #d4a85c;
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          backdrop-filter: blur(4px);
+          z-index: 2;
+        }
+
+        /* Floating pin where image meets dark body */
+        .twn-pin {
+          position: absolute;
+          left: 50%;
+          bottom: -22px;
+          transform: translateX(-50%);
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          background: #0c2541;
+          color: #d4a85c;
+          border: 2px solid #d4a85c;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+          z-index: 3;
+        }
+
+        .twn-body {
+          padding: 36px 24px 22px;
+          text-align: center;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 6px;
+        }
+        .twn-area {
+          font-size: clamp(20px, 1.7vw, 24px);
+          font-weight: 700;
+          color: #ffffff;
+          letter-spacing: -0.2px;
+          line-height: 1.25;
+          margin: 0;
+        }
+        .twn-city {
+          font-size: 13.5px;
+          color: rgba(255, 255, 255, 0.62);
+          letter-spacing: 0.2px;
+          margin: 0;
+        }
+        .twn-divider {
+          display: block;
+          width: 56px;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.18);
+          margin: 14px auto 8px;
+        }
+        .twn-cta {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 8px;
+          font-size: 11.5px;
+          font-weight: 700;
+          letter-spacing: 1.8px;
+          text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.78);
+          transition: color 0.25s ease, gap 0.25s ease;
+        }
+        .twn-card-link:hover .twn-cta {
+          color: #d4a85c;
+          gap: 12px;
+        }
+
+        @media (max-width: 1024px) {
+          .twn-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+          }
+        }
+        @media (max-width: 640px) {
+          .twn-root {
+            padding: 40px 0 48px;
+          }
+          .twn-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+          .twn-body {
+            padding: 32px 20px 20px;
           }
         }
       `}</style>

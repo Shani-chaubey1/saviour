@@ -106,6 +106,37 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'projects_section_cta', label: 'View All CTA Label', type: 'text', hint: 'e.g. View All Projects' },
     ],
   },
+  /* ── 4b. Townships Section (Homepage) ────── */
+  {
+    id: 'townships_section',
+    label: '📍 Homepage · Townships Section',
+    fields: [
+      {
+        key: 'townships_section_title',
+        label: 'Section Heading',
+        type: 'text',
+        hint: 'e.g. Our Presence in Leading Townships',
+      },
+      {
+        key: 'townships_section_subtitle',
+        label: 'Section Subtitle',
+        type: 'text',
+        hint: 'Short tagline shown below the heading.',
+      },
+      {
+        key: 'townships_section_cta_label',
+        label: 'Card CTA Label',
+        type: 'text',
+        hint: 'Label for the link at the bottom of each card. Default: View Projects',
+      },
+      {
+        key: '__townships_list',
+        label: 'Township cards',
+        type: 'townships_list',
+        hint: 'Each row becomes one card on the homepage. Add / edit / remove inline — each save persists immediately.',
+      },
+    ],
+  },
   /* ── 5. Launching Soon Banner (Homepage) ── */
   {
     id: 'launching',
