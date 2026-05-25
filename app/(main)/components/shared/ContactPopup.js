@@ -120,7 +120,7 @@ export default function ContactPopup({
           background: white;
           border-radius: 16px;
           width: 100%;
-          max-width: 480px;
+          max-width: 580px;
           max-height: calc(100vh - 32px);
           overflow: hidden;
           display: flex !important;
