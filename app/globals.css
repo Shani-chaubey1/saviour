@@ -233,6 +233,45 @@ img {
   animation: fadeInUp 0.6s ease-out;
 }
 
+/* ── Page transition (template.js entry fade) ── */
+/* @keyframes pageEnter {
+  from { opacity: 1; transform: translate3d(0, 6px, 0); }
+  to   { opacity: 1; transform: none; }
+} */
+
+.page-enter {
+  animation: pageEnter 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  will-change: opacity, transform;
+}
+
+/* ── AOS: every <section> inside <main> reveals on scroll ──
+   The IntersectionObserver lives in app/(main)/template.js and toggles
+   `.aos-visible` once the section enters the viewport.
+   A <noscript> override in the layout keeps content visible without JS. */
+main section {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+main section.aos-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter { animation: none; }
+  main section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Responsive grid */
 .grid-2 {
   display: grid;
