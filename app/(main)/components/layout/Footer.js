@@ -49,7 +49,7 @@ function FooterNavLink({ href, className, children }) {
   );
 }
 
-export default function Footer({ settings = {} }) {
+export default function Footer({ settings = {}, contentPages = [] }) {
   const fromJson = parseJsonArray(settings.footer_stats_strip_json, [])
     .filter((s) => String(s.num || '').trim() && String(s.label || '').trim())
     .map((s) => ({ num: String(s.num).trim(), label: String(s.label).trim() }));
@@ -86,7 +86,16 @@ export default function Footer({ settings = {} }) {
   const quickParsed = parseJsonArray(settings.footer_quick_links_json, []).filter(
     (r) => (r.label || '').trim() && (r.href || '').trim(),
   );
-  const quickLinks = quickParsed.length ? quickParsed : FALLBACK_QUICK_LINKS;
+  const baseQuickLinks = quickParsed.length ? quickParsed : FALLBACK_QUICK_LINKS;
+  const dynamicFooterLinks = Array.isArray(contentPages)
+    ? contentPages
+        .filter((p) => p && p.slug && p.title)
+        .map((p) => ({ label: p.title, href: `/${p.slug}` }))
+    : [];
+  const dedupedDynamic = dynamicFooterLinks.filter(
+    (d) => !baseQuickLinks.some((q) => (q.href || '').trim().toLowerCase() === d.href.toLowerCase()),
+  );
+  const quickLinks = [...baseQuickLinks, ...dedupedDynamic];
 
   const projParsed = parseJsonArray(settings.footer_project_links_json, []).filter(
     (r) => (r.label || '').trim() && (r.href || '').trim(),

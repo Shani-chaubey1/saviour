@@ -17,6 +17,10 @@ export async function POST(request) {
       message: data.message || '',
       project: data.project,
       source: 'website',
+      formType: data.formType,
+      preferredDateTime: data.preferredDateTime || null,
+      visitDate: data.visitDate || '',
+      visitTime: data.visitTime || '',
     });
     return NextResponse.json({ success: true, message: 'Enquiry submitted successfully' });
   } catch (err) {

@@ -72,7 +72,11 @@ export default function ContactPageContent({ sections = {}, settings = {} }) {
             <div className="contact-form-col">
               <div className="form-box">
                 <h3 className="form-box-title">{formTitle}</h3>
-                <ContactForm pageLabel={pageTitle} />
+                <ContactForm
+                  pageLabel={pageTitle}
+                  tabConnectLabel={settings.contact_form_tab_connect_label || ''}
+                  tabVisitLabel={settings.contact_form_tab_visit_label || ''}
+                />
               </div>
             </div>
           </div>

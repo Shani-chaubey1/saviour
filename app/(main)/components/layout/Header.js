@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
@@ -42,6 +42,11 @@ export default function Header({ settings = {} }) {
 
   const isActive = (href) =>
     pathname === href || pathname.startsWith(href + "/");
+
+  const ctaLabel = settings.header_cta_label || "Get in Touch";
+  const ctaPhone = settings.site_phone || settings.site_phone_2 || "";
+  const ctaTel = ctaPhone ? `tel:${ctaPhone.replace(/\s/g, "")}` : "";
+  const ctaHref = ctaTel || settings.header_cta_url || "/contact-us";
 
   return (
     <>
@@ -98,9 +103,20 @@ export default function Header({ settings = {} }) {
               </div>
             ))}
 
-            <Link href={settings.header_cta_url || '/contact-us'} className="lx-cta-btn">
-              {settings.header_cta_label || 'Get in Touch'}
-            </Link>
+            {ctaPhone ? (
+              <a href={ctaHref} className="lx-cta-btn lx-cta-phone" aria-label={`${ctaPhone}`}>
+                <span className="lx-cta-icon" aria-hidden="true">
+                  <Phone size={16} />
+                </span>
+                <span className="lx-cta-text">
+                  <span className="lx-cta-num">{ctaPhone}</span>
+                </span>
+              </a>
+            ) : (
+              <Link href={settings.header_cta_url || '/contact-us'} className="lx-cta-btn">
+                {ctaLabel}
+              </Link>
+            )}
           </nav>
 
           {/* Mobile toggle */}
@@ -159,13 +175,28 @@ export default function Header({ settings = {} }) {
               </div>
             ))}
             <div className="lx-mob-cta">
-              <Link
-                href="/contact-us"
-                className="lx-cta-btn"
-                style={{ display: "inline-flex" }}
-              >
-                Get in Touch
-              </Link>
+              {ctaPhone ? (
+                <a
+                  href={ctaHref}
+                  className="lx-cta-btn lx-cta-phone"
+                  aria-label={`${ctaPhone}`}
+                >
+                  <span className="lx-cta-icon" aria-hidden="true">
+                    <Phone size={16} />
+                  </span>
+                  <span className="lx-cta-text">
+                    <span className="lx-cta-num">{ctaPhone}</span>
+                  </span>
+                </a>
+              ) : (
+                <Link
+                  href={settings.header_cta_url || "/contact-us"}
+                  className="lx-cta-btn"
+                  style={{ display: "inline-flex" }}
+                >
+                  {ctaLabel}
+                </Link>
+              )}
             </div>
           </nav>
         )}
@@ -366,6 +397,42 @@ export default function Header({ settings = {} }) {
             var(--green-light, #00a04d),
             var(--green, #006833)
           );
+        }
+
+        .lx-cta-phone {
+          padding: 8px 16px 8px 12px;
+          gap: 10px;
+          align-items: center;
+        }
+        .lx-cta-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.15);
+          color: white;
+          flex-shrink: 0;
+        }
+        .lx-cta-text {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: flex-start;
+          line-height: 1.15;
+          text-align: left;
+        }
+        .lx-cta-label {
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          opacity: 0.85;
+        }
+        .lx-cta-num {
+          font-size: 14px;
+          font-weight: 800;
+          letter-spacing: 0.2px;
         }
 
         /* Mobile toggle */

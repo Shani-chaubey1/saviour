@@ -1,4 +1,8 @@
-/** All editable setting keys grouped for the homepage + global site content panel. */
+/**
+ * All editable setting keys grouped for the homepage + global site content panel.
+ * Order mirrors the actual section order on the live site (globals first, then
+ * homepage sections in render order, then About-page sections, then footer/SEO).
+ */
 export const SITE_SETTINGS_GROUPS = [
   /* ── Brand & General ──────────────────────── */
   {
@@ -37,10 +41,10 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'topbar_tagline', label: 'Top Bar Tagline / Promo Text', type: 'text', hint: 'Short text shown in top bar, e.g. "Best Builder in Delhi-NCR"' },
     ],
   },
-  /* ── Stats (shared) ──────────────────────── */
+  /* ── Stats (shared across site) ──────────── */
   {
     id: 'stats',
-    label: '📊 Stats (used across site)',
+    label: '📊 Stats (shared)',
     fields: [
       { key: 'stat_years', label: 'Years of Experience (e.g. 25+)', type: 'text' },
       { key: 'stat_projects', label: 'Projects Delivered (e.g. 50+)', type: 'text' },
@@ -49,23 +53,10 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'stat_visitors', label: 'Monthly Visitors (e.g. 30K+)', type: 'text', hint: 'Used on About page stats row.' },
     ],
   },
-  /* ── Certifications Banner ───────────────── */
-  {
-    id: 'certifications',
-    label: '🏅 Certifications Banner (Below Hero)',
-    fields: [
-      { key: 'cert_heading', label: 'Section Heading', type: 'text', hint: 'e.g. RERA Registered Projects & Member of CREDAI' },
-      { key: 'cert_logo_1', label: 'Certification Logo 1 (RERA)', type: 'image', hint: 'Large certification logo — e.g. RERA Approved seal' },
-      { key: 'cert_logo_1_alt', label: 'Logo 1 Alt Text', type: 'text' },
-      { key: 'cert_logo_2', label: 'Certification Logo 2 (CREDAI)', type: 'image', hint: 'Large certification logo — e.g. CREDAI Member badge' },
-      { key: 'cert_logo_2_alt', label: 'Logo 2 Alt Text', type: 'text' },
-      { key: 'cert_partner_logos', label: 'Partner / Project Logos', type: 'multi_image', hint: 'Upload or paste URLs. Each logo appears in the strip below the RERA/CREDAI badges.' },
-    ],
-  },
-  /* ── Trust Banner ────────────────────────── */
+  /* ── 1. Trust Banner (Homepage) ──────────── */
   {
     id: 'trust',
-    label: '🏆 Trust Banner (Homepage)',
+    label: '🏆 Homepage · Trust Banner',
     fields: [
       { key: 'trust_tag', label: 'Badge Label', type: 'text', hint: 'e.g. A Name You Can Trust Upon' },
       { key: 'trust_intro', label: 'Intro Paragraph', type: 'textarea', hint: 'The paragraph below the company name.' },
@@ -75,72 +66,50 @@ export const SITE_SETTINGS_GROUPS = [
         key: 'trust_banner_stats_json',
         label: 'Stat cards (right column)',
         type: 'stats_cards_json',
-        hint: 'Add or remove cards; each row is a number + label. If empty, the four global stats fields (Years, Projects, etc.) are used.',
+        hint: 'Add or remove cards; each row is a number + label. If empty, the four global stats fields are used.',
       },
     ],
   },
-  /* ── About Section (Homepage) ────────────── */
+  /* ── 2. Certifications Banner (Homepage) ── */
+  {
+    id: 'certifications',
+    label: '🏅 Homepage · Certifications Banner',
+    fields: [
+      { key: 'cert_heading', label: 'Section Heading', type: 'text', hint: 'e.g. RERA Registered Projects & Member of CREDAI' },
+      { key: 'cert_logo_1', label: 'Certification Logo 1 (RERA)', type: 'image', hint: 'Large certification logo — e.g. RERA Approved seal' },
+      { key: 'cert_logo_1_alt', label: 'Logo 1 Alt Text', type: 'text' },
+      { key: 'cert_logo_2', label: 'Certification Logo 2 (CREDAI)', type: 'image', hint: 'Large certification logo — e.g. CREDAI Member badge' },
+      { key: 'cert_logo_2_alt', label: 'Logo 2 Alt Text', type: 'text' },
+      { key: 'cert_partner_logos', label: 'Partner / Project Logos', type: 'multi_image', hint: 'Upload or paste URLs. Each logo appears in the strip below the RERA/CREDAI badges.' },
+    ],
+  },
+  /* ── 3. About Banner (Homepage) ──────────── */
   {
     id: 'about',
-    label: '🌿 About Section (Homepage)',
+    label: '🖼️ Homepage · About Banner',
     fields: [
-      { key: 'about_heading', label: 'Section Heading', type: 'text' },
-      { key: 'about_subtitle', label: 'Section Subtitle', type: 'text' },
-      { key: 'about_desc_1', label: 'Paragraph 1', type: 'textarea' },
-      { key: 'about_desc_2', label: 'Paragraph 2', type: 'textarea' },
-      { key: 'about_image', label: 'Side Image', type: 'image', hint: 'Shown left of the about text.' },
-      { key: 'about_full_image', label: 'Bottom Full-Width Image', type: 'image', hint: 'Displayed as a full-width band below the about section.' },
-      { key: 'about_badge_num', label: 'Badge Number (e.g. 25+)', type: 'text' },
-      { key: 'about_badge_text', label: 'Badge Text (e.g. Years of Excellence)', type: 'text' },
-      { key: 'about_points', label: 'Bullet Points', type: 'textarea', hint: 'One point per line.' },
-      { key: 'about_cta_label', label: 'CTA Button Label', type: 'text' },
-      { key: 'about_cta_url', label: 'CTA Button URL', type: 'text' },
+      {
+        key: 'about_full_image',
+        label: 'Full-width Banner Image',
+        type: 'image',
+        hint: 'Displayed as a full-width image band on the homepage between Certifications and Projects.',
+      },
     ],
   },
-  /* ── Mission / Vision / Quality ─────────── */
-  {
-    id: 'mission',
-    label: '🎯 Mission / Vision / Quality (Homepage)',
-    fields: [
-      { key: 'mission_title', label: 'Card 1 Title', type: 'text' },
-      { key: 'mission_desc', label: 'Card 1 Description', type: 'textarea' },
-      { key: 'vision_title', label: 'Card 2 Title', type: 'text' },
-      { key: 'vision_desc', label: 'Card 2 Description', type: 'textarea' },
-      { key: 'quality_title', label: 'Card 3 Title', type: 'text' },
-      { key: 'quality_desc', label: 'Card 3 Description', type: 'textarea' },
-    ],
-  },
-  /* ── Projects Section ────────────────────── */
+  /* ── 4. Projects Section (Homepage) ──────── */
   {
     id: 'projects_section',
-    label: '🏗 Projects Section (Homepage)',
+    label: '🏗 Homepage · Projects Section',
     fields: [
       { key: 'projects_section_title', label: 'Section Heading', type: 'text', hint: 'e.g. Current & Future Projects' },
       { key: 'projects_section_subtitle', label: 'Section Subtitle', type: 'text' },
       { key: 'projects_section_cta', label: 'View All CTA Label', type: 'text', hint: 'e.g. View All Projects' },
     ],
   },
-  /* ── Why Choose Us ───────────────────────── */
-  {
-    id: 'whyus',
-    label: '💡 Why Choose Us (Homepage)',
-    fields: [
-      { key: 'why_section_subtitle', label: 'Section Subtitle', type: 'text' },
-      { key: 'why_1_icon', label: 'Pillar 1 Icon (emoji)', type: 'text', hint: 'e.g. 🏆' },
-      { key: 'why_1_title', label: 'Pillar 1 Title', type: 'text' },
-      { key: 'why_1_desc', label: 'Pillar 1 Description', type: 'textarea' },
-      { key: 'why_2_icon', label: 'Pillar 2 Icon (emoji)', type: 'text', hint: 'e.g. 🌿' },
-      { key: 'why_2_title', label: 'Pillar 2 Title', type: 'text' },
-      { key: 'why_2_desc', label: 'Pillar 2 Description', type: 'textarea' },
-      { key: 'why_3_icon', label: 'Pillar 3 Icon (emoji)', type: 'text', hint: 'e.g. 💎' },
-      { key: 'why_3_title', label: 'Pillar 3 Title', type: 'text' },
-      { key: 'why_3_desc', label: 'Pillar 3 Description', type: 'textarea' },
-    ],
-  },
-  /* ── Launching Soon Banner ───────────────── */
+  /* ── 5. Launching Soon Banner (Homepage) ── */
   {
     id: 'launching',
-    label: '🚀 Launching Soon Banner (Homepage)',
+    label: '🚀 Homepage · Launching Soon Banner',
     fields: [
       { key: 'launching_soon_badge', label: 'Badge Label', type: 'text', hint: 'e.g. Launching Soon' },
       { key: 'launching_soon_title', label: 'Project Name', type: 'text' },
@@ -152,10 +121,10 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'launching_soon_secondary_url', label: 'Secondary CTA URL', type: 'text' },
     ],
   },
-  /* ── Developments Section ────────────────── */
+  /* ── 6. Developments Section (Homepage) ─── */
   {
     id: 'developments',
-    label: '🏗️ Developments Section (Homepage)',
+    label: '🏗️ Homepage · Developments Section',
     fields: [
       { key: 'dev_section_title', label: 'Section Heading', type: 'text', hint: 'e.g. Explore More' },
       { key: 'dev_section_subtitle', label: 'Section Subtitle', type: 'text' },
@@ -176,32 +145,51 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'dev_3_tag', label: 'Card 3 Tag Label (e.g. Investor)', type: 'text' },
     ],
   },
-  /* ── Blog Section (Homepage) ─────────────── */
-  {
-    id: 'blog_section',
-    label: '📰 Blog Section (Homepage)',
-    fields: [
-      { key: 'blog_section_title', label: 'Section Heading', type: 'text', hint: 'e.g. News & Events' },
-      { key: 'blog_section_subtitle', label: 'Section Subtitle', type: 'text' },
-      { key: 'blog_section_view_all', label: '"View All" link label', type: 'text', hint: 'e.g. View All' },
-    ],
-  },
-  /* ── Testimonials Section ────────────────── */
+  /* ── 7. Testimonials Section (Homepage) ─── */
   {
     id: 'testimonials_section',
-    label: '💬 Testimonials Section',
+    label: '💬 Homepage · Testimonials Section',
     fields: [
       { key: 'testimonials_section_title', label: 'Section Heading', type: 'text', hint: 'e.g. What Clients Say' },
       { key: 'testimonials_section_subtitle', label: 'Section Subtitle', type: 'text' },
     ],
   },
-  /* ── Contact CTA Section (Homepage) ─────── */
+  /* ── 8. Contact CTA Section (Homepage) ──── */
   {
     id: 'contact_section',
-    label: '📞 Contact CTA Section (Homepage)',
+    label: '📞 Homepage · Contact CTA Section',
     fields: [
       { key: 'contact_section_desc', label: 'Description Paragraph', type: 'textarea', hint: 'Intro text in the homepage contact section.' },
       { key: 'contact_form_title', label: 'Contact Form Box Title', type: 'text', hint: 'e.g. Send a Message' },
+      {
+        key: 'contact_form_tab_connect_label',
+        label: 'Form Tab 1 Label — Connect',
+        type: 'text',
+        hint: 'Label for the first tab (default: "Connect with an Agent"). Used everywhere the contact form appears.',
+      },
+      {
+        key: 'contact_form_tab_visit_label',
+        label: 'Form Tab 2 Label — Visit',
+        type: 'text',
+        hint: 'Label for the second tab (default: "Book a Visit").',
+      },
+    ],
+  },
+  /* ── About Page · Why Choose Us ──────────── */
+  {
+    id: 'whyus',
+    label: '💡 About Page · Why Choose Us',
+    fields: [
+      { key: 'why_section_subtitle', label: 'Section Subtitle', type: 'text' },
+      { key: 'why_1_icon', label: 'Pillar 1 Icon (emoji)', type: 'text', hint: 'e.g. 🏆' },
+      { key: 'why_1_title', label: 'Pillar 1 Title', type: 'text' },
+      { key: 'why_1_desc', label: 'Pillar 1 Description', type: 'textarea' },
+      { key: 'why_2_icon', label: 'Pillar 2 Icon (emoji)', type: 'text', hint: 'e.g. 🌿' },
+      { key: 'why_2_title', label: 'Pillar 2 Title', type: 'text' },
+      { key: 'why_2_desc', label: 'Pillar 2 Description', type: 'textarea' },
+      { key: 'why_3_icon', label: 'Pillar 3 Icon (emoji)', type: 'text', hint: 'e.g. 💎' },
+      { key: 'why_3_title', label: 'Pillar 3 Title', type: 'text' },
+      { key: 'why_3_desc', label: 'Pillar 3 Description', type: 'textarea' },
     ],
   },
   /* ── Footer ──────────────────────────────── */

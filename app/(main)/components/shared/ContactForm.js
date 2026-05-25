@@ -2,7 +2,17 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { User, Mail, Phone, MessageSquare, Send, CheckCircle } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  MessageSquare,
+  Send,
+  CheckCircle,
+  CalendarClock,
+  Calendar,
+  Clock,
+} from 'lucide-react';
 import {
   validateLeadFormFields,
   resolveLeadProjectField,
@@ -10,18 +20,40 @@ import {
 } from '@/lib/leadSubmission';
 import './ContactForm.css';
 
-const INITIAL = { name: '', email: '', phone: '', message: '' };
+const INITIAL = {
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+  preferredDateTime: '',
+  visitDate: '',
+  visitTime: '',
+};
+
+const DEFAULT_CONNECT_LABEL = 'Connect with an Agent';
+const DEFAULT_VISIT_LABEL = 'Book a Visit';
 
 /**
- * @param {string} [projectName] – Property / project display name (detail page).
- * @param {string} [pageLabel] – Override source label when not a project page (e.g. "Blog — Post title").
+ * @param {string} [projectName]
+ * @param {string} [pageLabel]
+ * @param {string} [tabConnectLabel]
+ * @param {string} [tabVisitLabel]
  */
-export default function ContactForm({ projectName = '', pageLabel = '' }) {
+export default function ContactForm({
+  projectName = '',
+  pageLabel = '',
+  tabConnectLabel = '',
+  tabVisitLabel = '',
+}) {
   const pathname = usePathname() || '/';
+  const [tab, setTab] = useState('connect');
   const [form, setForm] = useState({ ...INITIAL });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const connectLabel = tabConnectLabel?.trim() || DEFAULT_CONNECT_LABEL;
+  const visitLabel = tabVisitLabel?.trim() || DEFAULT_VISIT_LABEL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,9 +61,15 @@ export default function ContactForm({ projectName = '', pageLabel = '' }) {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
+  const switchTab = (next) => {
+    if (next === tab) return;
+    setTab(next);
+    setErrors({});
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errs = validateLeadFormFields(form);
+    const errs = validateLeadFormFields({ ...form, formType: tab });
     if (Object.keys(errs).length) {
       setErrors(errs);
       return;
@@ -43,6 +81,10 @@ export default function ContactForm({ projectName = '', pageLabel = '' }) {
       phone: form.phone.trim(),
       message: form.message.trim(),
       project,
+      formType: tab,
+      preferredDateTime: tab === 'connect' ? form.preferredDateTime.trim() : '',
+      visitDate: tab === 'visit' ? form.visitDate.trim() : '',
+      visitTime: tab === 'visit' ? form.visitTime.trim() : '',
     };
 
     setLoading(true);
@@ -75,89 +117,178 @@ export default function ContactForm({ projectName = '', pageLabel = '' }) {
     );
   }
 
+  const isConnect = tab === 'connect';
+  const submitText = isConnect ? 'Send Enquiry' : 'Confirm Visit';
+
   return (
-    <form onSubmit={handleSubmit} className="contact-form" noValidate>
-      <div className="form-group">
-        <label htmlFor="name" className="form-label">
-          <User size={14} /> Your Name <span className="req">*</span>
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Enter your full name"
-          className={`form-input${errors.name ? ' error' : ''}`}
-          autoComplete="name"
-        />
-        {errors.name && <span className="error-msg">{errors.name}</span>}
+    <div className="cf-wrap">
+      <div className="cf-tabs" role="tablist" aria-label="Enquiry type">
+        <button
+          type="button"
+          role="tab"
+          id="cf-tab-connect"
+          aria-selected={isConnect}
+          aria-controls="cf-panel"
+          className={`cf-tab${isConnect ? ' cf-tab-active' : ''}`}
+          onClick={() => switchTab('connect')}
+        >
+          {connectLabel}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="cf-tab-visit"
+          aria-selected={!isConnect}
+          aria-controls="cf-panel"
+          className={`cf-tab${!isConnect ? ' cf-tab-active' : ''}`}
+          onClick={() => switchTab('visit')}
+        >
+          {visitLabel}
+        </button>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="email" className="form-label">
-          <Mail size={14} /> Your Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          placeholder="Enter your email address"
-          className={`form-input${errors.email ? ' error' : ''}`}
-          autoComplete="email"
-        />
-        {errors.email && <span className="error-msg">{errors.email}</span>}
-      </div>
+      <form
+        id="cf-panel"
+        role="tabpanel"
+        aria-labelledby={isConnect ? 'cf-tab-connect' : 'cf-tab-visit'}
+        onSubmit={handleSubmit}
+        className="contact-form"
+        noValidate
+      >
+        <div className="form-group">
+          <label htmlFor="name" className="form-label">
+            <User size={14} /> Your Name <span className="req">*</span>
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={form.name}
+            onChange={handleChange}
+            placeholder="Enter your full name"
+            className={`form-input${errors.name ? ' error' : ''}`}
+            autoComplete="name"
+          />
+          {errors.name && <span className="error-msg">{errors.name}</span>}
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="phone" className="form-label">
-          <Phone size={14} /> Your Number <span className="req">*</span>
-        </label>
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          value={form.phone}
-          onChange={handleChange}
-          placeholder="Enter your phone number"
-          className={`form-input${errors.phone ? ' error' : ''}`}
-          autoComplete="tel"
-        />
-        {errors.phone && <span className="error-msg">{errors.phone}</span>}
-      </div>
+        <div className="form-group">
+          <label htmlFor="email" className="form-label">
+            <Mail size={14} /> Your Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Enter your email address"
+            className={`form-input${errors.email ? ' error' : ''}`}
+            autoComplete="email"
+          />
+          {errors.email && <span className="error-msg">{errors.email}</span>}
+        </div>
 
-      <div className="form-group">
-        <label htmlFor="message" className="form-label">
-          <MessageSquare size={14} /> Message
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          value={form.message}
-          onChange={handleChange}
-          placeholder="How can we help you?"
-          rows={3}
-          className="form-input form-textarea"
-        />
-      </div>
+        <div className="form-group">
+          <label htmlFor="phone" className="form-label">
+            <Phone size={14} /> Your Number <span className="req">*</span>
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="Enter your phone number"
+            className={`form-input${errors.phone ? ' error' : ''}`}
+            autoComplete="tel"
+          />
+          {errors.phone && <span className="error-msg">{errors.phone}</span>}
+        </div>
 
-      {errors.submit && <div className="submit-error">{errors.submit}</div>}
-
-      <button type="submit" className="submit-btn" disabled={loading}>
-        {loading ? (
-          <span className="loading-dots">
-            Sending<span>.</span>
-            <span>.</span>
-            <span>.</span>
-          </span>
+        {isConnect ? (
+          <div className="form-group">
+            <label htmlFor="preferredDateTime" className="form-label">
+              <CalendarClock size={14} /> Preferred Date &amp; Time
+            </label>
+            <input
+              id="preferredDateTime"
+              name="preferredDateTime"
+              type="datetime-local"
+              value={form.preferredDateTime}
+              onChange={handleChange}
+              className={`form-input${errors.preferredDateTime ? ' error' : ''}`}
+            />
+            {errors.preferredDateTime && (
+              <span className="error-msg">{errors.preferredDateTime}</span>
+            )}
+          </div>
         ) : (
-          <>
-            <Send size={16} /> Send Message
-          </>
+          <div className="form-group">
+            <label htmlFor="visitDate" className="form-label">
+              <Calendar size={14} /> Visit Date <span className="req">*</span>
+            </label>
+            <input
+              id="visitDate"
+              name="visitDate"
+              type="date"
+              value={form.visitDate}
+              onChange={handleChange}
+              className={`form-input${errors.visitDate ? ' error' : ''}`}
+              min={new Date().toISOString().slice(0, 10)}
+            />
+            {errors.visitDate && <span className="error-msg">{errors.visitDate}</span>}
+          </div>
         )}
-      </button>
-    </form>
+
+        {!isConnect && (
+          <div className="form-group">
+            <label htmlFor="visitTime" className="form-label">
+              <Clock size={14} /> Visit Time <span className="req">*</span>
+            </label>
+            <input
+              id="visitTime"
+              name="visitTime"
+              type="time"
+              value={form.visitTime}
+              onChange={handleChange}
+              className={`form-input${errors.visitTime ? ' error' : ''}`}
+            />
+            {errors.visitTime && <span className="error-msg">{errors.visitTime}</span>}
+          </div>
+        )}
+
+        <div className={`form-group${isConnect ? ' span-2' : ''}`}>
+          <label htmlFor="message" className="form-label">
+            <MessageSquare size={14} /> Message
+          </label>
+          <input
+            id="message"
+            name="message"
+            type="text"
+            value={form.message}
+            onChange={handleChange}
+            placeholder="How can we help you?"
+            className="form-input"
+          />
+        </div>
+
+        {errors.submit && <div className="submit-error span-2">{errors.submit}</div>}
+
+        <button type="submit" className="submit-btn span-2" disabled={loading}>
+          {loading ? (
+            <span className="loading-dots">
+              Sending<span>.</span>
+              <span>.</span>
+              <span>.</span>
+            </span>
+          ) : (
+            <>
+              <Send size={16} /> {submitText}
+            </>
+          )}
+        </button>
+      </form>
+    </div>
   );
 }

@@ -77,11 +77,6 @@ export default function AdminHeader({ admin, onMenuToggle }) {
 
         {/* Right */}
         <div className="ah-right">
-          <button className="ah-bell-btn" aria-label="Notifications">
-            <FaBell size={14} />
-            <span className="ah-notif-dot" />
-          </button>
-
           <div className="ah-user-wrap">
             <button className="ah-user-trigger" onClick={() => setDropdownOpen(!dropdownOpen)}>
               <div className="ah-avatar">

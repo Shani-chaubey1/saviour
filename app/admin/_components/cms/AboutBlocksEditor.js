@@ -28,6 +28,8 @@ function emptyBlock(kind) {
         subtitle: '',
         html: '',
         image: '',
+        ctaPrimaryLabel: '',
+        ctaSecondaryLabel: '',
       };
     case 'stats_row':
       return { id: newId(), kind, items: [{ num: '', label: '' }] };
@@ -135,6 +137,30 @@ export default function AboutBlocksEditor({ value, onChange, label, hint }) {
                   previewW={280}
                   previewH={160}
                 />
+                <div className="ab-cta-grid">
+                  <div className="ab-cta-col">
+                    <label className="ab-sublabel">Primary CTA button label</label>
+                    <input
+                      type="text"
+                      className="ab-inp"
+                      placeholder="e.g. Schedule a Visit"
+                      value={block.ctaPrimaryLabel ?? ''}
+                      onChange={(e) => patchBlock(i, { ctaPrimaryLabel: e.target.value })}
+                    />
+                    <p className="ab-cta-hint">Leave blank to hide. Opens a contact popup on click.</p>
+                  </div>
+                  <div className="ab-cta-col">
+                    <label className="ab-sublabel">Secondary CTA button label</label>
+                    <input
+                      type="text"
+                      className="ab-inp"
+                      placeholder="e.g. Download Brochure"
+                      value={block.ctaSecondaryLabel ?? ''}
+                      onChange={(e) => patchBlock(i, { ctaSecondaryLabel: e.target.value })}
+                    />
+                    <p className="ab-cta-hint">Leave blank to hide. Opens a contact popup on click.</p>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -417,6 +443,11 @@ export default function AboutBlocksEditor({ value, onChange, label, hint }) {
           background: #fef2f2;
           color: #b91c1c;
         }
+        .ab-cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .ab-cta-col { display: flex; flex-direction: column; gap: 6px; }
+        .ab-sublabel { font-size: 12px; font-weight: 600; color: #374151; }
+        .ab-cta-hint { font-size: 11px; color: #9ca3af; margin: 0; }
+        @media (max-width: 640px) { .ab-cta-grid { grid-template-columns: 1fr; } }
         .ab-add-row { margin-top: 4px; }
         .ab-select {
           padding: 10px 14px;

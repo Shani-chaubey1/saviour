@@ -1,18 +1,21 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { Target, Eye, Heart, Award } from 'lucide-react';
-import PageBanner from '../ui/PageBanner';
-import SectionHeading from '../ui/SectionHeading';
-import { TrustBanner, CertificationsSection } from './HomePageContent';
-import { ensureAboutBlocks } from '@/lib/aboutBlocks';
+import { ensureAboutBlocks } from "@/lib/aboutBlocks";
+import { Award, Eye, Heart, Target } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import PageBanner from "../ui/PageBanner";
+import SectionHeading from "../ui/SectionHeading";
+import ContactPopup from "../shared/ContactPopup";
+import { CertificationsSection, WhyUsSection } from "./HomePageContent";
 
 const MV_ICONS = [Target, Eye, Heart, Award];
 
-const FALLBACK_IMG = 'https://saviourgroup.in/wp-content/uploads/2025/05/about.png';
+const FALLBACK_IMG =
+  "https://saviourgroup.in/wp-content/uploads/2025/05/about.png";
 
 export default function AboutPageContent({ sections = {}, settings = {} }) {
-  const pageTitle = sections.page_title?.trim() || 'About Us';
+  const pageTitle = sections.page_title?.trim() || "About Us";
   const bannerLabel = pageTitle;
   const blocks = ensureAboutBlocks(sections);
 
@@ -20,27 +23,33 @@ export default function AboutPageContent({ sections = {}, settings = {} }) {
     <>
       <PageBanner title={bannerLabel} breadcrumbs={[{ label: bannerLabel }]} />
       {blocks.map((block, bi) => (
-        <AboutBlock key={block.id || `${block.kind}-${bi}`} block={block} sections={sections} settings={settings} pageTitle={pageTitle} />
+        <AboutBlock
+          key={block.id || `${block.kind}-${bi}`}
+          block={block}
+          sections={sections}
+          settings={settings}
+          pageTitle={pageTitle}
+        />
       ))}
-      <TrustBanner settings={settings} />
-      <CertificationsSection settings={settings} />
+      <WhyUsSection settings={settings} />
     </>
   );
 }
 
 function AboutBlock({ block, sections, settings, pageTitle }) {
   switch (block.kind) {
-    case 'intro_split':
-      return <IntroSplitBlock block={block} sections={sections} settings={settings} pageTitle={pageTitle} />;
-    case 'stats_row':
+    case "intro_split":
+      return (
+        <IntroSplitBlock
+          block={block}
+          sections={sections}
+          settings={settings}
+          pageTitle={pageTitle}
+        />
+      );
+    case "stats_row":
       return <StatsRowBlock block={block} />;
-    case 'team':
-      return <TeamBlock block={block} />;
-    case 'chairman':
-      return <ChairmanBlock block={block} />;
-    case 'mission_grid':
-      return <MissionGridBlock block={block} />;
-    case 'html_section':
+    case "html_section":
       return <HtmlSectionBlock block={block} />;
     default:
       return null;
@@ -48,9 +57,19 @@ function AboutBlock({ block, sections, settings, pageTitle }) {
 }
 
 function IntroSplitBlock({ block, sections, settings, pageTitle }) {
-  const sideImage = (block.image || '').trim() || settings.about_image || FALLBACK_IMG;
-  const title = (block.title || '').trim() || pageTitle;
-  const subtitle = (block.subtitle || '').trim() || sections.tagline?.trim();
+  const sideImage =
+    (block.image || "").trim() || settings.about_image || FALLBACK_IMG;
+  const title = (block.title || "").trim() || pageTitle;
+  const subtitle = (block.subtitle || "").trim() || sections.tagline?.trim();
+
+  const ctaPrimary = (block.ctaPrimaryLabel || "").trim();
+  const ctaSecondary = (block.ctaSecondaryLabel || "").trim();
+  const hasCtas = Boolean(ctaPrimary || ctaSecondary);
+
+  const [popup, setPopup] = useState(null);
+
+  const openPopup = (label) => setPopup(label);
+  const closePopup = () => setPopup(null);
 
   return (
     <section className="about-sec">
@@ -58,28 +77,155 @@ function IntroSplitBlock({ block, sections, settings, pageTitle }) {
         <div className="about-text-col">
           <SectionHeading title={title} subtitle={subtitle || undefined} />
           {block.html?.trim() ? (
-            <div className="about-intro-html" dangerouslySetInnerHTML={{ __html: block.html }} />
+            <div
+              className="about-intro-html"
+              dangerouslySetInnerHTML={{ __html: block.html }}
+            />
           ) : null}
         </div>
-        <div className="about-img-col">
-          <Image
-            src={sideImage}
-            alt={title}
-            fill
-            className="about-img"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
+        <div className="about-img-col-wrap">
+          <div className="about-img-col">
+            <Image
+              src={sideImage}
+              alt={title}
+              fill
+              className="about-img"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          </div>
+          {hasCtas && (
+            <div className="about-cta-row">
+              {ctaPrimary && (
+                <button
+                  type="button"
+                  className="about-cta about-cta-primary"
+                  onClick={() => openPopup(ctaPrimary)}
+                >
+                  {ctaPrimary}
+                </button>
+              )}
+              {ctaSecondary && (
+                <button
+                  type="button"
+                  className="about-cta about-cta-secondary"
+                  onClick={() => openPopup(ctaSecondary)}
+                >
+                  {ctaSecondary}
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
+      <ContactPopup
+        open={Boolean(popup)}
+        onClose={closePopup}
+        title={popup || "Get in Touch"}
+        pageLabel={`About — ${popup || "CTA"}`}
+        tabConnectLabel={settings.contact_form_tab_connect_label || ""}
+        tabVisitLabel={settings.contact_form_tab_visit_label || ""}
+      />
       <style jsx global>{`
-        .about-sec { padding: 80px 0; background: white; }
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+        .about-sec {
+          padding: 46px 0;
+          background: white;
+        }
+        .about-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 64px;
+          align-items: start;
+        }
         .about-text-col p,
-        .about-intro-html { font-size: 15px; color: #555; line-height: 1.8; margin-bottom: 16px; }
-        .about-intro-html p { font-size: 15px; color: #555; line-height: 1.8; margin-bottom: 16px; }
-        .about-img-col { position: relative; height: 540px; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
-        .about-img { object-fit: cover; }
-        @media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 40px; } .about-img-col { height: 360px; } }
+        .about-intro-html {
+          font-size: 15px;
+          color: #555;
+          line-height: 1.8;
+          margin-bottom: 16px;
+        }
+        .about-intro-html p {
+          font-size: 15px;
+          color: #555;
+          line-height: 1.8;
+          margin-bottom: 16px;
+        }
+        .about-img-col-wrap {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .about-img-col {
+          position: relative;
+          height: 540px;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+        .about-img {
+          object-fit: cover;
+        }
+        .about-cta-row {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .about-cta {
+          min-height: 44px;
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.3px;
+          cursor: pointer;
+          border: 2px solid transparent;
+          transition:
+            transform 0.18s ease,
+            box-shadow 0.18s ease,
+            background 0.18s ease,
+            color 0.18s ease;
+        }
+        .about-cta:focus-visible {
+          outline: 2px solid var(--green, #006833);
+          outline-offset: 3px;
+        }
+        .about-cta-primary {
+          background: linear-gradient(
+            135deg,
+            var(--green, #006833),
+            var(--green-dark, #004d26)
+          );
+          color: white;
+          box-shadow: 0 6px 18px rgba(0, 104, 51, 0.28);
+        }
+        .about-cta-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 26px rgba(0, 104, 51, 0.36);
+        }
+        .about-cta-secondary {
+          background: white;
+          color: var(--green, #006833);
+          border-color: var(--green, #006833);
+        }
+        .about-cta-secondary:hover {
+          background: var(--green, #006833);
+          color: white;
+          transform: translateY(-2px);
+        }
+        @media (max-width: 1024px) {
+          .about-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+          .about-img-col {
+            height: 360px;
+          }
+        }
+        @media (max-width: 480px) {
+          .about-cta {
+            width: 100%;
+          }
+        }
       `}</style>
     </section>
   );
@@ -87,7 +233,7 @@ function IntroSplitBlock({ block, sections, settings, pageTitle }) {
 
 function StatsRowBlock({ block }) {
   const items = (block.items || [])
-    .filter((r) => String(r.num || '').trim() && String(r.label || '').trim())
+    .filter((r) => String(r.num || "").trim() && String(r.label || "").trim())
     .map((r) => ({ num: r.num, label: r.label }));
   if (!items.length) return null;
 
@@ -104,7 +250,11 @@ function StatsRowBlock({ block }) {
         </div>
       </div>
       <style jsx global>{`
-        .about-stats-sec { padding: 0 0 48px; background: white; margin-top: -24px; }
+        .about-stats-sec {
+          padding: 0 0 48px;
+          background: white;
+          margin-top: -24px;
+        }
         .stats-row-dynamic {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -112,17 +262,35 @@ function StatsRowBlock({ block }) {
           padding-top: 8px;
           border-top: 2px solid #f0f0f0;
         }
-        .stat-item { text-align: center; padding: 16px 8px; border-radius: 8px; background: #f8f9fa; }
-        .stat-num { display: block; font-size: 28px; font-weight: 900; color: #e67e22; line-height: 1; margin-bottom: 6px; }
-        .stat-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .stat-item {
+          text-align: center;
+          padding: 16px 8px;
+          border-radius: 8px;
+          background: #f8f9fa;
+        }
+        .stat-num {
+          display: block;
+          font-size: 28px;
+          font-weight: 900;
+          color: #e67e22;
+          line-height: 1;
+          margin-bottom: 6px;
+        }
+        .stat-label {
+          font-size: 12px;
+          color: #666;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
       `}</style>
     </section>
   );
 }
 
 function TeamBlock({ block }) {
-  const heading = (block.title || '').trim() || 'Management';
-  const team = (block.members || []).filter((m) => (m.name || '').trim());
+  const heading = (block.title || "").trim() || "Management";
+  const team = (block.members || []).filter((m) => (m.name || "").trim());
   if (!team.length) return null;
 
   return (
@@ -134,7 +302,7 @@ function TeamBlock({ block }) {
             <div key={m.name} className="mgmt-card">
               <div className="mgmt-img-wrap">
                 <Image
-                  src={(m.image || '').trim() || FALLBACK_IMG}
+                  src={(m.image || "").trim() || FALLBACK_IMG}
                   alt={m.name}
                   fill
                   className="mgmt-img"
@@ -150,24 +318,61 @@ function TeamBlock({ block }) {
         </div>
       </div>
       <style jsx global>{`
-        .mgmt-sec { padding: 80px 0; background: #f8f9fa; }
-        .mgmt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 32px; }
-        .mgmt-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s ease; }
-        .mgmt-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
-        .mgmt-img-wrap { position: relative; height: 300px; overflow: hidden; }
-        .mgmt-img { object-fit: cover; }
-        .mgmt-body { padding: 20px; text-align: center; border-top: 3px solid #e67e22; }
-        .mgmt-name { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 6px; }
-        .mgmt-role { font-size: 13px; color: #e67e22; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+        .mgmt-sec {
+          padding: 46px 0;
+          background: #f8f9fa;
+        }
+        .mgmt-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 32px;
+        }
+        .mgmt-card {
+          background: white;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+          transition: all 0.3s ease;
+        }
+        .mgmt-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .mgmt-img-wrap {
+          position: relative;
+          height: 300px;
+          overflow: hidden;
+        }
+        .mgmt-img {
+          object-fit: cover;
+        }
+        .mgmt-body {
+          padding: 20px;
+          text-align: center;
+          border-top: 3px solid #e67e22;
+        }
+        .mgmt-name {
+          font-size: 18px;
+          font-weight: 700;
+          color: #2c3e50;
+          margin-bottom: 6px;
+        }
+        .mgmt-role {
+          font-size: 13px;
+          color: #e67e22;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
+        }
       `}</style>
     </section>
   );
 }
 
 function ChairmanBlock({ block }) {
-  const img = (block.image || '').trim() || FALLBACK_IMG;
-  const sigName = (block.signatureName || '').trim();
-  const sigTitle = (block.signatureTitle || '').trim();
+  const img = (block.image || "").trim() || FALLBACK_IMG;
+  const sigName = (block.signatureName || "").trim();
+  const sigTitle = (block.signatureTitle || "").trim();
 
   if (!block.html?.trim()) return null;
 
@@ -175,12 +380,21 @@ function ChairmanBlock({ block }) {
     <section className="chairman-sec">
       <div className="container chairman-inner">
         <div className="chairman-img-wrap">
-          <Image src={img} alt="Chairman's Message" fill className="chairman-img" sizes="(max-width: 1024px) 100vw, 40vw" />
+          <Image
+            src={img}
+            alt="Chairman's Message"
+            fill
+            className="chairman-img"
+            sizes="(max-width: 1024px) 100vw, 40vw"
+          />
           <div className="quote-mark">&ldquo;</div>
         </div>
         <div className="chairman-content">
           <SectionHeading title="Chairman's Message" />
-          <div className="chairman-message-html" dangerouslySetInnerHTML={{ __html: block.html }} />
+          <div
+            className="chairman-message-html"
+            dangerouslySetInnerHTML={{ __html: block.html }}
+          />
           {(sigName || sigTitle) && (
             <div className="chairman-sig">
               {sigName && <strong>{sigName}</strong>}
@@ -190,26 +404,97 @@ function ChairmanBlock({ block }) {
         </div>
       </div>
       <style jsx global>{`
-        .chairman-sec { padding: 80px 0; background: white; }
-        .chairman-inner { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 64px; align-items: start; }
-        .chairman-img-wrap { position: relative; height: 440px; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
-        .chairman-img { object-fit: cover; }
-        .quote-mark { position: absolute; top: -10px; left: 16px; font-size: 120px; color: #e67e22; opacity: 0.15; font-family: Georgia, serif; line-height: 1; }
-        .chairman-quote { font-size: 17px; color: #2c3e50; font-style: italic; font-weight: 600; line-height: 1.8; border-left: 4px solid #e67e22; padding-left: 20px; margin-bottom: 20px; }
-        .chairman-content p { font-size: 15px; color: #555; line-height: 1.8; margin-bottom: 16px; }
-        .chairman-message-html { font-size: 15px; color: #555; line-height: 1.8; }
-        .chairman-message-html p { margin-bottom: 16px; }
-        .chairman-sig { margin-top: 24px; display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 2px solid #f0f0f0; }
-        .chairman-sig strong { font-size: 17px; color: #2c3e50; }
-        .chairman-sig span { font-size: 13px; color: #e67e22; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        @media (max-width: 1024px) { .chairman-inner { grid-template-columns: 1fr; gap: 40px; } .chairman-img-wrap { height: 320px; } }
+        .chairman-sec {
+          padding: 46px 0;
+          background: white;
+        }
+        .chairman-inner {
+          display: grid;
+          grid-template-columns: 0.8fr 1.2fr;
+          gap: 64px;
+          align-items: start;
+        }
+        .chairman-img-wrap {
+          position: relative;
+          height: 440px;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+        }
+        .chairman-img {
+          object-fit: cover;
+        }
+        .quote-mark {
+          position: absolute;
+          top: -10px;
+          left: 16px;
+          font-size: 120px;
+          color: #e67e22;
+          opacity: 0.15;
+          font-family: Georgia, serif;
+          line-height: 1;
+        }
+        .chairman-quote {
+          font-size: 17px;
+          color: #2c3e50;
+          font-style: italic;
+          font-weight: 600;
+          line-height: 1.8;
+          border-left: 4px solid #e67e22;
+          padding-left: 20px;
+          margin-bottom: 20px;
+        }
+        .chairman-content p {
+          font-size: 15px;
+          color: #555;
+          line-height: 1.8;
+          margin-bottom: 16px;
+        }
+        .chairman-message-html {
+          font-size: 15px;
+          color: #555;
+          line-height: 1.8;
+        }
+        .chairman-message-html p {
+          margin-bottom: 16px;
+        }
+        .chairman-sig {
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding-top: 16px;
+          border-top: 2px solid #f0f0f0;
+        }
+        .chairman-sig strong {
+          font-size: 17px;
+          color: #2c3e50;
+        }
+        .chairman-sig span {
+          font-size: 13px;
+          color: #e67e22;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
+        @media (max-width: 1024px) {
+          .chairman-inner {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+          .chairman-img-wrap {
+            height: 320px;
+          }
+        }
       `}</style>
     </section>
   );
 }
 
 function MissionGridBlock({ block }) {
-  const items = (block.items || []).filter((x) => (x.title || '').trim() && (x.text || '').trim());
+  const items = (block.items || []).filter(
+    (x) => (x.title || "").trim() && (x.text || "").trim(),
+  );
   if (!items.length) return null;
 
   return (
@@ -232,13 +517,55 @@ function MissionGridBlock({ block }) {
         </div>
       </div>
       <style jsx global>{`
-        .mvv-sec { padding: 80px 0; background: #f8f9fa; }
-        .mvv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
-        .mvv-card { background: white; border-radius: 12px; padding: 32px 24px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s ease; border-top: 4px solid transparent; }
-        .mvv-card:hover { border-top-color: #e67e22; transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
-        .mvv-icon { display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; background: linear-gradient(135deg, rgba(230,126,34,0.12), rgba(211,84,0,0.06)); border-radius: 50%; color: #e67e22; margin-bottom: 20px; }
-        .mvv-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 12px; }
-        .mvv-desc { font-size: 14px; color: #666; line-height: 1.7; }
+        .mvv-sec {
+          padding: 46px 0;
+          background: #f8f9fa;
+        }
+        .mvv-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 24px;
+        }
+        .mvv-card {
+          background: white;
+          border-radius: 12px;
+          padding: 32px 24px;
+          text-align: center;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+          transition: all 0.3s ease;
+          border-top: 4px solid transparent;
+        }
+        .mvv-card:hover {
+          border-top-color: #e67e22;
+          transform: translateY(-6px);
+          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+        .mvv-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
+          background: linear-gradient(
+            135deg,
+            rgba(230, 126, 34, 0.12),
+            rgba(211, 84, 0, 0.06)
+          );
+          border-radius: 50%;
+          color: #e67e22;
+          margin-bottom: 20px;
+        }
+        .mvv-title {
+          font-size: 18px;
+          font-weight: 700;
+          color: #2c3e50;
+          margin-bottom: 12px;
+        }
+        .mvv-desc {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.7;
+        }
       `}</style>
     </section>
   );
@@ -249,13 +576,27 @@ function HtmlSectionBlock({ block }) {
   return (
     <section className="ab-html-sec">
       <div className="container">
-        {(block.title || '').trim() ? <SectionHeading title={block.title.trim()} centered /> : null}
-        <div className="ab-html-inner" dangerouslySetInnerHTML={{ __html: block.html }} />
+        {(block.title || "").trim() ? (
+          <SectionHeading title={block.title.trim()} centered />
+        ) : null}
+        <div
+          className="ab-html-inner"
+          dangerouslySetInnerHTML={{ __html: block.html }}
+        />
       </div>
       <style jsx global>{`
-        .ab-html-sec { padding: 64px 0; background: white; }
-        .ab-html-inner { font-size: 15px; color: #555; line-height: 1.85; }
-        .ab-html-inner p { margin-bottom: 16px; }
+        .ab-html-sec {
+          padding: 64px 0;
+          background: white;
+        }
+        .ab-html-inner {
+          font-size: 15px;
+          color: #555;
+          line-height: 1.85;
+        }
+        .ab-html-inner p {
+          margin-bottom: 16px;
+        }
       `}</style>
     </section>
   );

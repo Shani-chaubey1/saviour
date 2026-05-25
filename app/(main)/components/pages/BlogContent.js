@@ -77,7 +77,7 @@ export function BlogListContent({ posts, cms = {} }) {
       </section>
       <style jsx global>{`
         .blog-pg { padding: 80px 0; background: white; }
-        .blog-pg-layout { display: grid; grid-template-columns: 1fr 320px; gap: 40px; align-items: start; }
+        .blog-pg-layout { display: grid; grid-template-columns: 1fr 320px; gap: 10px; align-items: start; }
         .blog-pg-sidebar { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 24px; }
         .blog-pg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
         .empty-msg { text-align: center; color: #888; font-size: 16px; padding: 48px 0; }

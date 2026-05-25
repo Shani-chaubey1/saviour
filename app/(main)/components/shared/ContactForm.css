@@ -1,133 +1,221 @@
-          .success-state {
-            text-align: center;
-            padding: 48px 24px;
-          }
-          .success-state h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin: 16px 0 8px;
-          }
-          .success-state p {
-            color: #666;
-            font-size: 15px;
-          }
-          .btn-back {
-            margin-top: 20px;
-            padding: 10px 24px;
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: transform 0.2s;
-          }
-          .btn-back:hover { transform: translateY(-2px); }
-        
+.success-state {
+  text-align: center;
+  padding: 48px 24px;
+}
+.success-state h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 16px 0 8px;
+}
+.success-state p {
+  color: #666;
+  font-size: 15px;
+}
+.btn-back {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn-back:hover { transform: translateY(-2px); }
 
-        .contact-form {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-        .form-label {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 13px;
-          font-weight: 600;
-          color: #2c3e50;
-          text-transform: uppercase;
-          letter-spacing: 0.3px;
-        }
-        .form-label svg {
-          color: #e67e22;
-        }
-        .req {
-          color: #e74c3c;
-        }
-        .form-input {
-          padding: 12px 16px;
-          border: 1.5px solid #e0e0e0;
-          border-radius: 6px;
-          font-size: 15px;
-          font-family: inherit;
-          color: #222;
-          background: white;
-          transition: border-color 0.2s, box-shadow 0.2s;
-          outline: none;
-          width: 100%;
-        }
-        .form-input:focus {
-          border-color: #e67e22;
-          box-shadow: 0 0 0 3px rgba(230,126,34,0.12);
-        }
-        .form-input.error {
-          border-color: #e74c3c;
-        }
-        .form-input.error:focus {
-          box-shadow: 0 0 0 3px rgba(231,76,60,0.12);
-        }
-        .form-textarea {
-          resize: vertical;
-          min-height: 100px;
-        }
-        .captcha-input {
-          max-width: 120px;
-        }
-        .error-msg {
-          font-size: 12px;
-          color: #e74c3c;
-          font-weight: 500;
-        }
-        .submit-error {
-          background: rgba(231,76,60,0.08);
-          border: 1px solid rgba(231,76,60,0.2);
-          color: #e74c3c;
-          padding: 12px 16px;
-          border-radius: 6px;
-          font-size: 14px;
-        }
-        .submit-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          background: linear-gradient(135deg, #e67e22, #d35400);
-          color: white;
-          border: none;
-          border-radius: 6px;
-          padding: 14px 32px;
-          font-size: 15px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          font-family: inherit;
-          align-self: flex-start;
-        }
-        .submit-btn:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(230,126,34,0.35);
-        }
-        .submit-btn:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-        .loading-dots span {
-          animation: blink 1.4s infinite both;
-        }
-        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-          0%, 80%, 100% { opacity: 0; }
-          40% { opacity: 1; }
-        }
+.cf-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  container-type: inline-size;
+  container-name: cfwrap;
+}
+
+.cf-tabs {
+  display: flex;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+.cf-tab {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
+}
+.cf-tab:hover { color: #111827; }
+.cf-tab:focus-visible {
+  outline: 2px solid #e67e22;
+  outline-offset: 2px;
+}
+.cf-tab-active {
+  background: white;
+  color: #d35400;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.contact-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+  align-items: start;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.form-group.span-2,
+.contact-form > .span-2 {
+  grid-column: 1 / -1;
+}
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.form-label svg {
+  color: #e67e22;
+}
+.req {
+  color: #e74c3c;
+}
+.form-input {
+  padding: 11px 14px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: #222;
+  background: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  width: 100%;
+  min-height: 44px;
+}
+.form-input:focus {
+  border-color: #e67e22;
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.12);
+}
+.form-input.error {
+  border-color: #e74c3c;
+}
+.form-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
+}
+.captcha-input {
+  max-width: 120px;
+}
+.error-msg {
+  font-size: 12px;
+  color: #e74c3c;
+  font-weight: 500;
+}
+.submit-error {
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  justify-self: center;
+}
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(230, 126, 34, 0.35);
+}
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.loading-dots span {
+  animation: blink 1.4s infinite both;
+}
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+/* Container-query collapse: when the form's own width is narrow (sidebars,
+   popups, mobile), fall back to a single column and stacked tabs regardless
+   of viewport width. */
+@container cfwrap (max-width: 480px) {
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+  .form-group.span-2,
+  .contact-form > .span-2 {
+    grid-column: 1 / -1;
+  }
+  .cf-tabs {
+    flex-direction: column;
+  }
+  .submit-btn {
+    width: 100%;
+    justify-self: center;
+  }
+}
+
+/* Viewport fallback for very small screens (also catches the rare case where
+   the browser doesn't support container queries). */
+@media (max-width: 640px) {
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+  .form-group.span-2,
+  .contact-form > .span-2 {
+    grid-column: 1 / -1;
+  }
+  .cf-tabs {
+    flex-direction: column;
+  }
+  .submit-btn {
+    width: 100%;
+    justify-self: center;
+  }
+}

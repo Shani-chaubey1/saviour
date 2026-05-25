@@ -35,16 +35,13 @@ export default async function HomePage() {
   return (
     <>
       <HeroSlider slides={heroSlides} />
-      <AboutSection settings={settings} />
-      <MissionVisionSection settings={settings} />
-      <ProjectsSection projects={projects} />
-      <CertificationsSection settings={settings} />
       <TrustBanner settings={settings} />
-      <WhyUsSection settings={settings} />
+      <CertificationsSection settings={settings} />
+      <AboutSection settings={settings} willShowFull={false} />
+      <ProjectsSection projects={projects} />
       <LaunchingSoonBanner data={settings} />
       <DevelopmentsSection settings={settings} />
       <TestimonialsSection testimonials={testimonials} />
-      <BlogSection posts={posts} />
       <ContactSection settings={settings} />
     </>
   );

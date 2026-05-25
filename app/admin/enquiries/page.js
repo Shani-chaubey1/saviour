@@ -73,7 +73,12 @@ export default function EnquiriesPage() {
                 <div className="enq-main" onClick={() => setExpanded(expanded === e._id ? null : e._id)}>
                   <div className="enq-avatar">{e.name?.[0]?.toUpperCase()}</div>
                   <div className="enq-info">
-                    <p className="enq-name">{e.name}</p>
+                    <p className="enq-name">
+                      {e.name}
+                      <span className={`enq-type ${e.formType === 'visit' ? 'enq-type-visit' : 'enq-type-connect'}`}>
+                        {e.formType === 'visit' ? 'Book a Visit' : 'Connect'}
+                      </span>
+                    </p>
                     <p className="enq-contact">{e.email} {e.phone ? `· ${e.phone}` : ''}</p>
                   </div>
                   <div className="enq-meta">
@@ -92,10 +97,30 @@ export default function EnquiriesPage() {
                   </div>
                   <span className="enq-chevron">{expanded === e._id ? '▲' : '▼'}</span>
                 </div>
-                {expanded === e._id && e.message && (
-                  <div className="enq-message">
-                    <p className="message-label">Message:</p>
-                    <p className="message-text">{e.message}</p>
+                {expanded === e._id && (
+                  <div className="enq-details">
+                    {e.formType === 'visit' && (e.visitDate || e.visitTime) && (
+                      <div className="enq-row">
+                        <span className="enq-row-label">Visit:</span>
+                        <span className="enq-row-value">
+                          {e.visitDate || '—'} {e.visitTime ? `at ${e.visitTime}` : ''}
+                        </span>
+                      </div>
+                    )}
+                    {e.formType !== 'visit' && e.preferredDateTime && (
+                      <div className="enq-row">
+                        <span className="enq-row-label">Preferred Time:</span>
+                        <span className="enq-row-value">
+                          {new Date(e.preferredDateTime).toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    {e.message && (
+                      <div className="enq-row">
+                        <span className="enq-row-label">Message:</span>
+                        <span className="enq-row-value">{e.message}</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -136,9 +161,13 @@ export default function EnquiriesPage() {
         .status-select.status-contacted { background: #d1fae5; color: #059669; }
         .status-select.status-closed { background: #f3f4f6; color: #9ca3af; }
         .enq-chevron { font-size: 10px; color: #9ca3af; flex-shrink: 0; }
-        .enq-message { padding: 12px 16px 16px 64px; }
-        .message-label { font-size: 12px; font-weight: 600; color: #9ca3af; margin-bottom: 4px; }
-        .message-text { font-size: 13.5px; color: #374151; line-height: 1.6; }
+        .enq-type { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.3px; text-transform: uppercase; vertical-align: middle; }
+        .enq-type-connect { background: #dbeafe; color: #1d4ed8; }
+        .enq-type-visit { background: #fef3c7; color: #b45309; }
+        .enq-details { padding: 8px 16px 16px 64px; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid #f3f4f6; }
+        .enq-row { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; }
+        .enq-row-label { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; flex-shrink: 0; min-width: 110px; }
+        .enq-row-value { font-size: 13.5px; color: #374151; line-height: 1.6; flex: 1; min-width: 0; word-break: break-word; }
       `}</style>
     </div>
   );
