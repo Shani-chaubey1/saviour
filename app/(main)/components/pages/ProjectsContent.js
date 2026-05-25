@@ -24,9 +24,13 @@ const FALLBACK = {
   },
 };
 
-export function AllProjectsContent({ projects, sections = {} }) {
+export function AllProjectsContent({ projects, sections = {}, locationLabel = '' }) {
   const searchParams = useSearchParams();
   const type = searchParams.get('type') || '';
+  const hasLocation = Boolean(locationLabel);
+
+  // Build a reset-location URL that keeps the active type tab intact.
+  const resetLocationHref = type ? `/projects?type=${type}` : '/projects';
 
   const title =
     type === 'residential'
@@ -47,7 +51,10 @@ export function AllProjectsContent({ projects, sections = {} }) {
     : type === 'commercial' ? 'Commercial'
     : 'All Projects';
 
-  const emptyMsg = sections.empty_message?.trim() || 'No projects found at this time. Please check back soon.';
+  const baseEmptyMsg = sections.empty_message?.trim() || 'No projects found at this time. Please check back soon.';
+  const emptyMsg = hasLocation
+    ? `No projects matched “${locationLabel}”. Try clearing the location filter to see all projects.`
+    : baseEmptyMsg;
 
   const breadcrumbs = type
     ? [{ label: 'Projects', href: '/projects' }, { label: breadcrumb }]
@@ -68,6 +75,23 @@ export function AllProjectsContent({ projects, sections = {} }) {
       <section className="projects-pg">
         <div className="container">
           <SectionHeading title={title} subtitle={subtitle} />
+
+          {hasLocation && (
+            <div className="pj-active-filters" role="status" aria-live="polite">
+              <span className="pj-filter-pill">
+                <span className="pj-filter-label">Location:</span>
+                <span className="pj-filter-value">{locationLabel}</span>
+                <Link
+                  href={resetLocationHref}
+                  className="pj-filter-clear"
+                  aria-label={`Clear location filter (${locationLabel})`}
+                >
+                  ×
+                </Link>
+              </span>
+            </div>
+          )}
+
           {projects.length > 0 ? (
             <div className="pg-grid">
               {projects.map((project) => (
@@ -75,7 +99,14 @@ export function AllProjectsContent({ projects, sections = {} }) {
               ))}
             </div>
           ) : (
-            <p className="empty-msg">{emptyMsg}</p>
+            <div className="pj-empty">
+              <p className="empty-msg">{emptyMsg}</p>
+              {hasLocation && (
+                <Link href={resetLocationHref} className="pj-empty-cta">
+                  Show all projects
+                </Link>
+              )}
+            </div>
           )}
         </div>
       </section>
@@ -109,7 +140,65 @@ export function AllProjectsContent({ projects, sections = {} }) {
         }
         .projects-pg { padding: 64px 0 80px; background: white; }
         .pg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-        .empty-msg { text-align: center; color: #888; font-size: 16px; padding: 48px 0; }
+        .empty-msg { text-align: center; color: #888; font-size: 16px; padding: 48px 0 16px; }
+
+        /* Active location filter pill */
+        .pj-active-filters {
+          display: flex; align-items: center; gap: 8px;
+          margin: -16px 0 24px;
+        }
+        .pj-filter-pill {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 8px;
+          padding: 6px 8px 6px 14px;
+          background: var(--green-pale, #e8f5ee);
+          color: var(--green-dark, #004d26);
+          border: 1px solid rgba(0, 104, 51, 0.18);
+          border-radius: 999px;
+          font-size: 13px;
+          font-weight: 600;
+        }
+        .pj-filter-label { color: var(--green-dark, #004d26); opacity: 0.7; font-weight: 500; }
+        .pj-filter-value { color: var(--green, #006833); }
+        .pj-filter-clear {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 22px;
+          height: 22px;
+          border-radius: 50%;
+          background: rgba(0, 104, 51, 0.12);
+          color: var(--green-dark, #004d26);
+          font-size: 16px;
+          line-height: 1;
+          text-decoration: none !important;
+          transition: background 0.18s, color 0.18s;
+        }
+        .pj-filter-clear:hover {
+          background: var(--green, #006833);
+          color: #fff;
+        }
+
+        .pj-empty { text-align: center; padding: 32px 0 16px; }
+        .pj-empty-cta {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 8px;
+          padding: 10px 22px;
+          border: 1.5px solid var(--green, #006833);
+          color: var(--green, #006833);
+          border-radius: 999px;
+          font-size: 13.5px;
+          font-weight: 700;
+          text-decoration: none !important;
+          transition: all 0.2s;
+        }
+        .pj-empty-cta:hover {
+          background: var(--green, #006833);
+          color: #fff;
+          transform: translateY(-1px);
+        }
         @media (max-width: 1024px) { .pg-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 640px) { .pg-grid { grid-template-columns: 1fr; gap: 20px; } .pj-tab { padding: 12px 16px; font-size: 13px; } }
       `}</style>
