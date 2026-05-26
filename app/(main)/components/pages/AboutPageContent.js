@@ -1,13 +1,15 @@
 "use client";
 
 import { ensureAboutBlocks } from "@/lib/aboutBlocks";
-import { Award, Eye, Heart, Target } from "lucide-react";
+import { Award, Eye, Heart, Shield, Target } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 import PageBanner from "../ui/PageBanner";
 import SectionHeading from "../ui/SectionHeading";
-import ContactPopup from "../shared/ContactPopup";
-import { CertificationsSection, WhyUsSection } from "./HomePageContent";
+import {
+  CertificationsSection,
+  MissionVisionSection,
+  WhyUsSection,
+} from "./HomePageContent";
 
 const MV_ICONS = [Target, Eye, Heart, Award];
 
@@ -31,6 +33,7 @@ export default function AboutPageContent({ sections = {}, settings = {} }) {
           pageTitle={pageTitle}
         />
       ))}
+      <MissionVisionSection settings={settings} />
       <WhyUsSection settings={settings} />
     </>
   );
@@ -56,20 +59,89 @@ function AboutBlock({ block, sections, settings, pageTitle }) {
   }
 }
 
+/**
+ * Two pill-style credential badges (RERA + CREDAI) shown inside the About
+ * page intro. Labels are pulled from the existing `trust_credential_*`
+ * settings used by the homepage TrustBanner; icons are intentionally static
+ * (Shield + Award) so the visual identity stays consistent and doesn't
+ * require the admin to pick icons.
+ */
+function AboutCredentialBadges({ settings }) {
+  const cred1 = (settings.trust_credential_1 || "").trim();
+  const cred2 = (settings.trust_credential_2 || "").trim();
+  if (!cred1 && !cred2) return null;
+
+  return (
+    <div className="about-cred-row">
+      {cred1 && (
+        <span className="about-cred-pill">
+          <span className="about-cred-icon" aria-hidden="true">
+            <Shield size={18} strokeWidth={1.8} />
+          </span>
+          <span className="about-cred-label">{cred1}</span>
+        </span>
+      )}
+      {cred2 && (
+        <span className="about-cred-pill">
+          <span className="about-cred-icon" aria-hidden="true">
+            <Award size={18} strokeWidth={1.8} />
+          </span>
+          <span className="about-cred-label">{cred2}</span>
+        </span>
+      )}
+      <style jsx global>{`
+        .about-cred-row {
+          display: flex !important;
+          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
+        }
+        .about-cred-pill {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 10px;
+          padding: 10px 18px;
+          background: var(--green-pale, #e8f5ee);
+          border: 1px solid rgba(0, 104, 51, 0.22);
+          border-radius: 999px;
+          color: var(--green-dark, #004d26);
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.1px;
+          transition: transform 0.18s ease, box-shadow 0.18s ease,
+            background 0.18s ease;
+        }
+        .about-cred-pill:hover {
+          background: #d4ecdf;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 14px rgba(0, 104, 51, 0.14);
+        }
+        .about-cred-icon {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: var(--green, #006833);
+          flex-shrink: 0;
+        }
+        .about-cred-label {
+          line-height: 1;
+        }
+        @media (max-width: 480px) {
+          .about-cred-pill {
+            font-size: 13px;
+            padding: 9px 14px;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
 function IntroSplitBlock({ block, sections, settings, pageTitle }) {
   const sideImage =
     (block.image || "").trim() || settings.about_image || FALLBACK_IMG;
   const title = (block.title || "").trim() || pageTitle;
   const subtitle = (block.subtitle || "").trim() || sections.tagline?.trim();
-
-  const ctaPrimary = (block.ctaPrimaryLabel || "").trim();
-  const ctaSecondary = (block.ctaSecondaryLabel || "").trim();
-  const hasCtas = Boolean(ctaPrimary || ctaSecondary);
-
-  const [popup, setPopup] = useState(null);
-
-  const openPopup = (label) => setPopup(label);
-  const closePopup = () => setPopup(null);
 
   return (
     <section className="about-sec">
@@ -93,38 +165,9 @@ function IntroSplitBlock({ block, sections, settings, pageTitle }) {
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
-          {hasCtas && (
-            <div className="about-cta-row">
-              {ctaPrimary && (
-                <button
-                  type="button"
-                  className="about-cta about-cta-primary"
-                  onClick={() => openPopup(ctaPrimary)}
-                >
-                  {ctaPrimary}
-                </button>
-              )}
-              {ctaSecondary && (
-                <button
-                  type="button"
-                  className="about-cta about-cta-secondary"
-                  onClick={() => openPopup(ctaSecondary)}
-                >
-                  {ctaSecondary}
-                </button>
-              )}
-            </div>
-          )}
+          <AboutCredentialBadges settings={settings} />
         </div>
       </div>
-      <ContactPopup
-        open={Boolean(popup)}
-        onClose={closePopup}
-        title={popup || "Get in Touch"}
-        pageLabel={`About — ${popup || "CTA"}`}
-        tabConnectLabel={settings.contact_form_tab_connect_label || ""}
-        tabVisitLabel={settings.contact_form_tab_visit_label || ""}
-      />
       <style jsx global>{`
         .about-sec {
           padding: 46px 0;
@@ -164,54 +207,6 @@ function IntroSplitBlock({ block, sections, settings, pageTitle }) {
         .about-img {
           object-fit: cover;
         }
-        .about-cta-row {
-          display: flex;
-          gap: 12px;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-        .about-cta {
-          min-height: 44px;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-size: 14px;
-          font-weight: 700;
-          letter-spacing: 0.3px;
-          cursor: pointer;
-          border: 2px solid transparent;
-          transition:
-            transform 0.18s ease,
-            box-shadow 0.18s ease,
-            background 0.18s ease,
-            color 0.18s ease;
-        }
-        .about-cta:focus-visible {
-          outline: 2px solid var(--green, #006833);
-          outline-offset: 3px;
-        }
-        .about-cta-primary {
-          background: linear-gradient(
-            135deg,
-            var(--green, #006833),
-            var(--green-dark, #004d26)
-          );
-          color: white;
-          box-shadow: 0 6px 18px rgba(0, 104, 51, 0.28);
-        }
-        .about-cta-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 26px rgba(0, 104, 51, 0.36);
-        }
-        .about-cta-secondary {
-          background: white;
-          color: var(--green, #006833);
-          border-color: var(--green, #006833);
-        }
-        .about-cta-secondary:hover {
-          background: var(--green, #006833);
-          color: white;
-          transform: translateY(-2px);
-        }
         @media (max-width: 1024px) {
           .about-grid {
             grid-template-columns: 1fr;
@@ -219,11 +214,6 @@ function IntroSplitBlock({ block, sections, settings, pageTitle }) {
           }
           .about-img-col {
             height: 360px;
-          }
-        }
-        @media (max-width: 480px) {
-          .about-cta {
-            width: 100%;
           }
         }
       `}</style>

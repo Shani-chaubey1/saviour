@@ -15,7 +15,7 @@ export async function GET(request) {
     const total = await Project.countDocuments(query);
     const projects = await Project.find(query)
       .populate('type', 'name')
-      .sort({ createdAt: -1 })
+      .sort({ order: 1, createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();

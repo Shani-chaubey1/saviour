@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import ContentPageView from '../components/pages/ContentPageView';
-import { getContentPageBySlug, getContentPages } from '@/lib/data';
+import { getContentPageBySlug, getContentPages, getProjects } from '@/lib/data';
 
 export const revalidate = 60;
 
@@ -23,5 +23,11 @@ export default async function ContentPage({ params }) {
   const { slug } = await params;
   const page = await getContentPageBySlug(slug);
   if (!page) notFound();
-  return <ContentPageView page={page} />;
+
+  const wantsProjects = Boolean(page.showProjects && page.projectsLocation);
+  const projects = wantsProjects
+    ? await getProjects({ location: page.projectsLocation }).catch(() => [])
+    : [];
+
+  return <ContentPageView page={page} projects={projects} />;
 }

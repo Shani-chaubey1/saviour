@@ -40,6 +40,8 @@ const EMPTY = {
   isPublished: true,
   showInFooter: false,
   order: 0,
+  showProjects: false,
+  projectsLocation: '',
 };
 
 export default function ContentPageForm({ pageId }) {
@@ -72,6 +74,8 @@ export default function ContentPageForm({ pageId }) {
             isPublished: data.page.isPublished !== false,
             showInFooter: Boolean(data.page.showInFooter),
             order: Number(data.page.order) || 0,
+            showProjects: Boolean(data.page.showProjects),
+            projectsLocation: data.page.projectsLocation || '',
           });
           setSlugTouched(true);
         }
@@ -112,8 +116,11 @@ export default function ContentPageForm({ pageId }) {
     if (!s) return 'Slug is required';
     if (!SLUG_RE.test(s)) return 'Slug can only contain lowercase letters, numbers, and hyphens';
     if (RESERVED_SLUGS.has(s)) return `Slug "${s}" is reserved by the site`;
+    if (form.showProjects && !form.projectsLocation.trim()) {
+      return 'Location filter is required when "Show projects" is enabled';
+    }
     return '';
-  }, [form.slug, form.title]);
+  }, [form.slug, form.title, form.showProjects, form.projectsLocation]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -133,6 +140,8 @@ export default function ContentPageForm({ pageId }) {
         isPublished: form.isPublished,
         showInFooter: form.showInFooter,
         order: Number(form.order) || 0,
+        showProjects: form.showProjects,
+        projectsLocation: form.showProjects ? form.projectsLocation.trim() : '',
       };
       const url = isEdit
         ? `/api/admin/content-pages/${pageId}`
@@ -273,6 +282,43 @@ export default function ContentPageForm({ pageId }) {
               min={0}
             />
             <p className="cpf-hint">Lower numbers appear first.</p>
+          </div>
+
+          <div className="cpf-card">
+            <h3 className="cpf-section-title">Projects section</h3>
+            <label className="cpf-check">
+              <input
+                type="checkbox"
+                checked={form.showProjects}
+                onChange={set('showProjects')}
+              />
+              <span>Show projects button &amp; section</span>
+            </label>
+            <p className="cpf-hint">
+              Appends a projects grid (filtered by the location below) to the
+              bottom of this page, plus a CTA button linking to the matching
+              listing on the projects page.
+            </p>
+
+            {form.showProjects && (
+              <>
+                <label className="cpf-label cpf-label-mt">
+                  Location filter <span className="req">*</span>
+                </label>
+                <input
+                  type="text"
+                  className="cpf-input"
+                  value={form.projectsLocation}
+                  onChange={set('projectsLocation')}
+                  placeholder="e.g. Yamuna Expressway"
+                />
+                <p className="cpf-hint">
+                  Case-insensitive substring match against each project&apos;s
+                  address or location field — exactly the same matching used
+                  on <code>/projects?location=…</code>.
+                </p>
+              </>
+            )}
           </div>
 
           <div className="cpf-actions">

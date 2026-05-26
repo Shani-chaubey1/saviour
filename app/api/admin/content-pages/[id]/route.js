@@ -63,6 +63,13 @@ export async function PUT(request, { params }) {
     if (body.isPublished !== undefined) update.isPublished = Boolean(body.isPublished);
     if (body.showInFooter !== undefined) update.showInFooter = Boolean(body.showInFooter);
     if (body.order !== undefined && Number.isFinite(Number(body.order))) update.order = Number(body.order);
+    if (body.showProjects !== undefined) update.showProjects = Boolean(body.showProjects);
+    if (body.projectsLocation !== undefined) {
+      update.projectsLocation = String(body.projectsLocation || '').trim();
+    }
+    // Clear the saved location when the section is being turned off in this
+    // same payload (keeps DB tidy and the public renderer simple).
+    if (update.showProjects === false) update.projectsLocation = '';
 
     const page = await ContentPage.findByIdAndUpdate(id, update, { new: true });
     if (!page) return NextResponse.json({ error: 'Not found' }, { status: 404 });

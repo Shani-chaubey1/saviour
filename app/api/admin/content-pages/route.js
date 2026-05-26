@@ -54,6 +54,7 @@ export async function POST(request) {
       return NextResponse.json({ error: `A page with slug "${slug}" already exists.` }, { status: 409 });
     }
 
+    const showProjects = Boolean(body?.showProjects);
     const page = await ContentPage.create({
       title,
       slug,
@@ -63,6 +64,9 @@ export async function POST(request) {
       isPublished: body?.isPublished !== false,
       showInFooter: Boolean(body?.showInFooter),
       order: Number.isFinite(Number(body?.order)) ? Number(body.order) : 0,
+      showProjects,
+      // Only persist a location when the section is enabled.
+      projectsLocation: showProjects ? String(body?.projectsLocation || '').trim() : '',
     });
     return NextResponse.json({ page }, { status: 201 });
   } catch (err) {

@@ -13,7 +13,7 @@ const EMPTY_PROJECT = {
   title: '', slug: '', rera: '', configuration: '', address: '', location: '',
   price: '', area: '', pricePerSqft: '', badge: '', excerpt: '',
   overview: '', thumbnail: '', gallery: [], masterPlan: '', video: '',
-  status: 'For Sale', type: '', isFeatured: false, isActive: true,
+  status: 'For Sale', type: '', isFeatured: false, isActive: true, order: 0,
   amenities: [], specifications: [], highlights: [''], floorPlans: [], priceTable: [],
 };
 
@@ -248,6 +248,19 @@ export default function ProjectForm({ projectId }) {
             <label>Video URL</label>
             <input type="text" value={form.video} onChange={set('video')} placeholder="YouTube or Vimeo URL" />
           </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label>Display Order</label>
+              <input
+                type="number"
+                min="0"
+                value={form.order ?? 0}
+                onChange={(e) => setForm((p) => ({ ...p, order: Number(e.target.value) || 0 }))}
+                placeholder="0"
+              />
+              <span className="form-hint">Lower numbers show first on the public projects listing. Leave 0 to fall back to newest-first.</span>
+            </div>
+          </div>
           <div className="form-row checkboxes">
             <label className="checkbox-label">
               <input type="checkbox" checked={form.isFeatured} onChange={set('isFeatured')} />
@@ -462,6 +475,7 @@ export default function ProjectForm({ projectId }) {
           box-shadow: 0 0 0 2px rgba(0,104,51,0.12);
         }
         .form-group textarea { resize: vertical; }
+        .form-hint { font-size: 12px; color: #9ca3af; margin-top: 2px; }
         .checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13.5px; cursor: pointer; color: #374151; }
         .section-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 4px; }
         .section-hint { font-size: 13px; color: #6b7280; }

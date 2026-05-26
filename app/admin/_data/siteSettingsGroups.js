@@ -204,6 +204,31 @@ export const SITE_SETTINGS_GROUPS = [
         type: 'text',
         hint: 'Label for the second tab (default: "Book a Visit").',
       },
+      {
+        key: 'enquire_fab_label',
+        label: 'Floating Enquire Button — Label',
+        type: 'text',
+        hint: 'Vertical button pinned to the right edge of every page (default: "Enquire Now").',
+      },
+      {
+        key: 'enquire_fab_popup_title',
+        label: 'Floating Enquire Button — Popup Title',
+        type: 'text',
+        hint: 'Heading shown in the popup that opens from the floating button (default: "Get in Touch").',
+      },
+    ],
+  },
+  /* ── About Page · Mission, Vision & Quality ── */
+  {
+    id: 'mission_vision_quality',
+    label: '🎯 About Page · Mission, Vision & Quality',
+    fields: [
+      { key: 'mission_title', label: 'Mission Card Title', type: 'text', hint: 'e.g. Our Mission' },
+      { key: 'mission_desc', label: 'Mission Card Description', type: 'textarea' },
+      { key: 'vision_title', label: 'Vision Card Title', type: 'text', hint: 'e.g. Our Vision' },
+      { key: 'vision_desc', label: 'Vision Card Description', type: 'textarea' },
+      { key: 'quality_title', label: 'Quality Card Title', type: 'text', hint: 'e.g. Quality Policy' },
+      { key: 'quality_desc', label: 'Quality Card Description', type: 'textarea' },
     ],
   },
   /* ── About Page · Why Choose Us ──────────── */
@@ -250,11 +275,42 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'footer_powered_by_url', label: 'Powered-by Credits URL', type: 'text' },
     ],
   },
+  /* ── Cookie Consent Banner ───────────────── */
+  {
+    id: 'cookie_consent',
+    label: '🍪 Cookie Consent Banner',
+    fields: [
+      {
+        key: 'cookie_consent_message',
+        label: 'Banner Message',
+        type: 'textarea',
+        hint: 'Shown on the bottom-left of every page. Leave empty to disable the banner entirely. Hidden for 7 days after the visitor clicks Accept or Close.',
+      },
+      {
+        key: 'cookie_consent_accept_label',
+        label: 'Accept Button Label',
+        type: 'text',
+        hint: 'Default: "Accept".',
+      },
+      {
+        key: 'cookie_consent_close_label',
+        label: 'Close Button Label',
+        type: 'text',
+        hint: 'Default: "Close".',
+      },
+    ],
+  },
   /* ── SEO & Analytics ─────────────────────── */
   {
     id: 'seo',
     label: '🔍 SEO & Analytics',
     fields: [
+      {
+        key: 'site_url',
+        label: 'Canonical Site URL',
+        type: 'text',
+        hint: 'No trailing slash. Used in sitemap.xml and robots.txt (e.g. https://saviourgroup.in). Falls back to NEXT_PUBLIC_SITE_URL env var if left blank.',
+      },
       { key: 'meta_title', label: 'Default Meta Title', type: 'text' },
       { key: 'meta_description', label: 'Default Meta Description', type: 'textarea' },
       { key: 'google_analytics_id', label: 'Google Analytics ID', type: 'text' },
