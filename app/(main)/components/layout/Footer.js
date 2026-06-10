@@ -137,10 +137,10 @@ export default function Footer({ settings = {}, contentPages = [] }) {
                 width={150}
                 height={50}
                 style={{
-                  filter: 'brightness(0) invert(1)',
-                  objectFit: 'contain',
-                  marginBottom: '16px',
-                  display: 'block',
+                  filter: "brightness(0) invert(1)",
+                  objectFit: "contain",
+                  marginBottom: "16px",
+                  display: "block",
                 }}
               />
             </Link>
@@ -148,7 +148,9 @@ export default function Footer({ settings = {}, contentPages = [] }) {
             <div className="ft-social">
               {socialRows.length > 0
                 ? socialRows.map((row, idx) => {
-                    const col = row.color?.startsWith('#') ? row.color : '#ffffff';
+                    const col = row.color?.startsWith("#")
+                      ? row.color
+                      : "#ffffff";
                     return (
                       <a
                         key={`${row.url}-${idx}`}
@@ -156,17 +158,36 @@ export default function Footer({ settings = {}, contentPages = [] }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="ft-social-btn"
-                        aria-label={row.label || 'Social link'}
+                        aria-label={row.label || "Social link"}
                         style={{ color: col }}
                       >
-                        <DynamicFaIcon name={row.icon} size={15} style={{ color: col }} />
+                        <DynamicFaIcon
+                          name={row.icon}
+                          size={15}
+                          style={{ color: col }}
+                        />
                       </a>
                     );
                   })
                 : [
-                    { href: fbUrl, icon: 'FaFacebook', color: '#1877f2', label: 'Facebook' },
-                    { href: igUrl, icon: 'FaInstagram', color: '#e4405f', label: 'Instagram' },
-                    { href: ytUrl, icon: 'FaYoutube', color: '#ff0000', label: 'YouTube' },
+                    {
+                      href: fbUrl,
+                      icon: "FaFacebook",
+                      color: "#1877f2",
+                      label: "Facebook",
+                    },
+                    {
+                      href: igUrl,
+                      icon: "FaInstagram",
+                      color: "#e4405f",
+                      label: "Instagram",
+                    },
+                    {
+                      href: ytUrl,
+                      icon: "FaYoutube",
+                      color: "#ff0000",
+                      label: "YouTube",
+                    },
                   ].map((row) => (
                     <a
                       key={row.label}
@@ -177,7 +198,11 @@ export default function Footer({ settings = {}, contentPages = [] }) {
                       aria-label={row.label}
                       style={{ color: row.color }}
                     >
-                      <DynamicFaIcon name={row.icon} size={15} style={{ color: row.color }} />
+                      <DynamicFaIcon
+                        name={row.icon}
+                        size={15}
+                        style={{ color: row.color }}
+                      />
                     </a>
                   ))}
             </div>
@@ -217,10 +242,17 @@ export default function Footer({ settings = {}, contentPages = [] }) {
               {contactRows.map((row, idx) => (
                 <li key={`${row.value}-${idx}`}>
                   <div className="ft-contact-icon" aria-hidden>
-                    <DynamicFaIcon name={row.icon} size={14} style={{ color: 'var(--red,#eb3237)' }} />
+                    <DynamicFaIcon
+                      name={row.icon}
+                      size={14}
+                      style={{ color: "var(--red,#eb3237)" }}
+                    />
                   </div>
                   {row.href?.trim() ? (
-                    <FooterNavLink href={row.href.trim()} className="ft-contact-link">
+                    <FooterNavLink
+                      href={row.href.trim()}
+                      className="ft-contact-link"
+                    >
                       {row.value}
                     </FooterNavLink>
                   ) : (
@@ -229,7 +261,7 @@ export default function Footer({ settings = {}, contentPages = [] }) {
                 </li>
               ))}
             </ul>
-            <div className="ft-map">
+            {/* <div className="ft-map">
               <iframe
                 src={footerMap}
                 width="100%"
@@ -240,7 +272,7 @@ export default function Footer({ settings = {}, contentPages = [] }) {
                 referrerPolicy="no-referrer-when-downgrade"
                 title={`${siteName} Location`}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -248,31 +280,62 @@ export default function Footer({ settings = {}, contentPages = [] }) {
       <div className="ft-bottom">
         <div className="container ft-bottom-inner">
           <p>
-            &copy; {new Date().getFullYear()} {settings.footer_copyright || 'Saviour Group. All rights reserved.'}{' '}
-            &nbsp;·&nbsp; <span className="ft-disclaimer">Images for representation only.</span>
+            &copy; {new Date().getFullYear()}{" "}
+            {settings.footer_copyright || "Saviour Group. All rights reserved."}{" "}
+            &nbsp;·&nbsp;{" "}
+            <span className="ft-disclaimer">
+              Images for representation only.
+            </span>
           </p>
-          {settings.footer_powered_by !== '' && settings.footer_powered_by !== undefined && (
-            <p>
-              Powered by{' '}
-              {settings.footer_powered_by_url ? (
-                <a href={settings.footer_powered_by_url} target="_blank" rel="noopener noreferrer">
-                  {settings.footer_powered_by || 'Sysneticindia'}
-                </a>
-              ) : (
-                <span>{settings.footer_powered_by || 'Sysneticindia'}</span>
-              )}
-            </p>
-          )}
+          {settings.footer_powered_by !== "" &&
+            settings.footer_powered_by !== undefined && (
+              <p className="ft-powered-by">
+                Designed & Developed by{" "}
+                {settings.footer_powered_by_url ? (
+                  <a
+                    href={settings.footer_powered_by_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Image
+                      src="/uploads/sysneticindialogo.png"
+                      alt="Sysneticindia"
+                      width={100}
+                      height={30}
+                    />
+                  </a>
+                ) : (
+                  <span>{settings.footer_powered_by || "Sysneticindia"}</span>
+                )}
+              </p>
+            )}
         </div>
       </div>
 
       <style jsx global>{`
-        .ft-root { background: var(--dark-800, #041208); color: rgba(255,255,255,0.65); }
+        .ft-powered-by {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .ft-powered-by img {
+          width: 100px;
+          height: 30px;
+          object-fit: contain;
+        }
+        .ft-root {
+          background: var(--dark-800, #041208);
+          color: rgba(255, 255, 255, 0.65);
+        }
 
         .ft-stats-strip {
-          background: linear-gradient(135deg, var(--green-dark, #004d26), var(--green, #006833));
+          background: linear-gradient(
+            135deg,
+            var(--green-dark, #004d26),
+            var(--green, #006833)
+          );
           padding: 28px 0;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         .ft-stats-inner {
           display: grid !important;
@@ -285,81 +348,205 @@ export default function Footer({ settings = {}, contentPages = [] }) {
           align-items: center;
           gap: 4px;
           padding: 0 20px;
-          border-right: 1px solid rgba(255,255,255,0.15);
+          border-right: 1px solid rgba(255, 255, 255, 0.15);
         }
-        .ft-stat:last-child { border-right: none; }
+        .ft-stat:last-child {
+          border-right: none;
+        }
         .ft-stat-num {
-          font-size: 30px; font-weight: 900; color: white; line-height: 1;
+          font-size: 30px;
+          font-weight: 900;
+          color: white;
+          line-height: 1;
           background: linear-gradient(135deg, #fff, var(--red-light, #ff4d52));
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
         }
-        .ft-stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); }
+        .ft-stat-label {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: rgba(255, 255, 255, 0.7);
+        }
 
-        .ft-main { padding: 64px 0 48px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .ft-main {
+          padding: 30px 0 20px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
         .ft-grid {
           display: grid;
           grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
           gap: 40px;
         }
 
-        .ft-desc { font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.5); margin-bottom: 24px; }
+        .ft-desc {
+          font-size: 14px;
+          line-height: 1.75;
+          color: rgba(255, 255, 255, 0.5);
+          margin-bottom: 24px;
+        }
 
-        .ft-social { display: flex !important; gap: 10px; flex-wrap: wrap; }
+        .ft-social {
+          display: flex !important;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
         .ft-social-btn {
-          display: flex !important; align-items: center !important; justify-content: center !important;
-          width: 36px; height: 36px; border-radius: 8px;
-          background: rgba(255,255,255,0.07);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.6);
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.07);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.6);
           transition: all 0.2s;
         }
-        .ft-social-btn:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); transform: translateY(-3px); }
+        .ft-social-btn:hover {
+          background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(255, 255, 255, 0.25);
+          transform: translateY(-3px);
+        }
 
         .ft-heading {
-          font-size: 12px; font-weight: 800; color: white;
-          text-transform: uppercase; letter-spacing: 1.8px;
-          margin-bottom: 22px; padding-bottom: 12px;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          font-size: 12px;
+          font-weight: 800;
+          color: white;
+          text-transform: uppercase;
+          letter-spacing: 1.8px;
+          margin-bottom: 22px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .ft-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .ft-links {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
         .ft-link {
-          display: flex !important; align-items: center !important; gap: 9px;
-          font-size: 13.5px; color: rgba(255,255,255,0.55);
-          text-decoration: none; transition: all 0.18s;
+          display: flex !important;
+          align-items: center !important;
+          gap: 9px;
+          font-size: 13.5px;
+          color: rgba(255, 255, 255, 0.55);
+          text-decoration: none;
+          transition: all 0.18s;
         }
-        .ft-link:hover { color: var(--red, #eb3237); padding-left: 4px; }
-        .ft-link-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--red, #eb3237); opacity: 0.5; flex-shrink: 0; }
+        .ft-link:hover {
+          color: var(--red, #eb3237);
+          padding-left: 4px;
+        }
+        .ft-link-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: var(--red, #eb3237);
+          opacity: 0.5;
+          flex-shrink: 0;
+        }
 
-        .ft-contact { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-        .ft-contact li { display: flex !important; align-items: flex-start !important; gap: 12px; }
+        .ft-contact {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        .ft-contact li {
+          display: flex !important;
+          align-items: flex-start !important;
+          gap: 12px;
+        }
         .ft-contact-icon {
-          width: 30px; height: 30px; min-width: 30px;
-          border-radius: 6px; background: rgba(0,104,51,0.2);
-          display: flex !important; align-items: center !important; justify-content: center !important;
-          color: var(--red, #eb3237); flex-shrink: 0;
+          width: 30px;
+          height: 30px;
+          min-width: 30px;
+          border-radius: 6px;
+          background: rgba(0, 104, 51, 0.2);
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: var(--red, #eb3237);
+          flex-shrink: 0;
         }
-        .ft-contact a, .ft-contact span, .ft-contact-link { font-size: 13.5px; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; line-height: 1.6; }
-        .ft-contact a:hover, .ft-contact-link:hover { color: var(--red, #eb3237); }
-        .ft-map { margin-top: 18px; border-radius: 10px; overflow: hidden; opacity: 0.8; }
+        .ft-contact a,
+        .ft-contact span,
+        .ft-contact-link {
+          font-size: 13.5px;
+          color: rgba(255, 255, 255, 0.6);
+          text-decoration: none;
+          transition: color 0.15s;
+          line-height: 1.6;
+        }
+        .ft-contact a:hover,
+        .ft-contact-link:hover {
+          color: var(--red, #eb3237);
+        }
+        .ft-map {
+          margin-top: 18px;
+          border-radius: 10px;
+          overflow: hidden;
+          opacity: 0.8;
+        }
 
-        .ft-bottom { padding: 18px 0; background: rgba(0,0,0,0.25); }
+        .ft-bottom {
+          padding: 18px 0;
+          background: rgba(0, 0, 0, 0.25);
+        }
         .ft-bottom-inner {
-          display: flex !important; justify-content: space-between; align-items: center;
-          flex-wrap: wrap; gap: 10px;
+          display: flex !important;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 10px;
         }
-        .ft-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); margin: 0; }
-        .ft-disclaimer { font-size: 11px; opacity: 0.7; }
-        .ft-bottom a { color: var(--red, #eb3237); text-decoration: none; }
-        .ft-bottom a:hover { text-decoration: underline; }
+        .ft-bottom p {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.3);
+          margin: 0;
+        }
+        .ft-disclaimer {
+          font-size: 11px;
+          opacity: 0.7;
+        }
+        .ft-bottom a {
+          color: var(--red, #eb3237);
+          text-decoration: none;
+        }
+        .ft-bottom a:hover {
+          text-decoration: underline;
+        }
 
-        @media (max-width: 1024px) { .ft-grid { grid-template-columns: 1fr 1fr; gap: 36px; } }
+        @media (max-width: 1024px) {
+          .ft-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+          }
+        }
         @media (max-width: 640px) {
-          .ft-grid { grid-template-columns: 1fr; gap: 32px; }
-          .ft-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 1px; }
-          .ft-stat { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); border-right: none; }
-          .ft-stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.15) !important; }
-          .ft-bottom-inner { flex-direction: column; text-align: center; }
+          .ft-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .ft-stats-inner {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+          }
+          .ft-stat {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-right: none;
+          }
+          .ft-stat:nth-child(odd) {
+            border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+          }
+          .ft-bottom-inner {
+            flex-direction: column;
+            text-align: center;
+          }
         }
       `}</style>
     </footer>

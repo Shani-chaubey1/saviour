@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import ContentPageView from '../components/pages/ContentPageView';
-import { getContentPageBySlug, getContentPages, getProjects } from '@/lib/data';
+import { getContentPageBySlug, getContentPages, getProjects, getSettings } from '@/lib/data';
 
 export const revalidate = 60;
 
@@ -25,9 +25,18 @@ export default async function ContentPage({ params }) {
   if (!page) notFound();
 
   const wantsProjects = Boolean(page.showProjects && page.projectsLocation);
-  const projects = wantsProjects
-    ? await getProjects({ location: page.projectsLocation }).catch(() => [])
-    : [];
+  const [projects, settings] = await Promise.all([
+    wantsProjects
+      ? getProjects({ location: page.projectsLocation }).catch(() => [])
+      : Promise.resolve([]),
+    getSettings(),
+  ]);
 
-  return <ContentPageView page={page} projects={projects} />;
+  return (
+    <ContentPageView
+      page={page}
+      projects={projects}
+      bannerImage={settings.banner_image_content || settings.banner_image_default || ''}
+    />
+  );
 }

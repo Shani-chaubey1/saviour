@@ -23,7 +23,7 @@ export default function AboutPageContent({ sections = {}, settings = {} }) {
 
   return (
     <>
-      <PageBanner title={bannerLabel} breadcrumbs={[{ label: bannerLabel }]} />
+      <PageBanner title={bannerLabel} breadcrumbs={[{ label: bannerLabel }]} image={settings.banner_image_about || settings.banner_image_default || ''} />
       {blocks.map((block, bi) => (
         <AboutBlock
           key={block.id || `${block.kind}-${bi}`}
@@ -108,7 +108,9 @@ function AboutCredentialBadges({ settings }) {
           font-size: 14px;
           font-weight: 700;
           letter-spacing: 0.1px;
-          transition: transform 0.18s ease, box-shadow 0.18s ease,
+          transition:
+            transform 0.18s ease,
+            box-shadow 0.18s ease,
             background 0.18s ease;
         }
         .about-cred-pill:hover {
@@ -170,7 +172,7 @@ function IntroSplitBlock({ block, sections, settings, pageTitle }) {
       </div>
       <style jsx global>{`
         .about-sec {
-          padding: 46px 0;
+          padding: 30px 0;
           background: white;
         }
         .about-grid {
@@ -309,7 +311,7 @@ function TeamBlock({ block }) {
       </div>
       <style jsx global>{`
         .mgmt-sec {
-          padding: 46px 0;
+          padding: 30px 0;
           background: #f8f9fa;
         }
         .mgmt-grid {
@@ -395,7 +397,7 @@ function ChairmanBlock({ block }) {
       </div>
       <style jsx global>{`
         .chairman-sec {
-          padding: 46px 0;
+          padding: 30px 0;
           background: white;
         }
         .chairman-inner {
@@ -508,7 +510,7 @@ function MissionGridBlock({ block }) {
       </div>
       <style jsx global>{`
         .mvv-sec {
-          padding: 46px 0;
+          padding: 30px 0;
           background: #f8f9fa;
         }
         .mvv-grid {

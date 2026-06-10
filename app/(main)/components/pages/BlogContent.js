@@ -12,7 +12,7 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-export function BlogListContent({ posts, cms = {} }) {
+export function BlogListContent({ posts, cms = {}, bannerImage = '' }) {
   const bannerBrand = cms.banner_brand?.trim() || 'Savviour Builderrs';
   const sectionTitle = cms.section_title?.trim() || 'Blog';
   const sectionSubtitle = cms.section_subtitle?.trim() || 'Best Builder in Delhi-NCR';
@@ -23,7 +23,7 @@ export function BlogListContent({ posts, cms = {} }) {
 
   return (
     <>
-      <PageBanner title={bannerBrand} breadcrumbs={[{ label: 'Blog' }]} />
+      <PageBanner title={bannerBrand} breadcrumbs={[{ label: 'Blog' }]} image={bannerImage} />
       <section className="blog-pg">
         <div className="container">
           <SectionHeading title={sectionTitle} subtitle={sectionSubtitle} />
@@ -77,22 +77,30 @@ export function BlogListContent({ posts, cms = {} }) {
       </section>
       <style jsx global>{`
         .blog-pg { padding: 80px 0; background: white; }
-        .blog-pg-layout { display: grid; grid-template-columns: 1fr 320px; gap: 10px; align-items: start; }
+        .blog-pg-layout { display: grid; grid-template-columns: 1fr 380px; gap: 10px; align-items: start; }
         .blog-pg-sidebar { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 24px; }
         .blog-pg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
         .empty-msg { text-align: center; color: #888; font-size: 16px; padding: 48px 0; }
         .blog-list-recent-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid #eee; }
-        .blog-list-recent-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 2px solid #e67e22; display: inline-block; }
+        .blog-list-recent-title { font-size: 18px; font-weight: 700; color: #1f2937; margin: 0 0 16px; padding-bottom: 12px; border-bottom: 2px solid var(--green,#006833); display: inline-block; }
         .blog-list-recent-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
         .blog-list-recent-item { display: flex; gap: 12px; align-items: flex-start; text-decoration: none; transition: color 0.2s ease; }
-        .blog-list-recent-item:hover .blog-list-recent-post-title { color: #e67e22; }
+        .blog-list-recent-item:hover .blog-list-recent-post-title { color: var(--green,#006833); }
         .blog-list-recent-img-wrap { position: relative; width: 80px; height: 60px; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
         .blog-list-recent-img { object-fit: cover; }
         .blog-list-recent-info { flex: 1; min-width: 0; }
         .blog-list-recent-post-title { font-size: 13px; font-weight: 600; color: #333; line-height: 1.4; margin: 0 0 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 0.2s; }
         .blog-list-recent-date { font-size: 11px; color: #999; }
         .blog-list-sidebar-form { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid #eee; }
-        .blog-list-sidebar-form-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin: 0 0 20px; padding-bottom: 12px; border-bottom: 2px solid #e67e22; display: inline-block; }
+        .blog-list-sidebar-form-title { font-size: 18px; font-weight: 700; color: #1f2937; margin: 0 0 16px; padding-bottom: 10px; border-bottom: 2px solid var(--green,#006833); display: inline-block; }
+        /* Compact the sidebar contact form (matches property detail page) so it fits without scrolling. */
+        .blog-list-sidebar-form .cf-wrap { gap: 12px; }
+        .blog-list-sidebar-form .cf-tabs { flex-direction: row; }
+        .blog-list-sidebar-form .contact-form { grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+        .blog-list-sidebar-form .form-group { gap: 4px; }
+        .blog-list-sidebar-form .form-label { font-size: 10.5px; letter-spacing: 0.2px; }
+        .blog-list-sidebar-form .form-input { min-height: 40px; padding: 9px 11px; font-size: 14px; }
+        .blog-list-sidebar-form .submit-btn { padding: 11px 24px; font-size: 14px; }
         @media (max-width: 1280px) { .blog-pg-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 1024px) {
           .blog-pg-layout { grid-template-columns: 1fr; }
@@ -105,12 +113,13 @@ export function BlogListContent({ posts, cms = {} }) {
   );
 }
 
-export function BlogPostContent({ post, recentPosts }) {
+export function BlogPostContent({ post, recentPosts, bannerImage = '' }) {
   return (
     <>
       <PageBanner
         title={post.title}
         breadcrumbs={[{ label: 'Blog', href: '/blog' }, { label: post.title.slice(0, 40) + (post.title.length > 40 ? '...' : '') }]}
+        image={bannerImage}
       />
       <div className="post-layout container">
         <article className="post-main">
@@ -182,13 +191,21 @@ export function BlogPostContent({ post, recentPosts }) {
         .post-nav { margin-top: 32px; padding-top: 20px; border-top: 1px solid #eee; }
         .back-btn { display: inline-flex; align-items: center; gap: 8px; color: #e67e22; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none; transition: gap 0.2s; }
         .back-btn:hover { gap: 12px; }
-        .sidebar-form-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid #eee; margin-bottom: 24px; }
-        .sidebar-form-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #e67e22; display: inline-block; }
+        .sidebar-form-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid #eee; margin-bottom: 24px; position: sticky; top: 100px; }
+        .sidebar-form-title { font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--green,#006833); display: inline-block; }
+        /* Compact the sidebar contact form (matches property detail page) so it fits without scrolling. */
+        .sidebar-form-box .cf-wrap { gap: 12px; }
+        .sidebar-form-box .cf-tabs { flex-direction: row; }
+        .sidebar-form-box .contact-form { grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+        .sidebar-form-box .form-group { gap: 4px; }
+        .sidebar-form-box .form-label { font-size: 10.5px; letter-spacing: 0.2px; }
+        .sidebar-form-box .form-input { min-height: 40px; padding: 9px 11px; font-size: 14px; }
+        .sidebar-form-box .submit-btn { padding: 11px 24px; font-size: 14px; }
         .recent-posts-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid #eee; }
-        .recent-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #e67e22; display: inline-block; }
+        .recent-title { font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--green,#006833); display: inline-block; }
         .recent-list { display: flex; flex-direction: column; gap: 16px; }
         .recent-item { display: flex; gap: 12px; align-items: flex-start; text-decoration: none; transition: all 0.2s ease; }
-        .recent-item:hover .recent-post-title { color: #e67e22; }
+        .recent-item:hover .recent-post-title { color: var(--green,#006833); }
         .recent-img-wrap { position: relative; width: 80px; height: 60px; border-radius: 6px; overflow: hidden; flex-shrink: 0; }
         .recent-img { object-fit: cover; }
         .recent-info { flex: 1; }

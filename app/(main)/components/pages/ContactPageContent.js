@@ -28,7 +28,7 @@ export default function ContactPageContent({ sections = {}, settings = {} }) {
 
   return (
     <>
-      <PageBanner title={pageTitle} breadcrumbs={[{ label: pageTitle }]} />
+      <PageBanner title={pageTitle} breadcrumbs={[{ label: pageTitle }]} image={settings.banner_image_contact || settings.banner_image_default || ''} />
       <section className="contact-pg">
         <div className="container">
           <div className="contact-intro">

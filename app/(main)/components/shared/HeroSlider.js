@@ -66,28 +66,7 @@ export default function HeroSlider({ slides: slidesProp }) {
             priority={i === 0}
             sizes="100vw"
           />
-          <div
-            className={`hs-content container${i === current ? " hs-content-in" : ""}`}
-          >
-            {s.status && <span className="hs-eyebrow">{s.status}</span>}
-            <h1 className="hs-title">{s.title}</h1>
-            {s.excerpt && <p className="hs-sub">{s.excerpt}</p>}
-            <div className="hs-ctas">
-              <Link href={`/properties/${s.slug}`} className="hs-btn-primary">
-                Explore Project
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-          </div>
+        
         </div>
       ))}
 
@@ -159,10 +138,6 @@ export default function HeroSlider({ slides: slidesProp }) {
         .hs-img {
           object-fit: cover;
           object-position: center;
-          transition: transform 8s ease;
-        }
-        .hs-slide.hs-active .hs-img {
-          transform: scale(1.04);
         }
 
         /* Content */

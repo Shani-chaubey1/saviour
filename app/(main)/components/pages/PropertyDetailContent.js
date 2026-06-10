@@ -8,8 +8,9 @@ import { MapPin, Maximize2, IndianRupee, Building2, CheckCircle, Tag, FileText, 
 import PageBanner from '../ui/PageBanner';
 import PropertyCard from '../ui/PropertyCard';
 import ContactForm from '../shared/ContactForm';
+import PropertyPromoCarousel from '../shared/PropertyPromoCarousel';
 
-export default function PropertyDetailContent({ project, relatedProjects }) {
+export default function PropertyDetailContent({ project, relatedProjects, bannerImage = '', sidebarImages = [] }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [lightboxSources, setLightboxSources] = useState([]);
@@ -20,6 +21,7 @@ export default function PropertyDetailContent({ project, relatedProjects }) {
   const amenities = (project.amenities || []).filter(a => a?.name);
   const specs     = (project.specifications || []).filter(s => s?.name);
   const hasFloors = hasFloorPlans(project);
+  const galleryImages = (project.gallery || []).filter(Boolean);
   const openLightbox = (sources, index = 0) => {
     if (!Array.isArray(sources) || sources.length === 0) return;
     setLightboxSources(sources);
@@ -32,6 +34,7 @@ export default function PropertyDetailContent({ project, relatedProjects }) {
       <PageBanner
         title={project.title}
         breadcrumbs={[{ label: 'Projects', href: '/projects' }, { label: project.title }]}
+        image={bannerImage}
       />
       <div className="detail-layout container">
         <div className="detail-main">
@@ -43,10 +46,12 @@ export default function PropertyDetailContent({ project, relatedProjects }) {
           {amenities.length > 0 && <AmenitiesSection amenities={amenities} />}
           {specs.length > 0 && <SpecificationsSection specs={specs} />}
           {hasFloors && <FloorPlans floorPlans={project.floorPlans} masterPlan={project.masterPlan} onOpenLightbox={openLightbox} />}
+          {galleryImages.length > 0 && <GallerySection images={galleryImages} title={project.title} onOpenLightbox={openLightbox} />}
           {project.video && <VideoSection url={project.video} title={project.title} />}
         </div>
         <aside className="detail-sidebar">
           <PropertyMeta project={project} typeName={typeName} typeSlug={typeSlug} />
+          <PropertyPromoCarousel images={sidebarImages} />
           <div className="sidebar-form-box">
             <h3 className="sidebar-form-title">Contact Us</h3>
             <ContactForm projectName={project.title} />
@@ -74,8 +79,18 @@ export default function PropertyDetailContent({ project, relatedProjects }) {
         .detail-layout { display: grid; grid-template-columns: 1fr 360px; gap: 40px; padding-top: 48px; padding-bottom: 30px; align-items: start; }
         .detail-layout-related { padding-top: 0; padding-bottom: 80px; }
         .detail-sidebar { display: flex; flex-direction: column; gap: 24px; align-self: stretch; }
-        .sidebar-form-box { background: white; border-radius: 12px; padding: 28px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border: 1px solid #eee; position: sticky; top: 100px; z-index: 3; }
-        .sidebar-form-title { font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--green,#006833); display: inline-block; }
+        .sidebar-form-box { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border: 1px solid #eee; position: sticky; top: 100px; z-index: 3; }
+        .sidebar-form-title { font-size: 18px; font-weight: 700; color: #1f2937; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--green,#006833); display: inline-block; }
+        /* Compact the sidebar contact form so it fits without scrolling.
+           Higher specificity (.sidebar-form-box ...) overrides ContactForm's
+           single-column container/viewport fallbacks. */
+        .sidebar-form-box .cf-wrap { gap: 12px; }
+        .sidebar-form-box .cf-tabs { flex-direction: row; }
+        .sidebar-form-box .contact-form { grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+        .sidebar-form-box .form-group { gap: 4px; }
+        .sidebar-form-box .form-label { font-size: 10.5px; letter-spacing: 0.2px; }
+        .sidebar-form-box .form-input { min-height: 40px; padding: 9px 11px; font-size: 14px; }
+        .sidebar-form-box .submit-btn { padding: 11px 24px; font-size: 14px; }
         @media (max-width: 1024px) { .detail-layout { grid-template-columns: 1fr; } .sidebar-form-box { position: static; } .detail-sidebar { order: -1; align-self: auto; } .detail-layout-related { padding-bottom: 60px; } }
       `}</style>
     </>
@@ -150,40 +165,48 @@ function PropertyGallery({ project, onOpenLightbox }) {
           </div>
         )}
       </div>
-      {images.length > 1 && (
-        <div className="gallery-thumbs">
-          {images.slice(1, 5).map((img, i) => (
-            <div
-              key={i}
-              className="gallery-thumb"
-              role="button"
-              tabIndex={0}
-              aria-label={`Open image ${i + 2}`}
-              onClick={() => onOpenLightbox(images, i + 1)}
-              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpenLightbox(images, i + 1)}
-            >
-              <Image src={img} alt={`${project.title} ${i + 2}`} fill className="gallery-thumb-img" sizes="20vw" />
-              {i === 3 && images.length > 5 && (
-                <div className="gallery-more">+{images.length - 5}</div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
       <style jsx global>{`
         .gallery-wrap { margin-bottom: 36px; }
-        .gallery-main { position: relative; height: 460px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); margin-bottom: 12px; }
+        .gallery-main { position: relative; height: 460px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); cursor: pointer; }
         .gallery-main-img { object-fit: cover; }
         .gallery-badges { position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
         .gbadge { padding: 5px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
         .gbadge-status { background: var(--red,#eb3237); color: white; }
         .gbadge-offer  { background: var(--green,#006833); color: white; }
-        .gallery-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .gallery-thumb { position: relative; height: 120px; border-radius: 8px; overflow: hidden; cursor: pointer; }
-        .gallery-thumb:hover .gallery-thumb-img { transform: scale(1.06); }
-        .gallery-thumb-img { object-fit: cover; transition: transform 0.3s; }
-        .gallery-more { position: absolute; inset: 0; background: rgba(0,0,0,0.55); color: white; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; }
-        @media (max-width: 640px) { .gallery-main { height: 260px; } .gallery-thumbs { grid-template-columns: repeat(3,1fr); } .gallery-thumb { height: 80px; } }
+        @media (max-width: 640px) { .gallery-main { height: 260px; } }
+      `}</style>
+    </div>
+  );
+}
+
+/* ── Gallery Grid (all images, like floor plans) ── */
+function GallerySection({ images, title, onOpenLightbox }) {
+  if (!images?.length) return null;
+  return (
+    <div className="gal-wrap">
+      <SectionHeader title="Gallery" />
+      <div className="gal-grid">
+        {images.map((img, i) => (
+          <div
+            key={i}
+            className="gal-item"
+            role="button"
+            tabIndex={0}
+            aria-label={`Open image ${i + 1}`}
+            onClick={() => onOpenLightbox(images, i)}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpenLightbox(images, i)}
+          >
+            <Image src={img} alt={`${title} ${i + 1}`} fill className="gal-img" sizes="(max-width:768px) 100vw, 40vw" />
+          </div>
+        ))}
+      </div>
+      <style jsx global>{`
+        .gal-wrap { margin-bottom: 36px; }
+        .gal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .gal-item { position: relative; height: 300px; border-radius: 10px; overflow: hidden; border: 1px solid #e5e7eb; background: #f8f9fa; cursor: pointer; }
+        .gal-img { object-fit: cover; transition: transform 0.4s; }
+        .gal-item:hover .gal-img { transform: scale(1.05); }
+        @media (max-width: 640px) { .gal-grid { grid-template-columns: 1fr; } .gal-item { height: 220px; } }
       `}</style>
     </div>
   );
@@ -263,19 +286,20 @@ function ProjectOverview({ html }) {
 
 /* ── Pricing ──────────────────────────────── */
 function PricingTable({ rows }) {
+  const hasSize = rows.some(r => r.size);
   return (
     <div className="pricing-wrap">
       <SectionHeader title="Pricing" />
-      <div className="price-table">
+      <div className={`price-table${hasSize ? '' : ' price-table--nosize'}`}>
         <div className="price-row price-header">
           <span>Configuration</span>
-          {rows.some(r => r.size) && <span>Size</span>}
+          {hasSize && <span>Minimum Size</span>}
           <span>Price</span>
         </div>
         {rows.map((row, i) => (
           <div key={i} className="price-row">
             <span className="price-floor">{row.floor}</span>
-            {rows.some(r => r.size) && <span className="price-size">{row.size || '—'}</span>}
+            {hasSize && <span className="price-size">{row.size || '—'}</span>}
             <span className="price-val">{row.price}</span>
           </div>
         ))}
@@ -283,7 +307,8 @@ function PricingTable({ rows }) {
       <style jsx global>{`
         .pricing-wrap { margin-bottom: 36px; }
         .price-table { border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
-        .price-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 13px 20px; border-bottom: 1px solid #f0f0f0; transition: background 0.15s; gap: 12px; }
+        .price-row { display: grid; grid-template-columns: 1fr auto 1fr; justify-content: space-between; align-items: center; padding: 13px 20px; border-bottom: 1px solid #f0f0f0; transition: background 0.15s; gap: 12px; }
+        .price-table--nosize .price-row { grid-template-columns: 1fr 1fr; }
         .price-row:last-child { border-bottom: none; }
         .price-row:hover { background: var(--green-pale,#e8f5ee); }
         .price-header { background: #f9fafb; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #9ca3af; }
@@ -454,7 +479,7 @@ function PropertyMeta({ project, typeName, typeSlug }) {
 
   return (
     <div className="meta-box">
-      <h3 className="meta-box-title">Property Details</h3>
+      <h3 className="meta-box-title">Project Details</h3>
       <div className="meta-list">
         {metaRows.map((row, i) => (
           <div key={i} className="meta-row">

@@ -45,7 +45,7 @@
   box-sizing: border-box;
 }
 .cf-tab {
-  flex: 1 1 0;
+  flex: 0 0 60%;
   min-width: 0;
   min-height: 40px;
   padding: 8px 12px;
@@ -61,6 +61,9 @@
   white-space: normal;
   text-align: center;
   line-height: 1.25;
+}
+.cf-tab:last-child {
+  flex-basis: 40%;
 }
 .cf-tab:hover { color: #111827; }
 .cf-tab:focus-visible {

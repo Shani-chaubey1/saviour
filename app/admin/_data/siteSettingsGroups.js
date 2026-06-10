@@ -218,6 +218,31 @@ export const SITE_SETTINGS_GROUPS = [
       },
     ],
   },
+  /* ── Promotions & Popups ─────────────────── */
+  {
+    id: 'promotions',
+    label: '✨ Promotions & Popups',
+    fields: [
+      {
+        key: 'property_sidebar_images',
+        label: 'Property Detail — Sidebar Image Carousel',
+        type: 'multi_image',
+        hint: 'Shows as an auto-rotating card (~550px tall) in the right column of EVERY property detail page. Portrait / tall images recommended. Use the arrows to reorder. Leave empty to hide.',
+      },
+      {
+        key: 'inquiry_popup_enabled',
+        label: 'Enable Floating Inquiry Popup',
+        type: 'boolean',
+        hint: 'Shows a small clickable image pinned to the bottom-left of every page that opens the enquiry form.',
+      },
+      {
+        key: 'inquiry_popup_image',
+        label: 'Floating Inquiry Popup — Image',
+        type: 'image',
+        hint: 'The image shown in the floating popup. Required for the popup to appear.',
+      },
+    ],
+  },
   /* ── About Page · Mission, Vision & Quality ── */
   {
     id: 'mission_vision_quality',

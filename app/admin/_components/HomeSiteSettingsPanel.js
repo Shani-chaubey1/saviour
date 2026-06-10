@@ -129,6 +129,18 @@ export default function HomeSiteSettingsPanel() {
                       />
                     ) : f.type === 'townships_list' ? (
                       <TownshipsListEditor label={f.label} hint={f.hint} />
+                    ) : f.type === 'boolean' ? (
+                      <label className="hssp-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={values[f.key] === true || values[f.key] === 'true'}
+                          onChange={(e) => setValues((prev) => ({ ...prev, [f.key]: e.target.checked }))}
+                        />
+                        <span className="hssp-checkbox-text">
+                          {f.label}
+                          {f.hint && <span className="hssp-hint">{f.hint}</span>}
+                        </span>
+                      </label>
                     ) : f.type === 'image' ? (
                       <ImageField
                         value={values[f.key] || ''}
@@ -216,6 +228,10 @@ export default function HomeSiteSettingsPanel() {
         .hssp-textarea { resize: vertical; min-height: 90px; }
 
         .hssp-panel-footer { margin-top: 28px; padding-top: 20px; border-top: 1px solid #f0f0f0; display: flex !important; justify-content: flex-end; }
+
+        .hssp-checkbox { display: flex !important; align-items: flex-start !important; gap: 10px; cursor: pointer; }
+        .hssp-checkbox input { width: 18px; height: 18px; margin-top: 1px; accent-color: #006833; cursor: pointer; flex-shrink: 0; }
+        .hssp-checkbox-text { font-size: 13px; font-weight: 600; color: #374151; }
       `}</style>
     </div>
   );

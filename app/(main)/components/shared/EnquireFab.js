@@ -23,7 +23,7 @@ export default function EnquireFab({
         aria-haspopup="dialog"
         aria-expanded={open}
       >
-        <MessageSquare size={16} aria-hidden="true" className="enquire-fab__icon" />
+        <MessageSquare size={13} aria-hidden="true" className="enquire-fab__icon" />
         <span className="enquire-fab__text">{label}</span>
       </button>
 
@@ -46,8 +46,8 @@ export default function EnquireFab({
 
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          padding: 12px 14px;
+          gap: 6px;
+          padding: 8px 8px;
 
           /* Vertical orientation — anchors flush to the right edge */
           writing-mode: vertical-rl;
@@ -55,15 +55,15 @@ export default function EnquireFab({
 
           background: var(--green, #006833);
           color: #ffffff;
-          font-size: 13px;
+          font-size: 11px;
           font-weight: 700;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.03em;
           text-transform: uppercase;
           line-height: 1;
 
           border: none;
-          border-radius: 12px 0 0 12px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+          border-radius: 10px 0 0 10px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
           cursor: pointer;
 
           transition:
@@ -97,9 +97,9 @@ export default function EnquireFab({
 
         @media (max-width: 480px) {
           .enquire-fab {
-            padding: 10px 11px;
-            font-size: 12px;
-            border-radius: 10px 0 0 10px;
+            padding: 7px 6px;
+            font-size: 10px;
+            border-radius: 8px 0 0 8px;
           }
         }
 

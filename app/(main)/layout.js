@@ -3,6 +3,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import ScrollToTop from './components/shared/ScrollToTop';
 import EnquireFab from './components/shared/EnquireFab';
+import FloatingInquiryPopup from './components/shared/FloatingInquiryPopup';
 import CookieConsent from './components/shared/CookieConsent';
 import { getSettings, getFooterContentPages } from '@/lib/data';
 
@@ -23,6 +24,13 @@ export default async function PublicLayout({ children }) {
       <Footer settings={settings} contentPages={footerPages} />
       <EnquireFab
         label={settings.enquire_fab_label || 'Enquire Now'}
+        popupTitle={settings.enquire_fab_popup_title || 'Get in Touch'}
+        tabConnectLabel={settings.contact_form_tab_connect_label || ''}
+        tabVisitLabel={settings.contact_form_tab_visit_label || ''}
+      />
+      <FloatingInquiryPopup
+        enabled={settings.inquiry_popup_enabled}
+        image={settings.inquiry_popup_image || ''}
         popupTitle={settings.enquire_fab_popup_title || 'Get in Touch'}
         tabConnectLabel={settings.contact_form_tab_connect_label || ''}
         tabVisitLabel={settings.contact_form_tab_visit_label || ''}

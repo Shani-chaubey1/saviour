@@ -188,7 +188,7 @@ async function run() {
         ? p.floorPlans
         : [{ title: 'Floor Plan', image: thumb }],
       masterPlan: isEmpty(p.masterPlan) ? thumb : p.masterPlan,
-      video: isEmpty(p.video) ? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' : p.video,
+      video: isEmpty(p.video) ? '' : p.video,
       amenities: Array.isArray(p.amenities) && p.amenities.length ? p.amenities : amenityIds,
       specifications: Array.isArray(p.specifications) && p.specifications.length ? p.specifications : specIds,
       highlights: Array.isArray(p.highlights) && p.highlights.length

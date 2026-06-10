@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { BlogPostContent } from '../../components/pages/BlogContent';
-import { getPostBySlug, getPosts, SEED_POSTS } from '@/lib/data';
+import { getPostBySlug, getPosts, getSettings, SEED_POSTS } from '@/lib/data';
 
 export const revalidate = 60;
 
@@ -20,13 +20,20 @@ export async function generateMetadata({ params }) {
 
 export default async function BlogPostPage({ params }) {
   const { slug } = await params;
-  const [post, allPosts] = await Promise.all([
+  const [post, allPosts, settings] = await Promise.all([
     getPostBySlug(slug),
     getPosts(),
+    getSettings(),
   ]);
 
   if (!post) notFound();
 
   const recentPosts = allPosts.filter(p => p.slug !== slug).slice(0, 3);
-  return <BlogPostContent post={post} recentPosts={recentPosts} />;
+  return (
+    <BlogPostContent
+      post={post}
+      recentPosts={recentPosts}
+      bannerImage={settings.banner_image_blog || settings.banner_image_default || ''}
+    />
+  );
 }

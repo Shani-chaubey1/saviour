@@ -37,6 +37,14 @@ export default function MultiImageManager({ value = '', onChange, label = 'Image
 
   const remove = (idx) => onChange(urls.filter((_, i) => i !== idx).join('\n'));
 
+  const move = (idx, dir) => {
+    const target = idx + dir;
+    if (target < 0 || target >= urls.length) return;
+    const next = [...urls];
+    [next[idx], next[target]] = [next[target], next[idx]];
+    onChange(next.join('\n'));
+  };
+
   const addUrl = () => {
     const u = urlInput.trim();
     if (!u) return;
@@ -147,6 +155,28 @@ export default function MultiImageManager({ value = '', onChange, label = 'Image
                   ✕
                 </button>
               </div>
+              <div className="mim-reorder">
+                <button
+                  type="button"
+                  className="mim-move"
+                  onClick={() => move(i, -1)}
+                  disabled={i === 0}
+                  title="Move left / up"
+                  aria-label="Move image earlier"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  className="mim-move"
+                  onClick={() => move(i, 1)}
+                  disabled={i === urls.length - 1}
+                  title="Move right / down"
+                  aria-label="Move image later"
+                >
+                  ›
+                </button>
+              </div>
               <span className="mim-index">{i + 1}</span>
             </div>
           ))}
@@ -254,6 +284,21 @@ export default function MultiImageManager({ value = '', onChange, label = 'Image
           box-shadow: 0 1px 4px rgba(0,0,0,0.25);
         }
         .mim-item:hover .mim-remove { opacity: 1; }
+        .mim-reorder {
+          position: absolute; bottom: 4px; right: 4px;
+          display: flex !important; gap: 4px;
+          opacity: 0; transition: opacity 0.18s;
+        }
+        .mim-item:hover .mim-reorder { opacity: 1; }
+        .mim-move {
+          width: 22px; height: 22px; border-radius: 6px;
+          background: rgba(0,104,51,0.92); color: white;
+          border: 1.5px solid white; font-size: 13px; line-height: 1;
+          cursor: pointer; display: flex; align-items: center; justify-content: center;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+        }
+        .mim-move:hover:not(:disabled) { background: #004d26; }
+        .mim-move:disabled { opacity: 0.4; cursor: not-allowed; }
         .mim-index {
           position: absolute; bottom: 4px; left: 6px;
           font-size: 10px; font-weight: 700; color: rgba(0,0,0,0.4);

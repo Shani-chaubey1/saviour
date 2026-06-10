@@ -3,14 +3,8 @@
 export default function SectionHeading({ title, subtitle, centered = false, light = false }) {
   return (
     <div className={`sh-wrap${centered ? ' sh-c' : ''}${light ? ' sh-l' : ''}`}>
-      <div className="sh-eyebrow">
-        <span className="sh-accent-line" />
-        <span className="sh-label">— {title} —</span>
-        <span className="sh-accent-line" />
-      </div>
       <h2 className="sh-title">{title}</h2>
       <div className="sh-divider" />
-      {subtitle && <p className="sh-sub">{subtitle}</p>}
 
       <style jsx global>{`
         .sh-wrap { margin-bottom: 48px; }

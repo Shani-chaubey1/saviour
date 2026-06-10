@@ -10,8 +10,10 @@ export default function ContactPopup({
   onClose,
   title = "Get in Touch",
   pageLabel = "",
+  projectName = "",
   tabConnectLabel = "",
   tabVisitLabel = "",
+  onSubmitted,
 }) {
   const dialogRef = useRef(null);
   const previouslyFocusedRef = useRef(null);
@@ -97,9 +99,11 @@ export default function ContactPopup({
         </div>
         <div className="cp-body">
           <ContactForm
+            projectName={projectName}
             pageLabel={pageLabel}
             tabConnectLabel={tabConnectLabel}
             tabVisitLabel={tabVisitLabel}
+            onSuccess={onSubmitted}
           />
         </div>
       </div>
@@ -194,11 +198,46 @@ export default function ContactPopup({
           }
         }
         @media (max-width: 480px) {
+          .cp-overlay {
+            padding: 8px;
+          }
+          .cp-dialog {
+            max-height: calc(100vh - 16px);
+          }
           .cp-head {
-            padding: 14px 16px;
+            padding: 12px 16px;
           }
           .cp-body {
-            padding: 16px 16px 20px;
+            padding: 14px 16px 18px;
+          }
+          /* Compact layout so the popup form fits without scrolling.
+             Higher specificity (.cp-dialog ...) overrides ContactForm's
+             single-column container/viewport fallbacks. */
+          .cp-dialog .cf-wrap {
+            gap: 12px;
+          }
+          .cp-dialog .cf-tabs {
+            flex-direction: row;
+          }
+          .cp-dialog .contact-form {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 12px;
+          }
+          .cp-dialog .form-group {
+            gap: 4px;
+          }
+          .cp-dialog .form-label {
+            font-size: 10.5px;
+            letter-spacing: 0.2px;
+          }
+          .cp-dialog .form-input {
+            min-height: 40px;
+            padding: 9px 11px;
+            font-size: 14px;
+          }
+          .cp-dialog .submit-btn {
+            padding: 11px 24px;
+            font-size: 14px;
           }
         }
       `}</style>

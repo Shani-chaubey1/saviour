@@ -234,7 +234,6 @@ export function CertificationsSection({ settings = {} }) {
         {/* Partner / project logos strip */}
         {partnerLogos.length > 0 && (
           <>
-            <div className="cert-divider" />
             <div className="cert-partners">
               {partnerLogos.map((src, i) => (
                 <div key={i} className="cert-partner-item">
@@ -253,7 +252,7 @@ export function CertificationsSection({ settings = {} }) {
       <style jsx global>{`
         .cert-root {
           background: #ffffff;
-          padding: 56px 0 48px;
+          padding: 30px 0 20px;
           border-bottom: 1px solid #f0f0f0;
         }
 
@@ -283,8 +282,8 @@ export function CertificationsSection({ settings = {} }) {
           padding: 12px 24px;
         }
         .cert-logo-img {
-          max-height: 180px;
-          max-width: 277px;
+          max-height: 140px;
+          max-width: 220px;
           width: auto;
           display: block;
           transition: transform 0.2s;
@@ -395,7 +394,7 @@ export function TrustBanner({ settings = {} }) {
             {settings.trust_intro ||
               "Saviour Builders are one of the leading real estate developers in Delhi NCR, dedicated to the highest standards, systems and performance necessary to fulfill all of your real estate dreams."}
           </p>
-          <div className="tb-creds">
+          {/* <div className="tb-creds">
             {settings.trust_credential_1 && (
               <div className="tb-cred">
                 <svg
@@ -427,7 +426,7 @@ export function TrustBanner({ settings = {} }) {
                 {settings.trust_credential_2}
               </div>
             )}
-          </div>
+          </div> */}
         </div>
         <div className="tb-right">
           {stats.map((s) => (
@@ -441,7 +440,7 @@ export function TrustBanner({ settings = {} }) {
       <style jsx global>{`
         .tb-root {
           background: #fff;
-          padding: 72px 0;
+          padding: 32px 0;
           border-bottom: 1px solid #f0f0f0;
         }
         .tb-inner {
@@ -638,7 +637,7 @@ export function AboutSection({ settings = {}, willShowFull = true }) {
           padding: 0 !important;
         }
         .as-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: var(--green-pale, #e8f5ee);
         }
         .as-inner {
@@ -860,15 +859,23 @@ export function MissionVisionSection({ settings = {} }) {
       <div className="container mv-grid">
         {cards.map((c) => (
           <div key={c.title} className={`mv-card ${c.cls}`}>
-            <div className={`mv-icon-wrap ${c.iconCls}`}>{c.icon}</div>
-            <h3 className="mv-title">{c.title}</h3>
+            <div className="mv-card-inner">
+              <div className={`mv-icon-wrap ${c.iconCls}`}>{c.icon}</div>
+              <h3 className="mv-title">{c.title}</h3>
+            </div>
             <p className="mv-text">{c.text}</p>
           </div>
         ))}
       </div>
       <style jsx global>{`
+        .mv-card-inner {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
         .mv-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: #fff;
         }
         .mv-grid {
@@ -897,27 +904,23 @@ export function MissionVisionSection({ settings = {} }) {
           border-color: var(--green, #006833);
         }
         .mv-icon-wrap {
-          width: 64px;
-          height: 64px;
+          width: 26px;
+          height: 26px;
           border-radius: 14px;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-          margin-bottom: 20px;
         }
         .mv-icon-green {
-          background: var(--green-pale, #e8f5ee);
           color: var(--green, #006833);
         }
         .mv-icon-red {
-          background: var(--red-pale, #fef2f2);
           color: var(--red, #eb3237);
         }
         .mv-title {
           font-size: 20px;
           font-weight: 800;
           color: #111;
-          margin-bottom: 14px;
         }
         .mv-text {
           font-size: 14.5px;
@@ -978,7 +981,7 @@ export function ProjectsSection({ projects, settings = {} }) {
       </div>
       <style jsx global>{`
         .prs-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: #f7f9f8;
         }
         .prs-header {
@@ -1141,7 +1144,7 @@ export function TownshipsSection({ townships = [], settings = {} }) {
 
       <style jsx global>{`
         .twn-root {
-          padding: 56px 0 64px;
+          padding: 30px 0 30px;
           background: #ffffff;
         }
         .twn-grid {
@@ -1153,22 +1156,23 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           position: relative;
           display: flex !important;
           flex-direction: column !important;
-          background: #0c2541;
+          background: var(--green-dark, #004d26);
           border-radius: 14px;
           overflow: hidden;
           color: #ffffff;
           text-decoration: none !important;
-          box-shadow: 0 10px 28px rgba(12, 37, 65, 0.12);
-          transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow: 0 10px 28px rgba(0, 104, 51, 0.12);
+          transition:
+            transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
             box-shadow 0.35s ease;
           isolation: isolate;
         }
         .twn-card-link:hover {
           transform: translateY(-6px);
-          box-shadow: 0 22px 48px rgba(12, 37, 65, 0.28);
+          box-shadow: 0 22px 48px rgba(0, 104, 51, 0.28);
         }
         .twn-card-link:focus-visible {
-          outline: 3px solid #d4a85c;
+          outline: 3px solid var(--red, #eb3237);
           outline-offset: 3px;
         }
 
@@ -1177,7 +1181,7 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           width: 100%;
           aspect-ratio: 16 / 11;
           overflow: hidden;
-          background: #14365c;
+          background: var(--green, #006833);
         }
         .twn-img {
           width: 100%;
@@ -1196,7 +1200,11 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           align-items: center;
           justify-content: center;
           color: rgba(255, 255, 255, 0.45);
-          background: linear-gradient(135deg, #14365c, #0c2541);
+          background: linear-gradient(
+            135deg,
+            var(--green, #006833),
+            var(--green-dark, #004d26)
+          );
         }
 
         /* Numbered badge */
@@ -1207,9 +1215,9 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           width: 38px;
           height: 38px;
           border-radius: 50%;
-          background: rgba(12, 37, 65, 0.85);
-          color: #d4a85c;
-          border: 1.5px solid #d4a85c;
+          background: rgba(0, 77, 38, 0.85);
+          color: #ffffff;
+          border: 1.5px solid var(--red, #eb3237);
           font-size: 13px;
           font-weight: 700;
           letter-spacing: 0.5px;
@@ -1229,9 +1237,9 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           width: 46px;
           height: 46px;
           border-radius: 50%;
-          background: #0c2541;
-          color: #d4a85c;
-          border: 2px solid #d4a85c;
+          background: var(--green-dark, #004d26);
+          color: #ffffff;
+          border: 2px solid var(--red, #eb3237);
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
@@ -1270,6 +1278,7 @@ export function TownshipsSection({ townships = [], settings = {} }) {
         }
         .twn-cta {
           display: inline-flex !important;
+          align-self: flex-end !important;
           align-items: center !important;
           gap: 8px;
           font-size: 11.5px;
@@ -1277,10 +1286,12 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           letter-spacing: 1.8px;
           text-transform: uppercase;
           color: rgba(255, 255, 255, 0.78);
-          transition: color 0.25s ease, gap 0.25s ease;
+          transition:
+            color 0.25s ease,
+            gap 0.25s ease;
         }
         .twn-card-link:hover .twn-cta {
-          color: #d4a85c;
+          color: var(--red-light, #ff4d52);
           gap: 12px;
         }
 
@@ -1363,7 +1374,7 @@ export function WhyUsSection({ settings = {} }) {
       </div>
       <style jsx global>{`
         .wu-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: linear-gradient(
             160deg,
             var(--dark-900, #020c05) 0%,
@@ -1475,26 +1486,16 @@ export function LaunchingSoonBanner({ data = {} }) {
           </div>
           <h2 className="ls-title">{title}</h2>
           <p className="ls-sub">{desc}</p>
-          <div className="ls-tags">
-            {tags.map((t) => (
-              <span key={t} className="ls-tag">
-                {t.trim()}
-              </span>
-            ))}
-          </div>
           <div className="ls-actions">
             <Link href={ctaUrl} className="ls-btn-primary">
               {ctaLabel}
-            </Link>
-            <Link href={secUrl} className="ls-btn-outline">
-              {secLabel}
             </Link>
           </div>
         </div>
       </div>
       <style jsx global>{`
         .ls-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: linear-gradient(
             135deg,
             #f0faf5 0%,
@@ -1544,7 +1545,7 @@ export function LaunchingSoonBanner({ data = {} }) {
           -webkit-backdrop-filter: blur(20px);
           border: 1px solid rgba(255, 255, 255, 0.9);
           border-radius: 24px;
-          padding: 56px 48px;
+          padding: 30px 30px;
           text-align: center;
           max-width: 860px;
           margin: 0 auto;
@@ -1698,7 +1699,7 @@ export function DevelopmentsSection({ settings = {} }) {
         settings.dev_2_image ||
         "https://saviourgroup.in/wp-content/uploads/2024/11/mart.png",
       tag: settings.dev_2_tag,
-      color: "red",
+      color: "green",
     },
     {
       title: settings.dev_3_title,
@@ -1735,7 +1736,6 @@ export function DevelopmentsSection({ settings = {} }) {
                   sizes="(max-width:768px) 100vw, 33vw"
                 />
                 <div className="dev-img-overlay" />
-                <span className={`dev-tag dev-tag-${s.color}`}>{s.tag}</span>
               </div>
               <div className="dev-body">
                 <h3 className="dev-title">{s.title}</h3>
@@ -1750,7 +1750,7 @@ export function DevelopmentsSection({ settings = {} }) {
       </div>
       <style jsx global>{`
         .dev-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: white;
         }
         .dev-grid {
@@ -1897,7 +1897,7 @@ export function BlogSection({ posts, settings = {} }) {
       </div>
       <style jsx global>{`
         .bls-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: #f7f9f8;
         }
         .bls-header {
@@ -2086,7 +2086,7 @@ export function TestimonialsSection({ testimonials = [], settings = {} }) {
       </div>
       <style jsx global>{`
         .ts-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: linear-gradient(
             160deg,
             var(--dark-700, #062010) 0%,
@@ -2179,12 +2179,6 @@ export function ContactSection({ settings = {} }) {
                 href: `tel:${phone.replace(/\s/g, "")}`,
               },
               {
-                icon: "📞",
-                label: "Mobile",
-                val: phone2,
-                href: `tel:${phone2.replace(/\s/g, "")}`,
-              },
-              {
                 icon: "✉️",
                 label: "Email",
                 val: email,
@@ -2222,7 +2216,7 @@ export function ContactSection({ settings = {} }) {
       </div>
       <style jsx global>{`
         .cs-root {
-          padding: 46px 0;
+          padding: 30px 0;
           background: linear-gradient(
             135deg,
             var(--green-deep, #022d12) 0%,

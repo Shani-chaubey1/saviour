@@ -16,6 +16,27 @@
           inset: 0;
           background: linear-gradient(135deg, rgba(44,62,80,0.9), rgba(26,37,47,0.85));
         }
+        /* Admin-uploaded banner image: shown as a cover background, capped at
+           500px tall, with a darker overlay so the title stays readable. */
+        .page-banner.has-image {
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          padding: 0;
+          min-height: clamp(220px, 36vw, 500px);
+          max-height: 500px;
+          display: flex;
+          align-items: center;
+        }
+        .page-banner.has-image::before {
+          opacity: 0;
+        }
+        .page-banner.has-image .banner-overlay {
+          background: linear-gradient(135deg, rgba(15,23,18,0.62), rgba(10,15,12,0.5));
+        }
+        .page-banner.has-image .banner-content {
+          width: 100%;
+        }
         .banner-content {
           position: relative;
           z-index: 1;

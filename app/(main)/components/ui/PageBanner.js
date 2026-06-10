@@ -4,9 +4,13 @@ import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
 import './PageBanner.css';
 
-export default function PageBanner({ title, breadcrumbs = [] }) {
+export default function PageBanner({ title, breadcrumbs = [], image = '' }) {
+  const hasImage = Boolean(image);
   return (
-    <div className="page-banner">
+    <div
+      className={`page-banner${hasImage ? ' has-image' : ''}`}
+      style={hasImage ? { backgroundImage: `url(${image})` } : undefined}
+    >
       <div className="banner-overlay" />
       <div className="container banner-content">
         <h1 className="banner-title">{title}</h1>

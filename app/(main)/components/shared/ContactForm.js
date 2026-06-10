@@ -44,6 +44,7 @@ export default function ContactForm({
   pageLabel = '',
   tabConnectLabel = '',
   tabVisitLabel = '',
+  onSuccess,
 }) {
   const pathname = usePathname() || '/';
   const [tab, setTab] = useState('connect');
@@ -94,6 +95,7 @@ export default function ContactForm({
         setSuccess(true);
         setForm({ ...INITIAL });
         setErrors({});
+        onSuccess?.();
       } else {
         setErrors({ submit: data.error || 'Something went wrong. Please try again.' });
       }

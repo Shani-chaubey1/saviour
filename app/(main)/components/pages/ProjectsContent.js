@@ -24,7 +24,7 @@ const FALLBACK = {
   },
 };
 
-export function AllProjectsContent({ projects, sections = {}, locationLabel = '' }) {
+export function AllProjectsContent({ projects, sections = {}, locationLabel = '', bannerImage = '' }) {
   const searchParams = useSearchParams();
   const type = searchParams.get('type') || '';
   const hasLocation = Boolean(locationLabel);
@@ -62,7 +62,7 @@ export function AllProjectsContent({ projects, sections = {}, locationLabel = ''
 
   return (
     <>
-      <PageBanner title={title} breadcrumbs={breadcrumbs} />
+      <PageBanner title={title} breadcrumbs={breadcrumbs} image={bannerImage} />
 
       <div className="pj-tabs-wrap">
         <div className="container pj-tabs">

@@ -244,10 +244,6 @@ export default function ProjectForm({ projectId }) {
             <label>Excerpt / Short Description</label>
             <textarea value={form.excerpt} onChange={set('excerpt')} rows={3} placeholder="Short description for listings" />
           </div>
-          <div className="form-group">
-            <label>Video URL</label>
-            <input type="text" value={form.video} onChange={set('video')} placeholder="YouTube or Vimeo URL" />
-          </div>
           <div className="form-row">
             <div className="form-group">
               <label>Display Order</label>
@@ -300,6 +296,11 @@ export default function ProjectForm({ projectId }) {
               previewW={280}
               previewH={160}
             />
+          </div>
+          <div className="form-group">
+            <label>Project Video URL</label>
+            <input type="text" value={form.video || ''} onChange={set('video')} placeholder="YouTube or Vimeo URL" />
+            <span className="form-hint">Leave empty to hide the video section on the website.</span>
           </div>
         </div>
       )}

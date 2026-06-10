@@ -18,10 +18,8 @@
         .hs-img {
           object-fit: cover;
           object-position: center;
-          transition: transform 8s ease;
         }
         .hs-slide.hs-active .hs-img {
-          transform: scale(1.04);
         }
 
         /* Content */

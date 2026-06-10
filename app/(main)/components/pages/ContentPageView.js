@@ -24,7 +24,7 @@ function humanizeLocation(value) {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-export default function ContentPageView({ page, projects = [] }) {
+export default function ContentPageView({ page, projects = [], bannerImage = '' }) {
   const showProjects = Boolean(page?.showProjects && page?.projectsLocation);
   const locationLabel = showProjects ? humanizeLocation(page.projectsLocation) : '';
   const projectsUrl = showProjects
@@ -33,7 +33,7 @@ export default function ContentPageView({ page, projects = [] }) {
 
   return (
     <>
-      <PageBanner title={page.title} breadcrumbs={[{ label: page.title }]} />
+      <PageBanner title={page.title} breadcrumbs={[{ label: page.title }]} image={bannerImage} />
       <section className="cpv-section">
         <div className="container cpv-container">
           <article

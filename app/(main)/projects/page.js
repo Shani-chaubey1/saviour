@@ -1,5 +1,5 @@
 import { AllProjectsContent } from '../components/pages/ProjectsContent';
-import { getProjects, getPageSections } from '@/lib/data';
+import { getProjects, getPageSections, getSettings } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,12 +44,13 @@ export default async function ProjectsPage({ searchParams }) {
   const location = params?.location || '';
   const locationLabel = locationSlugToLabel(location);
 
-  const [projects, sections] = await Promise.all([
+  const [projects, sections, settings] = await Promise.all([
     getProjects({
       ...(type ? { type } : {}),
       ...(location ? { location } : {}),
     }),
     getPageSections('projects'),
+    getSettings(),
   ]);
 
   return (
@@ -57,6 +58,7 @@ export default async function ProjectsPage({ searchParams }) {
       projects={projects}
       sections={sections}
       locationLabel={locationLabel}
+      bannerImage={settings.banner_image_projects || settings.banner_image_default || ''}
     />
   );
 }

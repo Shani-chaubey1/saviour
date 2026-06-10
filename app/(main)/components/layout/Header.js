@@ -399,10 +399,40 @@ export default function Header({ settings = {} }) {
           );
         }
 
+        /* Phone CTA: outlined green by default; the filled "current state"
+           appears on hover. */
         .lx-cta-phone {
           padding: 8px 16px 8px 12px;
           gap: 10px;
           align-items: center;
+          background: transparent;
+          color: var(--green, #006833);
+          border: 1.5px solid transparent;
+          box-shadow: none;
+        }
+        .lx-cta-phone .lx-cta-icon {
+          background: rgba(0, 104, 51, 0.12);
+          color: var(--green, #006833);
+        }
+        .lx-cta-phone .lx-cta-num {
+          color: var(--green, #006833);
+        }
+        .lx-cta-phone:hover {
+          color: #ffffff;
+          border-color: transparent;
+          background: linear-gradient(
+            135deg,
+            var(--green, #006833),
+            var(--green-dark, #004d26)
+          );
+          box-shadow: 0 8px 24px rgba(0, 104, 51, 0.4);
+        }
+        .lx-cta-phone:hover .lx-cta-icon {
+          background: rgba(255, 255, 255, 0.15);
+          color: #ffffff;
+        }
+        .lx-cta-phone:hover .lx-cta-num {
+          color: #ffffff;
         }
         .lx-cta-icon {
           display: inline-flex;

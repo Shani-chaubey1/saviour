@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import {
   FaHome, FaBuilding, FaNewspaper, FaFileAlt, FaCommentDots,
   FaTag, FaListUl, FaClipboardList, FaUsers, FaEnvelopeOpenText,
-  FaCog, FaUserCircle, FaChevronRight, FaRegFileAlt,
+  FaCog, FaUserCircle, FaChevronRight, FaRegFileAlt, FaImage, FaSortAmountDown,
 } from 'react-icons/fa';
 
 const NAV_GROUPS = [
@@ -35,6 +35,13 @@ const NAV_GROUPS = [
     items: [
       { href: '/admin/admins', label: 'Admins', icon: FaUsers },
       { href: '/admin/enquiries', label: 'Enquiries', icon: FaEnvelopeOpenText },
+    ],
+  },
+  {
+    label: 'Appearance',
+    items: [
+      { href: '/admin/homepage-sections', label: 'Homepage Sections', icon: FaSortAmountDown },
+      { href: '/admin/page-banners', label: 'Page Banners', icon: FaImage },
     ],
   },
   {
