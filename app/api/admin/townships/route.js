@@ -24,6 +24,8 @@ export async function POST(request) {
     const township = await Township.create({
       area: String(data.area).trim(),
       city: String(data.city || '').trim(),
+      line1: String(data.line1 || '').trim(),
+      line2: String(data.line2 || '').trim(),
       image: String(data.image || '').trim(),
       link: String(data.link || '').trim(),
       order: Number.isFinite(Number(data.order)) ? Number(data.order) : 0,

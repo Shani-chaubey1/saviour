@@ -16,6 +16,8 @@ import ImageField from '../ImageField';
 const EMPTY_FORM = {
   area: '',
   city: '',
+  line1: '',
+  line2: '',
   image: '',
   link: '',
   order: 0,
@@ -48,6 +50,8 @@ export default function TownshipsListEditor({ label, hint }) {
     setDraft({
       area: item.area || '',
       city: item.city || '',
+      line1: item.line1 || '',
+      line2: item.line2 || '',
       image: item.image || '',
       link: item.link || '',
       order: Number(item.order) || 0,
@@ -154,6 +158,26 @@ export default function TownshipsListEditor({ label, hint }) {
               value={draft.city}
               onChange={(e) => update('city', e.target.value)}
               placeholder="e.g. Yamuna Expressway"
+            />
+          </div>
+        </div>
+        <div className="twle-row">
+          <div className="twle-field">
+            <label>Highlight line 1 (above name)</label>
+            <input
+              type="text"
+              value={draft.line1}
+              onChange={(e) => update('line1', e.target.value)}
+              placeholder="e.g. 7.5-Acre Central Park"
+            />
+          </div>
+          <div className="twle-field">
+            <label>Highlight line 2 (above name)</label>
+            <input
+              type="text"
+              value={draft.line2}
+              onChange={(e) => update('line2', e.target.value)}
+              placeholder="e.g. Ready-to-move Shops & Offices"
             />
           </div>
         </div>

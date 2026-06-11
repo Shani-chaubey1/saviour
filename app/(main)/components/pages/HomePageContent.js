@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, CheckCircle } from "lucide-react";
 import SectionHeading from "../ui/SectionHeading";
 import PropertyCard from "../ui/PropertyCard";
 import BlogCard from "../ui/BlogCard";
@@ -1128,6 +1128,22 @@ export function TownshipsSection({ townships = [], settings = {} }) {
                   </span>
                 </div>
                 <div className="twn-body">
+                  {(t.line1 || t.line2) && (
+                    <div className="twn-lines">
+                      {t.line1 && (
+                        <span className="twn-line">
+                          <CheckCircle size={13} strokeWidth={2.4} aria-hidden="true" />
+                          {t.line1}
+                        </span>
+                      )}
+                      {t.line2 && (
+                        <span className="twn-line">
+                          <CheckCircle size={13} strokeWidth={2.4} aria-hidden="true" />
+                          {t.line2}
+                        </span>
+                      )}
+                    </div>
+                  )}
                   <h3 className="twn-area">{t.area}</h3>
                   {t.city && <p className="twn-city">{t.city}</p>}
                   <span className="twn-divider" aria-hidden="true" />
@@ -1254,6 +1270,26 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           flex-direction: column !important;
           align-items: center !important;
           gap: 6px;
+        }
+        .twn-lines {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 5px;
+          margin-bottom: 4px;
+        }
+        .twn-line {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 6px;
+          font-size: 12.5px;
+          font-weight: 600;
+          line-height: 1.3;
+          color: rgba(255, 255, 255, 0.82);
+        }
+        .twn-line svg {
+          color: var(--red, #eb3237);
+          flex-shrink: 0;
         }
         .twn-area {
           font-size: clamp(20px, 1.7vw, 24px);

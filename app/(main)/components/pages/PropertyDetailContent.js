@@ -312,6 +312,8 @@ function PricingTable({ rows }) {
         .price-row:last-child { border-bottom: none; }
         .price-row:hover { background: var(--green-pale,#e8f5ee); }
         .price-header { background: #f9fafb; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #9ca3af; }
+        .price-header span:last-child { text-align: right; }
+        .price-table .price-row > span:last-child { text-align: right; }
         .price-header:hover { background: #f9fafb; }
         .price-floor { font-size: 14px; font-weight: 600; color: #374151; }
         .price-size  { font-size: 13.5px; color: #6b7280; text-align: center; }

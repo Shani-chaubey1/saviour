@@ -243,33 +243,30 @@ function StatsRowBlock({ block }) {
       </div>
       <style jsx global>{`
         .about-stats-sec {
-          padding: 0 0 48px;
           background: white;
-          margin-top: -24px;
         }
         .stats-row-dynamic {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
           gap: 16px;
           padding-top: 8px;
-          border-top: 2px solid #f0f0f0;
         }
         .stat-item {
           text-align: center;
-          padding: 16px 8px;
+          padding: 32px 24px;
           border-radius: 8px;
           background: #f8f9fa;
         }
         .stat-num {
           display: block;
-          font-size: 28px;
+          font-size: 36px;
           font-weight: 900;
           color: #e67e22;
           line-height: 1;
           margin-bottom: 6px;
         }
         .stat-label {
-          font-size: 12px;
+          font-size: 15px;
           color: #666;
           text-transform: uppercase;
           letter-spacing: 0.5px;

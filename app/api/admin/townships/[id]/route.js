@@ -30,6 +30,8 @@ export async function PUT(request, ctx) {
     const update = {};
     if (data.area !== undefined) update.area = String(data.area).trim();
     if (data.city !== undefined) update.city = String(data.city).trim();
+    if (data.line1 !== undefined) update.line1 = String(data.line1).trim();
+    if (data.line2 !== undefined) update.line2 = String(data.line2).trim();
     if (data.image !== undefined) update.image = String(data.image).trim();
     if (data.link !== undefined) update.link = String(data.link).trim();
     if (data.order !== undefined && Number.isFinite(Number(data.order))) {
