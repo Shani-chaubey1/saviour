@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
-import { ArrowRight, MapPin, CheckCircle } from "lucide-react";
+import { ArrowRight, MapPin, CheckCircle, Building2 } from "lucide-react";
 import SectionHeading from "../ui/SectionHeading";
 import PropertyCard from "../ui/PropertyCard";
 import BlogCard from "../ui/BlogCard";
@@ -1144,8 +1144,16 @@ export function TownshipsSection({ townships = [], settings = {} }) {
                       )}
                     </div>
                   )}
-                  <h3 className="twn-area">{t.area}</h3>
-                  {t.city && <p className="twn-city">{t.city}</p>}
+                  <h3 className="twn-area">
+                    <Building2 size={16} strokeWidth={2.2} aria-hidden="true" />
+                    {t.area}
+                  </h3>
+                  {t.city && (
+                    <p className="twn-city">
+                      <MapPin size={13} strokeWidth={2.2} aria-hidden="true" />
+                      {t.city}
+                    </p>
+                  )}
                   <span className="twn-divider" aria-hidden="true" />
                   <span className="twn-cta">
                     {ctaLabel}
@@ -1298,12 +1306,28 @@ export function TownshipsSection({ townships = [], settings = {} }) {
           letter-spacing: -0.2px;
           line-height: 1.25;
           margin: 0;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px;
+        }
+        .twn-area svg {
+          color: var(--red, #eb3237);
+          flex-shrink: 0;
         }
         .twn-city {
           font-size: 13.5px;
           color: rgba(255, 255, 255, 0.62);
           letter-spacing: 0.2px;
           margin: 0;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px;
+        }
+        .twn-city svg {
+          color: rgba(255, 255, 255, 0.55);
+          flex-shrink: 0;
         }
         .twn-divider {
           display: block;
