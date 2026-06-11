@@ -21,7 +21,9 @@ export async function POST(request) {
     if (!data?.area || !String(data.area).trim()) {
       return NextResponse.json({ error: 'Area name is required' }, { status: 400 });
     }
-    const township = await Township.create({
+    // strict:false on the document instance ensures line1/line2 survive even
+    // if a stale cached model is missing those schema paths.
+    const doc = new Township({
       area: String(data.area).trim(),
       city: String(data.city || '').trim(),
       line1: String(data.line1 || '').trim(),
@@ -31,7 +33,8 @@ export async function POST(request) {
       order: Number.isFinite(Number(data.order)) ? Number(data.order) : 0,
       isActive: data.isActive !== false,
     });
-    return NextResponse.json({ township }, { status: 201 });
+    const township = await doc.save({ strict: false });
+    return NextResponse.json({ township: township.toObject() }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });
   }

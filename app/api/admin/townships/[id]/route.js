@@ -43,9 +43,16 @@ export async function PUT(request, ctx) {
       return NextResponse.json({ error: 'Area name is required' }, { status: 400 });
     }
 
-    const township = await Township.findByIdAndUpdate(id, update, { new: true });
+    // Explicit $set + strict:false ensures line1/line2 are persisted even if
+    // the Mongoose model was cached from an older schema (before these fields
+    // were added). returnDocument replaces the deprecated `new: true` option.
+    const township = await Township.findByIdAndUpdate(
+      id,
+      { $set: update },
+      { returnDocument: 'after', strict: false },
+    );
     if (!township) return NextResponse.json({ error: 'Not found' }, { status: 404 });
-    return NextResponse.json({ township });
+    return NextResponse.json({ township: township.toObject ? township.toObject() : township });
   } catch (error) {
     return NextResponse.json({ error: error.message || 'Server error' }, { status: 500 });
   }
