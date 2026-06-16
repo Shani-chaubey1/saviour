@@ -53,22 +53,32 @@ export default function HeroSlider({ slides: slidesProp }) {
 
   return (
     <div className="hs-root">
-      {slides.map((s, i) => (
-        <div
-          key={s._id || i}
-          className={`hs-slide${i === current ? " hs-active" : ""}`}
-        >
+      {slides.map((s, i) => {
+        const img = (
           <Image
             src={s.thumbnail}
-            alt={s.title}
+            alt={s.title || "Hero banner"}
             fill
             className="hs-img"
             priority={i === 0}
             sizes="100vw"
           />
-        
-        </div>
-      ))}
+        );
+        return (
+          <div
+            key={s._id || i}
+            className={`hs-slide${i === current ? " hs-active" : ""}`}
+          >
+            {s.link ? (
+              <Link href={s.link} className="hs-link" aria-label={s.title || `Slide ${i + 1}`}>
+                {img}
+              </Link>
+            ) : (
+              img
+            )}
+          </div>
+        );
+      })}
 
       <button
         className="hs-arrow hs-arrow-l"
@@ -138,6 +148,11 @@ export default function HeroSlider({ slides: slidesProp }) {
         .hs-img {
           object-fit: cover;
           object-position: center;
+        }
+        .hs-link {
+          position: absolute;
+          inset: 0;
+          display: block;
         }
 
         /* Content */
@@ -383,7 +398,12 @@ export default function HeroSlider({ slides: slidesProp }) {
 
         @media (max-width: 768px) {
           .hs-root {
-            height: clamp(400px, 65vw, 520px);
+            height: auto;
+            aspect-ratio: 1920 / 780;
+            min-height: 180px;
+          }
+          .hs-img {
+            object-fit: cover;
           }
           .hs-arrow {
             display: none !important;

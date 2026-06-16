@@ -119,7 +119,7 @@ export default function PropertyPromoCarousel({
         .ppc-viewport {
           position: relative;
           width: 100%;
-          height: 550px;
+          height: 450px;
         }
         .ppc-slide {
           position: absolute;
@@ -192,17 +192,17 @@ export default function PropertyPromoCarousel({
 
         @media (max-width: 1199px) {
           .ppc-viewport {
-            height: 460px;
+            height: 450px;
           }
         }
         @media (max-width: 991px) {
           .ppc-viewport {
-            height: 420px;
+            height: 435px;
           }
         }
         @media (max-width: 575px) {
           .ppc-viewport {
-            height: 340px;
+            height: 435px;
           }
           .ppc-dots {
             bottom: 76px;

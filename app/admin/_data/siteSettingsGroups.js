@@ -53,6 +53,19 @@ export const SITE_SETTINGS_GROUPS = [
       { key: 'stat_visitors', label: 'Monthly Visitors (e.g. 30K+)', type: 'text', hint: 'Used on About page stats row.' },
     ],
   },
+  /* ── 0. Hero Slider (Homepage) ───────────── */
+  {
+    id: 'hero',
+    label: '🖼️ Homepage · Hero Slider',
+    fields: [
+      {
+        key: '__hero_slides_list',
+        label: 'Hero slider banners',
+        type: 'hero_slides_list',
+        hint: 'Upload the full-width banner images shown at the top of the homepage. Add / edit / remove inline — each save persists immediately. If left empty, the slider falls back to the latest project images.',
+      },
+    ],
+  },
   /* ── 1. Trust Banner (Homepage) ──────────── */
   {
     id: 'trust',

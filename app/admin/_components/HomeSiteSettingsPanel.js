@@ -9,6 +9,7 @@ import LinkListJsonEditor from './cms/LinkListJsonEditor';
 import SocialIconsJsonEditor from './cms/SocialIconsJsonEditor';
 import FooterContactJsonEditor from './cms/FooterContactJsonEditor';
 import TownshipsListEditor from './cms/TownshipsListEditor';
+import HeroSlidesListEditor from './cms/HeroSlidesListEditor';
 import { SITE_SETTINGS_GROUPS } from '../_data/siteSettingsGroups';
 
 export default function HomeSiteSettingsPanel() {
@@ -129,6 +130,8 @@ export default function HomeSiteSettingsPanel() {
                       />
                     ) : f.type === 'townships_list' ? (
                       <TownshipsListEditor label={f.label} hint={f.hint} />
+                    ) : f.type === 'hero_slides_list' ? (
+                      <HeroSlidesListEditor label={f.label} hint={f.hint} />
                     ) : f.type === 'boolean' ? (
                       <label className="hssp-checkbox">
                         <input

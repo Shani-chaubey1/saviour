@@ -71,11 +71,11 @@ export default function PropertyCard({ project }) {
             )}
             {badge && <span className="pc-badge pc-badge-red">{badge}</span>}
           </div>
-          {type && (
+          {/* {type && (
             <div className="pc-type-tag">
               {type === "residential" ? "Residential" : "Commercial"}
             </div>
-          )}
+          )} */}
         </div>
         <div className="pc-body">
           <h3 className="pc-title">{title}</h3>
@@ -317,7 +317,8 @@ export default function PropertyCard({ project }) {
           .pc-cta-row {
             display: flex !important;
             align-items: center !important;
-            justify-content: space-between;
+            justify-content: flex-end;
+            margin-left: auto;
           }
           .pc-cta {
             display: flex !important;

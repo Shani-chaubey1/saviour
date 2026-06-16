@@ -41,8 +41,8 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
           <PropertyGallery project={project} onOpenLightbox={openLightbox} />
           <ProjectInfo project={project} />
           {project.overview && <ProjectOverview html={project.overview} />}
-          {pricingRows.length > 0 && <PricingTable rows={pricingRows} />}
           {project.highlights?.length > 0 && <ProjectHighlights highlights={project.highlights} />}
+          {pricingRows.length > 0 && <PricingTable rows={pricingRows} />}
           {amenities.length > 0 && <AmenitiesSection amenities={amenities} />}
           {specs.length > 0 && <SpecificationsSection specs={specs} />}
           {hasFloors && <FloorPlans floorPlans={project.floorPlans} masterPlan={project.masterPlan} onOpenLightbox={openLightbox} />}

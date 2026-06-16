@@ -53,12 +53,23 @@ export default async function ProjectsPage({ searchParams }) {
     getSettings(),
   ]);
 
+  // Residential & Commercial can each have their own banner; both fall back to
+  // the generic Projects banner, then the site-wide default.
+  const typeBanner =
+    type === 'residential'
+      ? settings.banner_image_projects_residential
+      : type === 'commercial'
+        ? settings.banner_image_projects_commercial
+        : '';
+  const bannerImage =
+    typeBanner || settings.banner_image_projects || settings.banner_image_default || '';
+
   return (
     <AllProjectsContent
       projects={projects}
       sections={sections}
       locationLabel={locationLabel}
-      bannerImage={settings.banner_image_projects || settings.banner_image_default || ''}
+      bannerImage={bannerImage}
     />
   );
 }
