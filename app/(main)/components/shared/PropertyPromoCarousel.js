@@ -133,7 +133,6 @@ export default function PropertyPromoCarousel({
           pointer-events: auto;
         }
         .ppc-img {
-          object-fit: cover;
           border-radius: 16px;
         }
         .ppc-dots {

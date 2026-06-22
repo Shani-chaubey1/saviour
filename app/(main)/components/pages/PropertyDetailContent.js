@@ -91,7 +91,7 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
         .sidebar-form-box .form-label { font-size: 10.5px; letter-spacing: 0.2px; }
         .sidebar-form-box .form-input { min-height: 40px; padding: 9px 11px; font-size: 14px; }
         .sidebar-form-box .submit-btn { padding: 11px 24px; font-size: 14px; }
-        @media (max-width: 1024px) { .detail-layout { grid-template-columns: 1fr; } .sidebar-form-box { position: static; } .detail-sidebar { order: -1; align-self: auto; } .detail-layout-related { padding-bottom: 60px; } }
+        @media (max-width: 1024px) { .detail-layout { grid-template-columns: 1fr; } .sidebar-form-box { position: static; } .detail-sidebar { align-self: auto; } .detail-layout-related { padding-bottom: 60px; } }
       `}</style>
     </>
   );
