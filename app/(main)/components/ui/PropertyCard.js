@@ -23,7 +23,7 @@ export default function PropertyCard({ project }) {
     excerpt,
     thumbnail,
     price,
-    size,
+    area,
     location,
     createdAt,
     type,
@@ -49,6 +49,8 @@ export default function PropertyCard({ project }) {
     redirectedRef.current = false;
     setPopupOpen(true);
   };
+
+  const areaDisplay = String(area || '').trim();
 
   return (
     <>
@@ -103,10 +105,10 @@ export default function PropertyCard({ project }) {
                 <span className="pc-meta-v">{price}</span>
               </div>
             )}
-            {size && (
+            {areaDisplay && (
               <div className="pc-meta-item">
                 <span className="pc-meta-k">Area</span>
-                <span className="pc-meta-v">{size}</span>
+                <span className="pc-meta-v">{areaDisplay}</span>
               </div>
             )}
           </div>
