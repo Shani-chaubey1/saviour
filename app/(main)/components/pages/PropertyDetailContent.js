@@ -86,7 +86,7 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
            single-column container/viewport fallbacks. */
         .sidebar-form-box .cf-wrap { gap: 12px; }
         .sidebar-form-box .cf-tabs { flex-direction: row; }
-        .sidebar-form-box .contact-form { grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+        .sidebar-form-box .contact-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
         .sidebar-form-box .form-group { gap: 4px; }
         .sidebar-form-box .form-label { font-size: 10.5px; letter-spacing: 0.2px; }
         .sidebar-form-box .form-input { min-height: 40px; padding: 9px 11px; font-size: 14px; }

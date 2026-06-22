@@ -220,11 +220,12 @@ export default function ContactPopup({
             flex-direction: row;
           }
           .cp-dialog .contact-form {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 10px 12px;
           }
           .cp-dialog .form-group {
             gap: 4px;
+            min-width: 0;
           }
           .cp-dialog .form-label {
             font-size: 10.5px;
@@ -234,6 +235,17 @@ export default function ContactPopup({
             min-height: 40px;
             padding: 9px 11px;
             font-size: 14px;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+          }
+          .cp-dialog .form-input[type="date"],
+          .cp-dialog .form-input[type="time"],
+          .cp-dialog .form-input[type="datetime-local"] {
+            min-width: 0;
+            width: 100%;
+            max-width: 100%;
           }
           .cp-dialog .submit-btn {
             padding: 11px 24px;

@@ -78,7 +78,7 @@
 
 .contact-form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px 16px;
   align-items: start;
 }
@@ -119,7 +119,18 @@
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   min-height: 44px;
+}
+/* Native date/time pickers enforce a wide min-width; clamp so grid halves stay 50/50. */
+.form-input[type="date"],
+.form-input[type="time"],
+.form-input[type="datetime-local"] {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 .form-input:focus {
   border-color: #e67e22;
@@ -214,6 +225,17 @@
     width: 100%;
     justify-self: center;
   }
+  .cp-dialog .contact-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cp-dialog .cf-tabs {
+    flex-direction: row;
+  }
+  .cp-dialog .cf-tab,
+  .cp-dialog .cf-tab:last-child {
+    flex: 1 1 0;
+    width: auto;
+  }
 }
 
 /* Viewport fallback for very small screens (also catches the rare case where
@@ -245,4 +267,23 @@
     width: 100%;
     justify-self: center;
   }
+  .cp-dialog .contact-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cp-dialog .cf-tabs {
+    flex-direction: row;
+  }
+  .cp-dialog .cf-tab,
+  .cp-dialog .cf-tab:last-child {
+    flex: 1 1 0;
+    width: auto;
+  }
+}
+
+/* Enquire popup — keep visit time + message at equal 50/50 width. */
+.cp-dialog .contact-form {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.cp-dialog .form-group {
+  min-width: 0;
 }
