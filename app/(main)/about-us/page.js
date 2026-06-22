@@ -1,11 +1,9 @@
 import AboutPageContent from '../components/pages/AboutPageContent';
-import { getPageSections, getSettings } from '@/lib/data';
+import { getPageSections, getSettings, getPageNextMetadata } from '@/lib/data';
 
-export const metadata = {
-  title: 'About Us',
-  description:
-    'Learn about M/s Saviour Builders Pvt. Ltd. — one of the leading real estate developers in Delhi-NCR delivering residential & commercial projects.',
-};
+export async function generateMetadata() {
+  return getPageNextMetadata('about-us');
+}
 
 export default async function AboutPage() {
   const [sections, settings] = await Promise.all([

@@ -13,6 +13,10 @@ const PAGE_CONFIGS = {
   projects: {
     title: 'Projects listing page',
     sections: [
+      { key: 'meta_residential_title', label: 'SEO — Residential tab title', type: 'text' },
+      { key: 'meta_residential_description', label: 'SEO — Residential tab description', type: 'textarea' },
+      { key: 'meta_commercial_title', label: 'SEO — Commercial tab title', type: 'text' },
+      { key: 'meta_commercial_description', label: 'SEO — Commercial tab description', type: 'textarea' },
       { key: 'all_title', label: 'All Projects — Page Heading', type: 'text', hint: 'e.g. All Projects' },
       { key: 'all_subtitle', label: 'All Projects — Subtitle', type: 'text' },
       { key: 'residential_title', label: 'Residential tab — Heading', type: 'text' },
@@ -64,6 +68,8 @@ export default function EditPagePage() {
   const params = useParams();
   const slug = params?.slug;
   const [sections, setSections] = useState({});
+  const [metaTitle, setMetaTitle] = useState('');
+  const [metaDescription, setMetaDescription] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const config = slug === 'home' ? null : slug ? PAGE_CONFIGS[slug] : undefined;
@@ -82,6 +88,8 @@ export default function EditPagePage() {
             sec = { ...sec, about_blocks: legacyToAboutBlocks(sec) };
           }
           setSections(sec);
+          setMetaTitle(d.page.metaTitle || '');
+          setMetaDescription(d.page.metaDescription || '');
         }
         setLoading(false);
       })
@@ -96,7 +104,13 @@ export default function EditPagePage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
-        body: JSON.stringify({ slug, title: config?.title || slug, sections }),
+        body: JSON.stringify({
+          slug,
+          title: config?.title || slug,
+          sections,
+          metaTitle: metaTitle.trim(),
+          metaDescription: metaDescription.trim(),
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -162,6 +176,24 @@ export default function EditPagePage() {
         <div className="ep-loading">Loading page data...</div>
       ) : (
         <div className="ep-sections-grid">
+          <div className="ep-section-card ep-seo-card">
+            <h3 className="ep-seo-heading">SEO / Page metadata</h3>
+            <p className="ep-seo-hint">Used in the browser tab title and search-engine description for this page.</p>
+            <label className="ep-section-label">Meta title</label>
+            <input
+              type="text"
+              value={metaTitle}
+              onChange={(e) => setMetaTitle(e.target.value)}
+              placeholder="e.g. About Us"
+            />
+            <label className="ep-section-label">Meta description</label>
+            <textarea
+              value={metaDescription}
+              onChange={(e) => setMetaDescription(e.target.value)}
+              rows={3}
+              placeholder="Short description for search engines (150–160 characters recommended)"
+            />
+          </div>
           {config.sections.map((section) => (
             <div key={section.key} className="ep-section-card">
               <label className="ep-section-label">{section.label}</label>
@@ -210,6 +242,9 @@ export default function EditPagePage() {
         .ep-btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
         .ep-loading { padding: 40px; text-align: center; color: #9ca3af; }
         .ep-sections-grid { display: flex; flex-direction: column; gap: 16px; max-width: 800px; }
+        .ep-seo-card { border-color: #d1fae5; background: #f9fefb; }
+        .ep-seo-heading { font-size: 15px; font-weight: 800; color: #111827; margin: 0 0 4px; }
+        .ep-seo-hint { font-size: 12px; color: #6b7280; margin: 0 0 8px; }
         .ep-section-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #f3f4f6; display: flex; flex-direction: column; gap: 8px; }
         .ep-section-label { font-size: 13px; font-weight: 600; color: #374151; }
         .ep-section-card input, .ep-section-card textarea {

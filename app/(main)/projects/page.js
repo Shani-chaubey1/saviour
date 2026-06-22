@@ -1,5 +1,6 @@
 import { AllProjectsContent } from '../components/pages/ProjectsContent';
-import { getProjects, getPageSections, getSettings } from '@/lib/data';
+import { getProjects, getPageSections, getSettings, getProjectsPageMetadata } from '@/lib/data';
+import { toNextMetadata } from '@/lib/pageMetadata';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,23 +20,18 @@ export async function generateMetadata({ searchParams }) {
   const type = params?.type || '';
   const locationLabel = locationSlugToLabel(params?.location);
   const locationSuffix = locationLabel ? ` in ${locationLabel}` : '';
+  const meta = await getProjectsPageMetadata();
 
-  if (type === 'residential') {
-    return {
-      title: `Residential Projects${locationSuffix} – Saviour Group`,
-      description: `Explore Saviour Group's residential projects${locationSuffix ? ` ${locationSuffix}` : ' across Delhi-NCR'}.`,
-    };
-  }
-  if (type === 'commercial') {
-    return {
-      title: `Commercial Projects${locationSuffix} – Saviour Group`,
-      description: `Explore Saviour Group's commercial real estate projects${locationSuffix ? ` ${locationSuffix}` : ''}.`,
-    };
-  }
-  return {
-    title: `All Projects${locationSuffix} – Saviour Group`,
-    description: `Browse residential and commercial projects by Saviour Group${locationSuffix || ' across Delhi-NCR'}.`,
-  };
+  let base = meta.all;
+  if (type === 'residential') base = meta.residential;
+  if (type === 'commercial') base = meta.commercial;
+
+  const title = `${base.title}${locationSuffix}`;
+  const description = locationSuffix
+    ? `${base.description}${locationSuffix}.`
+    : base.description;
+
+  return toNextMetadata({ title, description });
 }
 
 export default async function ProjectsPage({ searchParams }) {

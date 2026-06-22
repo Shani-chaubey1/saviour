@@ -11,6 +11,7 @@
     "seed:content-pages": "node scripts/seed-content-pages.js",
     "seed:townships": "node scripts/seed-townships.js",
     "sync-defaults": "node scripts/sync-defaults.js",
+    "update-page-metadata": "node scripts/update-page-metadata.js",
     "backfill:projects": "node scripts/backfill-projects.js"
   },
   "dependencies": {

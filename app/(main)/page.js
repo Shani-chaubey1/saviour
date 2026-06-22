@@ -14,13 +14,11 @@ import {
   TestimonialsSection,
   ContactSection,
 } from './components/pages/HomePageContent';
-import { getProjects, getPosts, getTestimonials, getSettings, getHeroSlides, getTownships } from '@/lib/data';
+import { getProjects, getPosts, getTestimonials, getSettings, getHeroSlides, getTownships, getPageNextMetadata } from '@/lib/data';
 
-export const metadata = {
-  title: 'Savviour Builderrs – Best Builder in Delhi-NCR',
-  description:
-    'M/s Saviour Builders Pvt. Ltd. (Saviour Group) is one of the leading real estate developers in Delhi-NCR.',
-};
+export async function generateMetadata() {
+  return getPageNextMetadata('home');
+}
 
 export const revalidate = 60;
 

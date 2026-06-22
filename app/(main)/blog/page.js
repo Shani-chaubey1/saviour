@@ -1,10 +1,9 @@
 import { BlogListContent } from '../components/pages/BlogContent';
-import { getPosts, getPageSections, getSettings } from '@/lib/data';
+import { getPosts, getPageSections, getSettings, getPageNextMetadata } from '@/lib/data';
 
-export const metadata = {
-  title: 'Blog',
-  description: 'Read the latest news, insights, and updates about real estate in Delhi-NCR from Saviour Group.',
-};
+export async function generateMetadata() {
+  return getPageNextMetadata('blog');
+}
 
 export const revalidate = 60;
 
