@@ -186,19 +186,31 @@
 
 /* Container-query collapse: when the form's own width is narrow (sidebars,
    popups, mobile), fall back to a single column and stacked tabs regardless
-   of viewport width. */
+   of viewport width. Includes .sidebar-form-box overrides from property detail. */
 @container cfwrap (max-width: 480px) {
-  .contact-form {
+  .contact-form,
+  .sidebar-form-box .contact-form {
     grid-template-columns: 1fr;
   }
   .form-group.span-2,
-  .contact-form > .span-2 {
+  .contact-form > .span-2,
+  .sidebar-form-box .form-group.span-2,
+  .sidebar-form-box .contact-form > .span-2 {
     grid-column: 1 / -1;
   }
-  .cf-tabs {
+  .cf-tabs,
+  .sidebar-form-box .cf-tabs {
     flex-direction: column;
   }
-  .submit-btn {
+  .cf-tab,
+  .cf-tab:last-child,
+  .sidebar-form-box .cf-tab,
+  .sidebar-form-box .cf-tab:last-child {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .submit-btn,
+  .sidebar-form-box .submit-btn {
     width: 100%;
     justify-self: center;
   }
@@ -207,17 +219,29 @@
 /* Viewport fallback for very small screens (also catches the rare case where
    the browser doesn't support container queries). */
 @media (max-width: 640px) {
-  .contact-form {
+  .contact-form,
+  .sidebar-form-box .contact-form {
     grid-template-columns: 1fr;
   }
   .form-group.span-2,
-  .contact-form > .span-2 {
+  .contact-form > .span-2,
+  .sidebar-form-box .form-group.span-2,
+  .sidebar-form-box .contact-form > .span-2 {
     grid-column: 1 / -1;
   }
-  .cf-tabs {
+  .cf-tabs,
+  .sidebar-form-box .cf-tabs {
     flex-direction: column;
   }
-  .submit-btn {
+  .cf-tab,
+  .cf-tab:last-child,
+  .sidebar-form-box .cf-tab,
+  .sidebar-form-box .cf-tab:last-child {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .submit-btn,
+  .sidebar-form-box .submit-btn {
     width: 100%;
     justify-self: center;
   }

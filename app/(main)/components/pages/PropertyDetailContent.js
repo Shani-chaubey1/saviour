@@ -92,6 +92,17 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
         .sidebar-form-box .form-input { min-height: 40px; padding: 9px 11px; font-size: 14px; }
         .sidebar-form-box .submit-btn { padding: 11px 24px; font-size: 14px; }
         @media (max-width: 1024px) { .detail-layout { grid-template-columns: 1fr; } .sidebar-form-box { position: static; } .detail-sidebar { align-self: auto; } .detail-layout-related { padding-bottom: 60px; } }
+        /* Sidebar form uses a 2-col grid on desktop, but on small phones that
+           overrides ContactForm's collapse and squishes date/time fields together. */
+        @media (max-width: 640px) {
+          .sidebar-form-box .contact-form { grid-template-columns: 1fr; gap: 12px; }
+          .sidebar-form-box .form-group.span-2,
+          .sidebar-form-box .contact-form > .span-2 { grid-column: 1 / -1; }
+          .sidebar-form-box .cf-tabs { flex-direction: column; }
+          .sidebar-form-box .cf-tab,
+          .sidebar-form-box .cf-tab:last-child { flex: 1 1 auto; width: 100%; }
+          .sidebar-form-box .submit-btn { width: 100%; }
+        }
       `}</style>
     </>
   );
