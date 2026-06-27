@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { usePathname } from 'next/navigation';
 import {
   User,
@@ -38,20 +38,36 @@ const INITIAL = {
 const DEFAULT_CONNECT_LABEL = 'Connect with an Agent';
 const DEFAULT_VISIT_LABEL = 'Book a Visit';
 
+function readPropertyLeadContext() {
+  if (typeof window === 'undefined') return null;
+  const ctx = window.__saviourPropertyLead;
+  if (!ctx?.title) return null;
+  return {
+    title: String(ctx.title).trim(),
+    location: String(ctx.location || '').trim(),
+    address: String(ctx.address || '').trim(),
+  };
+}
+
 /**
  * @param {string} [projectName]
+ * @param {string} [projectLocation]
+ * @param {string} [projectAddress]
  * @param {string} [pageLabel]
  * @param {string} [tabConnectLabel]
  * @param {string} [tabVisitLabel]
  */
 export default function ContactForm({
   projectName = '',
+  projectLocation = '',
+  projectAddress = '',
   pageLabel = '',
   tabConnectLabel = '',
   tabVisitLabel = '',
   onSuccess,
 }) {
   const pathname = usePathname() || '/';
+  const formPanelId = useId().replace(/:/g, '');
   const [tab, setTab] = useState('connect');
   const [form, setForm] = useState({ ...INITIAL });
   const [challenge, setChallenge] = useState(() => generateMathChallenge());
@@ -93,7 +109,7 @@ export default function ContactForm({
         regenerateChallenge();
       }
       requestAnimationFrame(() => {
-        const panel = document.getElementById('cf-panel');
+        const panel = document.getElementById(formPanelId);
         const firstInvalid =
           panel?.querySelector('.form-input.error, .cf-captcha-answer.error') ||
           panel?.querySelector('.error-msg');
@@ -102,7 +118,19 @@ export default function ContactForm({
       return;
     }
     setErrors({});
-    const project = resolveLeadProjectField({ projectName, pageLabel, pathname });
+    const propertyCtx = readPropertyLeadContext();
+    const effectiveProjectName = projectName?.trim() || propertyCtx?.title || '';
+    const effectiveLocation = projectLocation?.trim() || propertyCtx?.location || '';
+    const effectiveAddress = projectAddress?.trim() || propertyCtx?.address || '';
+    const isPropertyLead = Boolean(
+      effectiveProjectName &&
+        (projectName?.trim() || propertyCtx?.title || pathname.startsWith('/properties/')),
+    );
+    const project = resolveLeadProjectField({
+      projectName: effectiveProjectName,
+      pageLabel,
+      pathname,
+    });
     const payload = {
       name: form.name.trim(),
       email: form.email.trim(),
@@ -117,6 +145,9 @@ export default function ContactForm({
       captchaB: challenge.b,
       captchaOp: challenge.op,
       captchaAnswer: form.captchaAnswer.trim(),
+      propertyLead: isPropertyLead,
+      projectLocation: effectiveLocation,
+      projectAddress: effectiveAddress,
     };
 
     setLoading(true);
@@ -195,7 +226,7 @@ export default function ContactForm({
       </div>
 
       <form
-        id="cf-panel"
+        id={formPanelId}
         role="tabpanel"
         aria-labelledby={isConnect ? 'cf-tab-connect' : 'cf-tab-visit'}
         onSubmit={handleSubmit}

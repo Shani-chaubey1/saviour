@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Lightbox from 'yet-another-react-lightbox';
 import { MapPin, Maximize2, IndianRupee, Building2, CheckCircle, Tag, FileText, Video } from 'lucide-react';
 import PageBanner from '../ui/PageBanner';
@@ -38,6 +38,18 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
     setLightboxOpen(true);
   };
 
+  useEffect(() => {
+    if (typeof window === 'undefined' || !project?.title) return undefined;
+    window.__saviourPropertyLead = {
+      title: project.title,
+      location: project.location || '',
+      address: project.address || '',
+    };
+    return () => {
+      delete window.__saviourPropertyLead;
+    };
+  }, [project?.title, project?.location, project?.address]);
+
   return (
     <>
       <PageBanner
@@ -66,7 +78,11 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
           <PropertyPromoCarousel images={sidebarImages} />
           <div className="sidebar-form-box">
             <h3 className="sidebar-form-title">Contact Us</h3>
-            <ContactForm projectName={project.title} />
+            <ContactForm
+              projectName={project.title}
+              projectLocation={project.location || ''}
+              projectAddress={project.address || ''}
+            />
           </div>
         </aside>
       </div>
