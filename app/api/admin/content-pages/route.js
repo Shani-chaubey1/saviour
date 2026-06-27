@@ -61,6 +61,7 @@ export async function POST(request) {
       content: String(body?.content || ''),
       metaTitle: String(body?.metaTitle || '').trim(),
       metaDescription: String(body?.metaDescription || '').trim(),
+      bannerImage: String(body?.bannerImage || '').trim(),
       isPublished: body?.isPublished !== false,
       showInFooter: Boolean(body?.showInFooter),
       order: Number.isFinite(Number(body?.order)) ? Number(body.order) : 0,

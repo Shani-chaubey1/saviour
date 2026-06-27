@@ -21,7 +21,16 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
   const amenities = (project.amenities || []).filter(a => a?.name);
   const specs     = (project.specifications || []).filter(s => s?.name);
   const hasFloors = hasFloorPlans(project);
+  const heroImage = (project.gallery?.[0] || project.thumbnail || '').trim();
   const galleryImages = (project.gallery || []).filter(Boolean);
+  const galleryGridImages = heroImage && galleryImages[0] === heroImage
+    ? galleryImages.slice(1)
+    : galleryImages.filter((img) => img !== heroImage);
+  const bannerBadges = [
+    project.status && { label: project.status, tone: 'default' },
+    project.badge && { label: project.badge, tone: 'offer' },
+  ].filter(Boolean);
+
   const openLightbox = (sources, index = 0) => {
     if (!Array.isArray(sources) || sources.length === 0) return;
     setLightboxSources(sources);
@@ -34,11 +43,12 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
       <PageBanner
         title={project.title}
         breadcrumbs={[{ label: 'Projects', href: '/projects' }, { label: project.title }]}
-        image={bannerImage}
+        image={heroImage || bannerImage}
+        variant={heroImage || bannerImage ? 'hero' : ''}
+        badges={bannerBadges}
       />
       <div className="detail-layout container">
         <div className="detail-main">
-          <PropertyGallery project={project} onOpenLightbox={openLightbox} />
           <ProjectInfo project={project} />
           {project.overview && <ProjectOverview html={project.overview} />}
           {project.highlights?.length > 0 && <ProjectHighlights highlights={project.highlights} />}
@@ -46,7 +56,9 @@ export default function PropertyDetailContent({ project, relatedProjects, banner
           {amenities.length > 0 && <AmenitiesSection amenities={amenities} />}
           {specs.length > 0 && <SpecificationsSection specs={specs} />}
           {hasFloors && <FloorPlans floorPlans={project.floorPlans} masterPlan={project.masterPlan} onOpenLightbox={openLightbox} />}
-          {galleryImages.length > 0 && <GallerySection images={galleryImages} title={project.title} onOpenLightbox={openLightbox} />}
+          {galleryGridImages.length > 0 && (
+            <GallerySection images={galleryGridImages} title={project.title} onOpenLightbox={openLightbox} />
+          )}
           {project.video && <VideoSection url={project.video} title={project.title} />}
         </div>
         <aside className="detail-sidebar">
@@ -154,43 +166,7 @@ function SectionHeader({ title }) {
   );
 }
 
-/* ── Gallery ─────────────────────────────── */
-function PropertyGallery({ project, onOpenLightbox }) {
-  const images = project.gallery?.length ? project.gallery : [project.thumbnail].filter(Boolean);
-  if (!images.length) return null;
-  return (
-    <div className="gallery-wrap">
-      <div
-        className="gallery-main"
-        role="button"
-        tabIndex={0}
-        aria-label="Open project images"
-        onClick={() => onOpenLightbox(images, 0)}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpenLightbox(images, 0)}
-      >
-        <Image src={images[0]} alt={project.title} fill className="gallery-main-img" sizes="(max-width:768px) 100vw, 65vw" priority />
-        {(project.status || project.badge) && (
-          <div className="gallery-badges">
-            {project.status && <span className="gbadge gbadge-status">{project.status}</span>}
-            {project.badge  && <span className="gbadge gbadge-offer">{project.badge}</span>}
-          </div>
-        )}
-      </div>
-      <style jsx global>{`
-        .gallery-wrap { margin-bottom: 36px; }
-        .gallery-main { position: relative; height: 460px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.12); cursor: pointer; }
-        .gallery-main-img { object-fit: cover; }
-        .gallery-badges { position: absolute; top: 16px; left: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
-        .gbadge { padding: 5px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .gbadge-status { background: var(--red,#eb3237); color: white; }
-        .gbadge-offer  { background: var(--green,#006833); color: white; }
-        @media (max-width: 640px) { .gallery-main { height: 260px; } }
-      `}</style>
-    </div>
-  );
-}
-
-/* ── Gallery Grid (all images, like floor plans) ── */
+/* ── Gallery Grid (additional images) ── */
 function GallerySection({ images, title, onOpenLightbox }) {
   if (!images?.length) return null;
   return (

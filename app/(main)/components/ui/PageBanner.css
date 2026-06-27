@@ -37,6 +37,50 @@
         .page-banner.has-image .banner-content {
           width: 100%;
         }
+        /* Property detail hero — first project image as full-width header bg */
+        .page-banner.has-image.page-banner--hero {
+          height: 600px;
+          max-height: none;
+          align-items: flex-end;
+          padding-bottom: 48px;
+        }
+        .page-banner.has-image.page-banner--hero .banner-overlay {
+          background: linear-gradient(
+            180deg,
+            rgba(10, 15, 12, 0.25) 0%,
+            rgba(10, 15, 12, 0.45) 45%,
+            rgba(10, 15, 12, 0.82) 100%
+          );
+        }
+        .banner-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-bottom: 14px;
+        }
+        .banner-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 6px 14px;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: #fff;
+          background: rgba(1, 104, 51, 0.92);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          backdrop-filter: blur(4px);
+        }
+        .banner-badge--offer {
+          background: rgba(230, 126, 34, 0.92);
+        }
+        @media (max-width: 768px) {
+          .page-banner.has-image.page-banner--hero {
+            min-height: clamp(360px, 62vw, 520px);
+            padding-bottom: 32px;
+          }
+        }
         .banner-content {
           position: relative;
           z-index: 1;

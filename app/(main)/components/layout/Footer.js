@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import DynamicFaIcon from '../shared/DynamicFaIcon';
 import { parseJsonArray } from '@/lib/cmsJson';
+import { resolveGoogleMapsEmbedUrl } from '@/lib/mapEmbed';
 
 const FALLBACK_QUICK_LINKS = [
   { label: 'Home', href: '/' },
@@ -69,12 +70,13 @@ export default function Footer({ settings = {}, contentPages = [] }) {
   const footerDesc =
     settings.footer_desc ||
     "M/s Saviour Builders Pvt. Ltd. is one of Delhi-NCR's leading real estate developers, delivering landmark residential & commercial projects since 1999.";
-  const footerMap =
-    settings.footer_map_embed ||
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.4561793905256!2d77.47369!3d28.32944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDE5JzQ2LjAiTiA3N8KwMjgnMjUuMyJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin';
+  const address = settings.site_address || 'C-110, Sector 65, Noida, Uttar Pradesh 201301';
+  const footerMap = resolveGoogleMapsEmbedUrl({
+    mapEmbed: settings.footer_map_embed,
+    address,
+  });
   const phone2 = settings.site_phone_2 || '+91 9206-001-002';
   const email = settings.site_email || 'sales@saviourindia.com';
-  const address = settings.site_address || 'C Block-110, Sector 65, Noida – 201301';
   const fbUrl = settings.site_facebook || 'https://facebook.com/saviourindia';
   const igUrl = settings.site_instagram || 'https://instagram.com/saviourindia';
   const ytUrl = settings.site_youtube || 'https://youtube.com/@saviourindia';
@@ -282,10 +284,6 @@ export default function Footer({ settings = {}, contentPages = [] }) {
           <p>
             &copy; {new Date().getFullYear()}{" "}
             {settings.footer_copyright || "Saviour Group. All rights reserved."}{" "}
-            &nbsp;·&nbsp;{" "}
-            <span className="ft-disclaimer">
-              Images for representation only.
-            </span>
           </p>
           {settings.footer_powered_by !== "" &&
             settings.footer_powered_by !== undefined && (

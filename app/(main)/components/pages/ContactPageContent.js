@@ -4,9 +4,7 @@ import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import PageBanner from '../ui/PageBanner';
 import SectionHeading from '../ui/SectionHeading';
 import ContactForm from '../shared/ContactForm';
-
-const DEFAULT_MAP =
-  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3510.4561793905256!2d77.47369!3d28.32944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDE5JzQ2LjAiTiA3N8KwMjgnMjUuMyJF!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin';
+import { resolveGoogleMapsEmbedUrl } from '@/lib/mapEmbed';
 
 export default function ContactPageContent({ sections = {}, settings = {} }) {
   const pageTitle = sections.page_title?.trim() || 'Contact Us';
@@ -18,9 +16,12 @@ export default function ContactPageContent({ sections = {}, settings = {} }) {
   const address =
     sections.address?.trim() ||
     settings.site_address ||
-    'Yamuna Expressway, Greater Noida, Uttar Pradesh';
+    'C-110, Sector 65, Noida, Uttar Pradesh 201301';
   const hours = sections.working_hours?.trim() || 'Mon – Sat: 9:00 AM – 7:00 PM';
-  const mapSrc = sections.map_embed?.trim() || DEFAULT_MAP;
+  const mapSrc = resolveGoogleMapsEmbedUrl({
+    mapEmbed: sections.map_embed,
+    address,
+  });
   const formTitle = sections.form_title?.trim() || 'Send Us a Message';
 
   const phoneHref = phone.replace(/\s/g, '').replace(/^\+/, '');

@@ -1,6 +1,8 @@
 import ContactPageContent from '../components/pages/ContactPageContent';
 import { getPageSections, getSettings, getPageNextMetadata } from '@/lib/data';
 
+export const revalidate = 60;
+
 export async function generateMetadata() {
   return getPageNextMetadata('contact-us');
 }

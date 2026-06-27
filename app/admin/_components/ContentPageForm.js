@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import RichEditor from './RichEditor';
+import ImageField from './ImageField';
 import { useToast } from './Toast';
 
 const RESERVED_SLUGS = new Set([
@@ -37,6 +38,7 @@ const EMPTY = {
   content: '',
   metaTitle: '',
   metaDescription: '',
+  bannerImage: '',
   isPublished: true,
   showInFooter: false,
   order: 0,
@@ -71,6 +73,7 @@ export default function ContentPageForm({ pageId }) {
             content: data.page.content || '',
             metaTitle: data.page.metaTitle || '',
             metaDescription: data.page.metaDescription || '',
+            bannerImage: data.page.bannerImage || '',
             isPublished: data.page.isPublished !== false,
             showInFooter: Boolean(data.page.showInFooter),
             order: Number(data.page.order) || 0,
@@ -137,6 +140,7 @@ export default function ContentPageForm({ pageId }) {
         content: form.content,
         metaTitle: form.metaTitle.trim(),
         metaDescription: form.metaDescription.trim(),
+        bannerImage: form.bannerImage.trim(),
         isPublished: form.isPublished,
         showInFooter: form.showInFooter,
         order: Number(form.order) || 0,
@@ -226,6 +230,18 @@ export default function ContentPageForm({ pageId }) {
             <RichEditor
               value={form.content}
               onChange={(content) => setForm((prev) => ({ ...prev, content }))}
+            />
+          </div>
+
+          <div className="cpf-card">
+            <h3 className="cpf-section-title">Page banner</h3>
+            <ImageField
+              value={form.bannerImage}
+              onChange={(url) => setForm((prev) => ({ ...prev, bannerImage: url }))}
+              label="Banner image"
+              hint="Top intro banner on this page. Leave empty to use the global Content Pages banner from Page Banners settings."
+              previewW={320}
+              previewH={160}
             />
           </div>
 

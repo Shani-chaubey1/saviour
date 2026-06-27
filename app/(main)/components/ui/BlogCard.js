@@ -11,14 +11,35 @@ export default function BlogCard({ post }) {
   return (
     <Link href={`/blog/${slug}`} className="bc-card">
       <div className="bc-img-wrap">
-        <Image src={thumbnail || 'https://saviourgroup.in/wp-content/uploads/2025/05/b1.jpg'} alt={title} fill className="bc-img" sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw" />
+        <Image
+          src={
+            thumbnail ||
+            "https://saviourgroup.in/wp-content/uploads/2025/05/b1.jpg"
+          }
+          alt={title}
+          fill
+          className="bc-img"
+          sizes="(max-width:768px) 100vw, (max-width:1024px) 50vw, 33vw"
+        />
         <div className="bc-img-overlay" />
         {category && <span className="bc-cat">{category}</span>}
       </div>
       <div className="bc-body">
         {createdAt && (
           <p className="bc-date">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
             {formatDate(createdAt)}
           </p>
         )}
@@ -26,7 +47,16 @@ export default function BlogCard({ post }) {
         <p className="bc-excerpt">{excerpt}</p>
         <div className="bc-read">
           Read More
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
         </div>
       </div>
       <style jsx global>{`
@@ -36,7 +66,7 @@ export default function BlogCard({ post }) {
         .bc-img { object-fit: cover; transition: transform 0.5s; }
         .bc-card:hover .bc-img { transform: scale(1.06); }
         .bc-img-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(2,45,18,0.6) 100%); }
-        .bc-cat { position: absolute; top: 14px; left: 14px; background: var(--red, #eb3237); color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
+        .bc-cat { position: absolute; top: 14px; left: 14px; background: #016833; color: white; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; }
         .bc-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
         .bc-date { display: flex !important; align-items: center !important; gap: 5px; font-size: 11px; color: #aaa; margin-bottom: 8px; }
         .bc-date svg { color: var(--green, #006833); }

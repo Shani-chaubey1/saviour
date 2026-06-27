@@ -24,10 +24,16 @@ export async function POST(request) {
       visitTime: data.visitTime || '',
     });
 
-    // Fire-and-forget CRM push — never blocks or fails the user response.
-    sendLeadToCrm(buildCrmLeadFromEnquiry(data)).catch((crmErr) => {
-      console.error('[CRM] unexpected error:', crmErr);
-    });
+    // CRM push — log failures; never blocks the user response.
+    sendLeadToCrm(buildCrmLeadFromEnquiry(data))
+      .then((crmResult) => {
+        if (!crmResult.sent) {
+          console.error('[CRM] lead not sent:', crmResult.reason || crmResult.error || crmResult);
+        }
+      })
+      .catch((crmErr) => {
+        console.error('[CRM] unexpected error:', crmErr);
+      });
 
     return NextResponse.json({ success: true, message: 'Enquiry submitted successfully' });
   } catch (err) {

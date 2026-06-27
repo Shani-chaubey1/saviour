@@ -36,7 +36,12 @@ export default async function ContentPage({ params }) {
     <ContentPageView
       page={page}
       projects={projects}
-      bannerImage={settings.banner_image_content || settings.banner_image_default || ''}
+      bannerImage={
+        page.bannerImage?.trim() ||
+        settings.banner_image_content ||
+        settings.banner_image_default ||
+        ''
+      }
     />
   );
 }

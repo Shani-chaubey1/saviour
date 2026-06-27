@@ -60,6 +60,7 @@ export async function PUT(request, { params }) {
     if (body.content !== undefined) update.content = String(body.content || '');
     if (body.metaTitle !== undefined) update.metaTitle = String(body.metaTitle || '').trim();
     if (body.metaDescription !== undefined) update.metaDescription = String(body.metaDescription || '').trim();
+    if (body.bannerImage !== undefined) update.bannerImage = String(body.bannerImage || '').trim();
     if (body.isPublished !== undefined) update.isPublished = Boolean(body.isPublished);
     if (body.showInFooter !== undefined) update.showInFooter = Boolean(body.showInFooter);
     if (body.order !== undefined && Number.isFinite(Number(body.order))) update.order = Number(body.order);

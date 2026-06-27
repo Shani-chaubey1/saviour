@@ -4,15 +4,26 @@ import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
 import './PageBanner.css';
 
-export default function PageBanner({ title, breadcrumbs = [], image = '' }) {
+export default function PageBanner({ title, breadcrumbs = [], image = '', variant = '', badges = [] }) {
   const hasImage = Boolean(image);
+  const variantClass = variant ? ` page-banner--${variant}` : '';
+  const badgeList = Array.isArray(badges) ? badges.filter(Boolean) : [];
   return (
     <div
-      className={`page-banner${hasImage ? ' has-image' : ''}`}
+      className={`page-banner${hasImage ? ' has-image' : ''}${variantClass}`}
       style={hasImage ? { backgroundImage: `url(${image})` } : undefined}
     >
       <div className="banner-overlay" />
       <div className="container banner-content">
+        {badgeList.length > 0 && (
+          <div className="banner-badges">
+            {badgeList.map((badge, i) => (
+              <span key={i} className={`banner-badge banner-badge--${badge.tone || 'default'}`}>
+                {badge.label}
+              </span>
+            ))}
+          </div>
+        )}
         <h1 className="banner-title">{title}</h1>
         <nav className="breadcrumb" aria-label="Breadcrumb">
           <Link href="/" className="bc-item">

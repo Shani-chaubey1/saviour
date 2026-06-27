@@ -12,11 +12,15 @@ import {
   CalendarClock,
   Calendar,
   Clock,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   validateLeadFormFields,
   resolveLeadProjectField,
   submitLeadRequest,
+  generateMathChallenge,
+  getTodayDateString,
+  getMinDateTimeLocalString,
 } from '@/lib/leadSubmission';
 import './ContactForm.css';
 
@@ -28,6 +32,7 @@ const INITIAL = {
   preferredDateTime: '',
   visitDate: '',
   visitTime: '',
+  captchaAnswer: '',
 };
 
 const DEFAULT_CONNECT_LABEL = 'Connect with an Agent';
@@ -49,9 +54,12 @@ export default function ContactForm({
   const pathname = usePathname() || '/';
   const [tab, setTab] = useState('connect');
   const [form, setForm] = useState({ ...INITIAL });
+  const [challenge, setChallenge] = useState(() => generateMathChallenge());
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const regenerateChallenge = () => setChallenge(generateMathChallenge());
 
   const connectLabel = tabConnectLabel?.trim() || DEFAULT_CONNECT_LABEL;
   const visitLabel = tabVisitLabel?.trim() || DEFAULT_VISIT_LABEL;
@@ -70,11 +78,30 @@ export default function ContactForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errs = validateLeadFormFields({ ...form, formType: tab });
+    const errs = validateLeadFormFields({
+      ...form,
+      formType: tab,
+      captchaA: challenge.a,
+      captchaB: challenge.b,
+      captchaOp: challenge.op,
+      captchaAnswer: form.captchaAnswer,
+    });
     if (Object.keys(errs).length) {
-      setErrors(errs);
+      setErrors({ ...errs, form: 'Please complete all required fields before submitting.' });
+      if (errs.captchaAnswer) {
+        setForm((prev) => ({ ...prev, captchaAnswer: '' }));
+        regenerateChallenge();
+      }
+      requestAnimationFrame(() => {
+        const panel = document.getElementById('cf-panel');
+        const firstInvalid =
+          panel?.querySelector('.form-input.error, .cf-captcha-answer.error') ||
+          panel?.querySelector('.error-msg');
+        firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
       return;
     }
+    setErrors({});
     const project = resolveLeadProjectField({ projectName, pageLabel, pathname });
     const payload = {
       name: form.name.trim(),
@@ -86,6 +113,10 @@ export default function ContactForm({
       preferredDateTime: tab === 'connect' ? form.preferredDateTime.trim() : '',
       visitDate: tab === 'visit' ? form.visitDate.trim() : '',
       visitTime: tab === 'visit' ? form.visitTime.trim() : '',
+      captchaA: challenge.a,
+      captchaB: challenge.b,
+      captchaOp: challenge.op,
+      captchaAnswer: form.captchaAnswer.trim(),
     };
 
     setLoading(true);
@@ -95,9 +126,14 @@ export default function ContactForm({
         setSuccess(true);
         setForm({ ...INITIAL });
         setErrors({});
+        regenerateChallenge();
         onSuccess?.();
       } else {
         setErrors({ submit: data.error || 'Something went wrong. Please try again.' });
+        if (data.error?.toLowerCase().includes('incorrect') || data.error?.toLowerCase().includes('calculation')) {
+          setForm((prev) => ({ ...prev, captchaAnswer: '' }));
+          regenerateChallenge();
+        }
       }
     } catch {
       setErrors({ submit: 'Network error. Please try again.' });
@@ -121,6 +157,15 @@ export default function ContactForm({
 
   const isConnect = tab === 'connect';
   const submitText = isConnect ? 'Send Enquiry' : 'Confirm Visit';
+  const todayStr = getTodayDateString();
+  const visitTimeMin =
+    !isConnect && form.visitDate === todayStr
+      ? (() => {
+          const now = new Date();
+          const pad = (n) => String(n).padStart(2, '0');
+          return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+        })()
+      : undefined;
 
   return (
     <div className="cf-wrap">
@@ -220,6 +265,7 @@ export default function ContactForm({
               value={form.preferredDateTime}
               onChange={handleChange}
               className={`form-input${errors.preferredDateTime ? ' error' : ''}`}
+              min={getMinDateTimeLocalString()}
             />
             {errors.preferredDateTime && (
               <span className="error-msg">{errors.preferredDateTime}</span>
@@ -237,7 +283,7 @@ export default function ContactForm({
               value={form.visitDate}
               onChange={handleChange}
               className={`form-input${errors.visitDate ? ' error' : ''}`}
-              min={new Date().toISOString().slice(0, 10)}
+              min={getTodayDateString()}
             />
             {errors.visitDate && <span className="error-msg">{errors.visitDate}</span>}
           </div>
@@ -255,6 +301,7 @@ export default function ContactForm({
               value={form.visitTime}
               onChange={handleChange}
               className={`form-input${errors.visitTime ? ' error' : ''}`}
+              min={visitTimeMin}
             />
             {errors.visitTime && <span className="error-msg">{errors.visitTime}</span>}
           </div>
@@ -274,6 +321,40 @@ export default function ContactForm({
             className="form-input"
           />
         </div>
+
+        <div className={`form-group span-2 cf-captcha${errors.captchaAnswer ? ' cf-captcha-error' : ''}`}>
+          <label htmlFor="captchaAnswer" className="form-label">
+            <ShieldCheck size={14} /> Security check <span className="req">*</span>
+          </label>
+          <div className="cf-captcha-card">
+            <div className="cf-captcha-equation" aria-hidden="true">
+              <span className="cf-captcha-chip cf-captcha-num">{challenge.a}</span>
+              <span className="cf-captcha-chip cf-captcha-op">{challenge.op}</span>
+              <span className="cf-captcha-chip cf-captcha-num">{challenge.b}</span>
+              <span className="cf-captcha-equals">=</span>
+              <input
+                id="captchaAnswer"
+                name="captchaAnswer"
+                type="number"
+                inputMode="numeric"
+                value={form.captchaAnswer}
+                onChange={handleChange}
+                placeholder="?"
+                className={`cf-captcha-answer${errors.captchaAnswer ? ' error' : ''}`}
+                autoComplete="off"
+                aria-label={`Answer: ${challenge.a} ${challenge.op} ${challenge.b}`}
+                aria-describedby={errors.captchaAnswer ? 'captcha-error' : 'captcha-hint'}
+              />
+            </div>
+          </div>
+          {errors.captchaAnswer && (
+            <span id="captcha-error" className="error-msg">
+              {errors.captchaAnswer}
+            </span>
+          )}
+        </div>
+
+        {errors.form && <div className="submit-error span-2">{errors.form}</div>}
 
         {errors.submit && <div className="submit-error span-2">{errors.submit}</div>}
 
